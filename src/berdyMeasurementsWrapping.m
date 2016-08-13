@@ -1,41 +1,37 @@
-function [ y,Sigmay ] = berdyMeasurementsWrapping(data)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+function [y, Sigmay] = berdyMeasurementsWrapping(data)
+% BERDYMEASUREMENTSWRAPPING orders the measurements in a format
+% compatible with the BerdyHelper class.  It returns a vector of
+% ordered measurements and its associated covariance matrix.
 
-% 1 = ACCELEROMETER
-% 2 = JOINT ACC
-% 3 = EXTERNAL WRENCH
-% 4 = GYROSCOPE
 
 berdyInfo = [];
 
-temp = struct;
-temp.type = 1;
-temp.id  = 'imu_acc';
-berdyInfo = [berdyInfo; temp];
+temp        = struct;
+temp.type   = 1;
+temp.id     = 'imu_acc';
+berdyInfo   = [berdyInfo; temp];
 
-temp.type = 2;
-temp.id  = 'ankle';
-berdyInfo = [berdyInfo; temp];
+temp.type   = 2;
+temp.id     = 'ankle';
+berdyInfo   = [berdyInfo; temp];
 
-temp.type = 2;
-temp.id  = 'hip';
-berdyInfo = [berdyInfo; temp];
+temp.type   = 2;
+temp.id     = 'hip';
+berdyInfo   = [berdyInfo; temp];
 
-temp.type = 3;
-temp.id  = 'foot';
-berdyInfo = [berdyInfo; temp];
+temp.type   = 3;
+temp.id     = 'foot';
+berdyInfo   = [berdyInfo; temp];
 
-temp.type = 3;
-temp.id  = 'leg';
-berdyInfo = [berdyInfo; temp];
+temp.type   = 3;
+temp.id     = 'leg';
+berdyInfo   = [berdyInfo; temp];
 
-temp.type = 3;
-temp.id  = 'torso';
-berdyInfo = [berdyInfo; temp];
-
-
+temp.type   = 3;
+temp.id     = 'torso';
+berdyInfo   = [berdyInfo; temp];
     
+
 y = [];
 Sigmay = [];
 for i = 1:length(berdyInfo)
@@ -52,12 +48,9 @@ for i = 1:length(berdyInfo)
         end
     end
     if (found == false)
-        error(strcat('Could not find sensor type', num2str(currentInfo.type), ' id: ', currentInfo.id ));
+        error(strcat('Could not find sensor type', num2str(currentInfo.type),...
+             ' id: ', currentInfo.id ));
     end
 end
 
-
-
-
 end
-
