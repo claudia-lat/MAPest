@@ -37,13 +37,10 @@ data = load('data/ExperimentDataset.mat');
 data.numOfSamples = size(data.sensors.acc,2);
 
 % Each sensor is identified by:
-% - type: 1 = LINK ACCELEROMETER
-%         2 = JOINT ACCELEROMETER
-%         3 = EXTERNAL WRENCH
-%         4 = GYROSCOPE
+% - type: the type associated to the sensors in iDynTree;
 % - id  : the name associated in the URDF;
 % - meas: value of measurements;
-% - var : varianca of sensor 
+% - var : variance of sensor. 
 
 
 %accelerometer
@@ -85,6 +82,8 @@ SENS.fext3.id           = 'torso';
 SENS.fext3.meas         = zeros(6, data.numOfSamples);
 SENS.fext3.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
 
+% (for the experiment with Xsens, this will be a file .mat with
+% data extracted from the file .mvnx)
 data.packedSens = [SENS.ddq1; SENS.fext1; SENS.acc_struct; SENS.ddq2; ...
                    SENS.gyro_struct; SENS.fext2; SENS.fext3];
     
