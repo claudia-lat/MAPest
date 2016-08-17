@@ -1,6 +1,6 @@
 
 clear;clc;close all;
-%rng(1); % forcing the casual generator to be const
+rng(1); % forcing the casual generator to be const
 
 
 %% Add src to the path
@@ -25,6 +25,9 @@ berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
 berdyOptions.includeFixedBaseExternalWrench                  = true;
 
+% sensors.removeAllSensorsOfType(iDynTree.GYROSCOPE);
+sensors.removeSensor(iDynTree.GYROSCOPE, 'imu_gyro');
+
 berdy = iDynTree.BerdyHelper();
 berdy.init(model, sensors, berdyOptions);
                                              
@@ -44,40 +47,40 @@ data.numOfSamples = size(data.sensors.acc,2);
 
 
 %accelerometer
-SENS.acc_struct.type    = 1;
+SENS.acc_struct.type    = iDynTree.ACCELEROMETER_SENSOR;
 SENS.acc_struct.id      = 'imu_acc';
 SENS.acc_struct.meas    = data.sensors.acc;
 SENS.acc_struct.var     = 0.001111 * ones(3,1); %from datasheet
 
 %gyroscope
-SENS.gyro_struct.type   = 4;
+SENS.gyro_struct.type   = iDynTree.GYROSCOPE_SENSOR;
 SENS.gyro_struct.id     = 'imu_gyro';
 SENS.gyro_struct.meas   = zeros(size(data.sensors.acc)); %no gyro for this experiment
 SENS.gyro_struct.var    = 5e-5 * ones(3,1); %from datasheet
 
 %joint acceleration as sensors
-SENS.ddq1.type          = 2;
+SENS.ddq1.type          = iDynTree.DOF_ACCELERATION_SENSOR;
 SENS.ddq1.id            = 'ankle';
 SENS.ddq1.meas          = data.joints.ddq(1,:);
 SENS.ddq1.var           = 6.66e-6; %from datasheet
 
-SENS.ddq2.type          = 2;
+SENS.ddq2.type          = iDynTree.DOF_ACCELERATION_SENSOR;
 SENS.ddq2.id            = 'hip';
 SENS.ddq2.meas          = data.joints.ddq(2,:);
 SENS.ddq2.var           = 6.66e-6; %from datasheet
 
 %external forse as sensors
-SENS.fext1.type         = 3;
+SENS.fext1.type         = iDynTree.NET_EXT_WRENCH_SENSOR;
 SENS.fext1.id           = 'foot';
 SENS.fext1.meas         = data.sensors.fts_footFrame;
 SENS.fext1.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
 
-SENS.fext2.type         = 3;
+SENS.fext2.type         = iDynTree.NET_EXT_WRENCH_SENSOR;
 SENS.fext2.id           = 'leg';
 SENS.fext2.meas         = zeros(6, data.numOfSamples);
 SENS.fext2.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
 
-SENS.fext3.type         = 3;
+SENS.fext3.type         = iDynTree.NET_EXT_WRENCH_SENSOR;
 SENS.fext3.id           = 'torso';
 SENS.fext3.meas         = zeros(6, data.numOfSamples);
 SENS.fext3.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
@@ -85,7 +88,7 @@ SENS.fext3.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
 data.packedSens = [SENS.ddq1; SENS.fext1; SENS.acc_struct; SENS.ddq2; ...
                    SENS.gyro_struct; SENS.fext2; SENS.fext3];
     
-[y, Sigmay] = berdyMeasurementsWrapping(data.packedSens);
+[y, Sigmay] = berdyMeasurementsWrapping(berdy, data.packedSens);
 
 %% MAP
 

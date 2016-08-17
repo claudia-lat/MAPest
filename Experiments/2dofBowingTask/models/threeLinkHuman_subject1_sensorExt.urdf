@@ -83,10 +83,10 @@
         <axis xyz="0 1 0" />
     </joint>
 
-	<!-- <sensor name="imu_gyro" type="gyroscope">
+	<sensor name="imu_gyro" type="gyroscope">
 		<parent link="torso"/>
 		<origin xyz="0.1461 0.0455 0.2335" rpy="-0.0283 -1.3298 -3.1176" />
-	</sensor> -->
+	</sensor>
 
 	<sensor name="imu_acc" type="accelerometer">
 		<parent link="torso"/>
