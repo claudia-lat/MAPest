@@ -1,8 +1,14 @@
-function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams)
+function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,filename)
 %CREATEXSENSLIKEURDFMODEL generates a URDF model of the subject.
+%
+% Inputs : 
+% -  subjectParams : anthropometric parameters coming from the previous
+%                    function;
+% -  filename      : (optional) allows to save the file.urdf in a folder 
+%                     called 'Models'.  
 
-urdfModelTemplate = fileread('XSensModelStyle_URDFtemplate.urdf');
-    
+
+urdfModelTemplate = fileread('XSensModelStyle_URDFtemplate.urdf');   
 % FOOT
 urdfModelTemplate = strrep(urdfModelTemplate,'FOOTALFA',num2str(subjectParams.footAlfa));
 urdfModelTemplate = strrep(urdfModelTemplate,'FOOTBETA',num2str(subjectParams.footBeta));
@@ -162,4 +168,14 @@ urdfModelTemplate = strrep(urdfModelTemplate,'NECKMASS',num2str(subjectParams.ne
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKINERTIAIXX',num2str(subjectParams.neckIxx));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKINERTIAIYY',num2str(subjectParams.neckIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKINERTIAIZZ',num2str(subjectParams.neckIzz));
+
+if nargin == 2
+    [dir,~,~] = fileparts(filename);
+    if ~exist(dir,'dir')
+        mkdir(dir);
+    end
+fileID = fopen(filename,'w');
+fprintf(fileID,'%s', urdfModelTemplate);
+fclose(fileID);
+end
 end

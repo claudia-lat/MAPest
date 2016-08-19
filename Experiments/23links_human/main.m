@@ -11,13 +11,20 @@ subjectID = 1;
 H = 1.70; % set manually the heigth in [m] of the subject;
 M = 61;   % set manually the mass in [kg] of the subject;
 subjectParams  = findAnthropometricParams(H,M);
-URDFmodel = createXsensLikeURDFmodel(subjectParams);
-saveURDF(URDFmodel,subjectID);
+filename = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
+URDFmodel = createXsensLikeURDFmodel(subjectParams,filename);
+
+%% Load measurements from sensors
+% SUIT
+mvnxFilename = 'data/S_1bowingtask.mvnx';
+[~] = extractSuitData(mvnxFilename,'data');
+% FORCEPLATE  --> to be done!
 
 %% Load URDF model
-model.FileName = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
+% model.FileName = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
+model.filename = filename;
 modelLoader = iDynTree.ModelLoader();
-if ~modelLoader.loadModelFromFile(model.FileName);
+if ~modelLoader.loadModelFromFile(model.filename);
     fprint('Something wrong with the model loading.')
 end
 
@@ -26,7 +33,7 @@ end
 % if ~modelLoader.loadModelFromString('urdfModel');
 %     fprint('Something wrong with the model loading.')
 % end
-m
+
 model   = modelLoader.model(); 
 % sensors = modelLoader.sensors(); ->TO BE ADDED
-                                             
+                 
