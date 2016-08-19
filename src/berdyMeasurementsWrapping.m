@@ -25,5 +25,4 @@ for i = 1:size(sensorOrder,2)
              ' id: ', currentInfo.id ));
     end
 end
-
 end
