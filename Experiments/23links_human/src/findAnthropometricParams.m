@@ -11,6 +11,10 @@ function [subjectParams] = findAnthropometricParams(H, M)
 %   - box     :    alfa = width, beta = height, gamma = depth;
 %   - cylinder:    radius and height (diameter case);
 %   - sphere  :    radius (diameter in case)
+%
+% It returns also the homogeneous transformations between links as
+% represented in the Xsens model. They will be useful for building the 
+% OSIM model.
 
 format longg %for decimal notation
 %% FOOT (solid: box)
@@ -203,6 +207,70 @@ neckMass       = 0.016 * M;
 neckIxx        = (neckMass/12) * (3 * neckRadius^2 + neckHeight^2);
 neckIyy        = (neckMass/12) * (3 * neckRadius^2 + neckHeight^2);
 neckIzz        = (neckMass/2) * (neckRadius^2);
+%% Homogeneous transformations
+pos = [-toeHalfGamma; 0; 0];
+ballFoot_H_toe = [  eye(3)    pos
+                  zeros(1,3)   1 ];
+pos = [-anklePosX;0;footHalfBeta];              
+ankle_H_foot= [ eye(3)    pos
+               zeros(1,3)  1 ]; 
+pos = [0;0;lowerLegHalfHeight];               
+knee_H_lowerLeg = [ eye(3)    pos
+                   zeros(1,3)  1 ];
+pos = [0;0;upperLegHalfHeight];               
+hip_H_upperLeg = [ eye(3)    pos
+                  zeros(1,3)  1 ];
+pos = [0;0;-0.5*pelvisHalfBeta];                
+hipOrigin_H_pelvis = [ eye(3)    pos
+                      zeros(1,3)  1 ];
+pos = [0; 0; -L5HalfHeight];                  
+jL5S1_H_l5 = [ eye(3)    pos
+              zeros(1,3)  1 ]; 
+pos = [0; 0; -L3HalfHeight]; 
+jL4L3_H_l3 = [ eye(3)    pos
+              zeros(1,3)  1 ]; 
+pos = [0; 0; -T12HalfHeight];
+jL1T12_H_T12 = [ eye(3)    pos
+                zeros(1,3)  1 ]; 
+pos = [0; 0; -T8HalfBeta]; 
+jT9T8_H_T8 = [ eye(3)    pos
+              zeros(1,3)  1 ];
+pos = [0; 0; -neckHalfHeight];         
+jT1C7_H_neck = [ eye(3)    pos
+                zeros(1,3)  1 ];
+pos = [0; 0; -headRadius];  
+jC1Head_H_head = [ eye(3)    pos
+                  zeros(1,3)  1 ];
+pos = [0; shoulderHalfHeight; 0];
+jRightC7Shoulder_H_rightShoulder = [ eye(3)    pos
+                                    zeros(1,3)  1 ];
+pos = [0; -shoulderHalfHeight; 0];
+jLeftC7Shoulder_H_leftShoulder = [ eye(3)    pos
+                                  zeros(1,3)  1 ];                             
+pos = [0; 0; armPosZ];
+rotX = iDynTree.Rotation.RotX(pi/2).toMatlab;
+jRightShoulder_H_rightUpperArm = [ rotX      pos
+                                  zeros(1,3)  1 ];    
+rotX = iDynTree.Rotation.RotX(-pi/2).toMatlab;
+jLeftShoulder_H_leftUpperArm = [ rotX      pos
+                                zeros(1,3)  1 ]; 
+rotX_c  = iDynTree.Rotation.RotX(-pi/2).toMatlab;
+rotX_cc = iDynTree.Rotation.RotX(pi/2).toMatlab;                     
+pos = [0; 0; foreArmHalfHeight];
+jRightElbow_H_rightForeArm = [ rotX_cc   pos
+                              zeros(1,3)  1 ];    
+jLeftElbow_H_leftForeArm = [ rotX_c    pos
+                            zeros(1,3)  1 ];                               
+pos = [0; 0; foreArmHalfHeight];
+jRightElbow_H_rightForeArm = [ rotX_cc   pos
+                              zeros(1,3)  1 ];    
+jLeftElbow_H_leftForeArm = [ rotX_c    pos
+                            zeros(1,3)  1 ];
+pos = [0; 0; handHalfBeta];
+jRightWrist_H_rightHand = [ rotX_cc   pos
+                           zeros(1,3)  1 ];    
+jLeftWrist_H_leftHand = [ rotX_c    pos
+                         zeros(1,3)  1 ];
 %% Save parameters
 % FOOT
 subjectParams.footAlfa      = footAlfa;
@@ -362,4 +430,24 @@ subjectParams.headMass     = headMass;
 subjectParams.headIxx      = headIxx;
 subjectParams.headIyy      = headIyy; 
 subjectParams.headIzz      = headIzz;
+% HOMOGENEOUS TRANSFORMATIONS
+subjectParams.ballFoot_H_toe                   = ballFoot_H_toe;
+subjectParams.ankle_H_foot                     = ankle_H_foot;
+subjectParams.knee_H_lowerLeg                  = knee_H_lowerLeg;
+subjectParams.hip_H_upperLeg                   = hip_H_upperLeg;
+subjectParams.hipOrigin_H_pelvis               = hipOrigin_H_pelvis;
+subjectParams.jL5S1_H_l5                       = jL5S1_H_l5;
+subjectParams.jL4L3_H_l3                       = jL4L3_H_l3;
+subjectParams.jL1T12_H_T12                     = jL1T12_H_T12;
+subjectParams.jT9T8_H_T8                       = jT9T8_H_T8;
+subjectParams.jT1C7_H_neck                     = jT1C7_H_neck;
+subjectParams.jC1Head_H_head                   = jC1Head_H_head;
+subjectParams.jRightC7Shoulder_H_rightShoulder = jRightC7Shoulder_H_rightShoulder;
+subjectParams.jLeftC7Shoulder_H_leftShoulder   = jLeftC7Shoulder_H_leftShoulder;
+subjectParams.jRightShoulder_H_rightUpperArm   = jRightShoulder_H_rightUpperArm;
+subjectParams.jLeftShoulder_H_leftUpperArm     = jLeftShoulder_H_leftUpperArm;
+subjectParams.jRightElbow_H_rightForeArm       = jRightElbow_H_rightForeArm;
+subjectParams.jLeftElbow_H_leftForeArm         = jLeftElbow_H_leftForeArm;
+subjectParams.jRightWrist_H_rightHand          = jRightWrist_H_rightHand;
+subjectParams.jLeftWrist_H_leftHand            = jLeftWrist_H_leftHand;
 end
