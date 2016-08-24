@@ -261,11 +261,11 @@ jRightElbow_H_rightForeArm = [ rotX_cc   pos
                               zeros(1,3)  1 ];    
 jLeftElbow_H_leftForeArm = [ rotX_c    pos
                             zeros(1,3)  1 ];                               
-pos = [0; 0; foreArmHalfHeight];
-jRightElbow_H_rightForeArm = [ rotX_cc   pos
-                              zeros(1,3)  1 ];    
-jLeftElbow_H_leftForeArm = [ rotX_c    pos
-                            zeros(1,3)  1 ];
+% pos = [0; 0; foreArmHalfHeight];
+% jRightElbow_H_rightForeArm = [ rotX_cc   pos
+%                               zeros(1,3)  1 ];    
+% jLeftElbow_H_leftForeArm = [ rotX_c    pos
+%                             zeros(1,3)  1 ];
 pos = [0; 0; handHalfBeta];
 jRightWrist_H_rightHand = [ rotX_cc   pos
                            zeros(1,3)  1 ];    

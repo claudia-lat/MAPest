@@ -58,7 +58,7 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.points.pointsValue       = zeros(3,suit.links{i}.points.nrOfPoints);
     for k = 1 : suit.links{i}.points.nrOfPoints
         suit.links{i}.points.label(1,k) = cellstr(mvnxData.subject.segments.segment(i).points.point(k).ATTRIBUTE.label);
-        suit.links{i}.points.pointsValue(:,k) = mvnxData.subject.segments.segment(1).points.point(k).pos_s;
+        suit.links{i}.points.pointsValue(:,k) = mvnxData.subject.segments.segment(i).points.point(k).pos_s;
     end
 end
 % JOINTS
