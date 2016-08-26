@@ -10,7 +10,7 @@ function [osimModelTemplate] = createXsensLikeOSIMmodel(subjectParams, suit, fil
 %                      called 'Models'.  
 
     
-osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate.osim');
+osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate_Floating_Sph.osim');
 % FOOT
 osimModelTemplate = strrep(osimModelTemplate,'FOOTALFA',sprintf('%.10f',subjectParams.footAlfa));
 osimModelTemplate = strrep(osimModelTemplate,'FOOTBETA',sprintf('%.10f',subjectParams.footBeta));
