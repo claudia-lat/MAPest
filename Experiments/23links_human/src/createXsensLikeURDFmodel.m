@@ -8,7 +8,7 @@ function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,filename)
 %                     called 'Models'.  
 
 
-urdfModelTemplate = fileread('XSensModelStyle_URDFtemplateNEW.urdf');
+urdfModelTemplate = fileread('XSensModelStyle_URDFtemplate.urdf');
 %% --LINK BASE
 % PELVIS
 urdfModelTemplate = strrep(urdfModelTemplate,'PELVIS_BOX_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));
@@ -64,7 +64,7 @@ urdfModelTemplate = strrep(urdfModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(su
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKHEIGHT',num2str(subjectParams.neck_z));
-urdfModelTemplate = strrep(urdfModelTemplate,'NECKRADIUS',num2str(subjectParams.neck_x/2));
+urdfModelTemplate = strrep(urdfModelTemplate,'NECKRADIUS',num2str(0.5 * subjectParams.neck_x));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKMASS',num2str(subjectParams.neckMass));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKINERTIAIXX',num2str(subjectParams.neckIxx));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECKINERTIAIYY',num2str(subjectParams.neckIyy));
@@ -73,7 +73,7 @@ urdfModelTemplate = strrep(urdfModelTemplate,'jC1Head_ORIGIN',num2str(subjectPar
 % HEAD
 urdfModelTemplate = strrep(urdfModelTemplate,'HEAD_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'HEAD_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
-urdfModelTemplate = strrep(urdfModelTemplate,'HEADRADIUS',num2str(subjectParams.head_z/2));
+urdfModelTemplate = strrep(urdfModelTemplate,'HEADRADIUS',num2str(0.5 * subjectParams.head_z));
 urdfModelTemplate = strrep(urdfModelTemplate,'HEADMASS',num2str(subjectParams.headMass));
 urdfModelTemplate = strrep(urdfModelTemplate,'HEADINERTIAIXX',num2str(subjectParams.headIxx));
 urdfModelTemplate = strrep(urdfModelTemplate,'HEADINERTIAIYY',num2str(subjectParams.headIyy));

@@ -1,626 +1,615 @@
 <robot name="XSensStyleModel_template">
-
-    <link name="Ground">
-        <inertial>
-            <mass value="0"/>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-	    <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="0.0001 0.0001 0.0001"/>
-            </geometry>
-        </visual>
-
-        <collision>
-	    <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="0.0001 0.0001 0.0001"/>
-            </geometry>
-        </collision>
-    </link>
 	
-	<link name="LeftFoot">
-        <inertial>
-            <mass value="FOOTMASS"/>
-            <origin xyz="0 0 FOOTHALFBETA" rpy="0 0 0" />
-            <inertia ixx="FOOTINERTIAIXX" iyy="FOOTINERTIAIYY" izz="FOOTINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-	    <origin xyz="0 0 FOOTHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="FOOTGAMMA FOOTALFA FOOTBETA"/>
-            </geometry>
-        </visual>
-
-        <collision>
-	    <origin xyz="0 0 FOOTHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="FOOTGAMMA FOOTALFA FOOTBETA"/>
-            </geometry>
-        </collision>
-    </link>
-	
-	<link name="LeftToe">
-        <inertial>
-            <mass value="TOEMASS"/>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <inertia ixx="TOEINERTIAIXX" iyy="TOEINERTIAIYY" izz="TOEINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="TOEGAMMA TOEALFA TOEBETA"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="TOEGAMMA TOEALFA TOEBETA"/>
-            </geometry>
-        </collision>
-    </link>
-
-    <link name="LeftLowerLeg">
-        <inertial>
-            <mass value="LOWERLEGMASS"/>
-            <origin xyz="0 0 LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="LOWERLEGINERTIAIXX" iyy="LOWERLEGINERTIAIYY" izz="LOWERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-		<cylinder length="LOWERLEGHEIGHT" radius="LOWERLEGRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="LOWERLEGHEIGHT" radius="LOWERLEGRADIUS"/>
-            </geometry>
-        </collision>
-    </link>
-    
-    <link name="LeftUpperLeg">
-        <inertial>
-            <mass value="UPPERLEGMASS"/>
-            <origin xyz="0 0 UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="UPPERLEGINERTIAIXX" iyy="UPPERLEGINERTIAIYY" izz="UPPERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERLEGHEIGHT" radius="UPPERLEGRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERLEGHEIGHT" radius="UPPERLEGRADIUS"/>
-            </geometry>
-        </collision>
-    </link>
-	
+	<!--LINKS-->
+	<!--Link base (1)-->
 	<link name="Pelvis">
         <inertial>
             <mass value="PELVISMASS"/>
-            <origin xyz="0 -HIPPOSY PELVISHALFBETA" rpy="0 0 0" />
+			<!--COM origin wrt pHipOrigin-->
+            <origin xyz="PELVIS_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="PELVISINERTIAIXX" iyy="PELVISINERTIAIYY" izz="PELVISINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 -HIPPOSY PELVISHALFBETA" rpy="0 0 0" />
+			<!--box origin wrt pHipOrigin-->
+            <origin xyz="PELVIS_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="PELVISGAMMA PELVISALFA PELVISBETA"/>
+                <box size="PELVIS_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 -HIPPOSY PELVISHALFBETA" rpy="0 0 0" />
+			<!--box origin wrt pHipOrigin-->
+            <origin xyz="PELVIS_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="PELVISGAMMA PELVISALFA PELVISBETA"/>
+                <box size="PELVIS_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-
+    <!--Chain from (2) to (7)-->
 	<link name="L5">
         <inertial>
             <mass value="L5MASS"/>
-            <origin xyz="0 0 L5HALFHEIGHT" rpy="0 0 0" />
+			<!--COM origin wrt jL5S1-->
+            <origin xyz="L5_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="L5INERTIAIXX" iyy="L5INERTIAIYY" izz="L5INERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 L5HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL5S1-->
+            <origin xyz="L5_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="L5DIAMETERX L5DIAMETERY L5HEIGHT"/>
+                <box size="L5_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 L5HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL5S1-->
+            <origin xyz="L5_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="L5DIAMETERX L5DIAMETERY L5HEIGHT"/>
+                <box size="L5_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-	
 	<link name="L3">
         <inertial>
             <mass value="L3MASS"/>
-            <origin xyz="0 0 L3HALFHEIGHT" rpy="0 0 0" />
+			<!--COM origin wrt jL4L3-->
+            <origin xyz="L3_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="L3INERTIAIXX" iyy="L3INERTIAIYY" izz="L3INERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 L3HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL4L3-->
+            <origin xyz="L3_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="L3DIAMETERX L3DIAMETERY L3HEIGHT"/>
+                <box size="L3_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 L3HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL4L3-->
+            <origin xyz="L3_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="L3DIAMETERX L3DIAMETERY L3HEIGHT"/>
+                <box size="L3_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-	
 	<link name="T12">
         <inertial>
             <mass value="T12MASS"/>
-            <origin xyz="0 0 T12HALFHEIGHT" rpy="0 0 0" />
+			<!--COM origin wrt jL1T12-->
+            <origin xyz="T12_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="T12INERTIAIXX" iyy="T12INERTIAIYY" izz="T12INERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 T12HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL1T12-->
+            <origin xyz="T12_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="T12DIAMETERX T12DIAMETERY T12HEIGHT"/>
+                <box size="T12_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 T12HALFHEIGHT" rpy="0 0 0" />
+			<!--box origin origin wrt jL1T12-->
+            <origin xyz="T12_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="T12DIAMETERX T12DIAMETERY T12HEIGHT"/>
+                <box size="T12_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-	
 	<link name="T8">
         <inertial>
             <mass value="T8MASS"/>
-            <origin xyz="0 0 T8HALFBETA" rpy="0 0 0" />
+			<!--COM origin wrt jT9T8-->
+            <origin xyz="T8_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="T8INERTIAIXX" iyy="T8INERTIAIYY" izz="T8INERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 T8HALFBETA" rpy="0 0 0" />
+			<!--box origin wrt jT9T8-->
+            <origin xyz="T8_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="T8GAMMA T8ALFA T8BETA"/>
+                <box size="T8_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 T8HALFBETA" rpy="0 0 0" />
+			<!--box origin wrt jT9T8-->
+            <origin xyz="T8_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="T8GAMMA T8ALFA T8BETA"/>
+                <box size="T8_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-	
-    <link name="Neck">
+	<link name="Neck">
         <inertial>
             <mass value="NECKMASS"/>
-            <origin xyz="0 0 NECKHALFHEIGHT" rpy="0 0 0" />
+			<!--COM origin wrt jT1C7-->
+            <origin xyz="NECK_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="NECKINERTIAIXX" iyy="NECKINERTIAIYY" izz="NECKINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 NECKHALFHEIGHT" rpy="0 0 0" />
+			<!--box origin wrt jT1C7-->
+            <origin xyz="NECK_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
 		<cylinder length="NECKHEIGHT" radius="NECKRADIUS"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 NECKHALFHEIGHT" rpy="0 0 0" />
+			<!--box origin wrt jT1C7-->
+            <origin xyz="NECK_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
                 <cylinder length="NECKHEIGHT" radius="NECKRADIUS"/>
             </geometry>
         </collision>
     </link>	
-	
 	<link name="Head">
         <inertial>
             <mass value="HEADMASS"/>
-            <origin xyz="0 0 HEADRADIUS" rpy="0 0 0" />
+			<!--COM origin wrt jC1Head-->
+            <origin xyz="HEAD_COM_ORIGIN" rpy="0 0 0" />
             <inertia ixx="HEADINERTIAIXX" iyy="HEADINERTIAIYY" izz="HEADINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 HEADRADIUS" rpy="0 0 0" />
+			<!--boc origin wrt jC1Head-->
+            <origin xyz="HEAD_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
                 <sphere radius="HEADRADIUS"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 HEADRADIUS" rpy="0 0 0" />
+			<!--box origin wrt jC1Head-->
+            <origin xyz="HEAD_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
                 <sphere radius="HEADRADIUS"/>
             </geometry>
         </collision>
     </link>
-	
-    <link name="RightUpperLeg">
-        <inertial>
-            <mass value="UPPERLEGMASS"/>
-            <origin xyz="0 0 -UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="UPPERLEGINERTIAIXX" iyy="UPPERLEGINERTIAIYY" izz="UPPERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 -UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERLEGHEIGHT" radius="UPPERLEGRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 -UPPERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERLEGHEIGHT" radius="UPPERLEGRADIUS"/>
-            </geometry>
-        </collision>
-    </link>
-
-
-    <link name="RightLowerLeg">
-        <inertial>
-            <mass value="LOWERLEGMASS"/>
-            <origin xyz="0 0 -LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="LOWERLEGINERTIAIXX" iyy="LOWERLEGINERTIAIYY" izz="LOWERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 -LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="LOWERLEGHEIGHT" radius="LOWERLEGRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 -LOWERLEGHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="LOWERLEGHEIGHT" radius="LOWERLEGRADIUS"/>
-            </geometry>
-        </collision>
-    </link>
-
-
-    <link name="RightFoot">
-        <inertial>
-            <mass value="FOOTMASS"/>
-            <origin xyz="ANKLEPOSX 0 -FOOTHALFBETA" rpy="0 0 0" />
-            <inertia ixx="FOOTINERTIAIXX" iyy="FOOTINERTIAIYY" izz="FOOTINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-	    <origin xyz="ANKLEPOSX 0 -FOOTHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="FOOTGAMMA FOOTALFA FOOTBETA"/>
-            </geometry>
-        </visual>
-
-        <collision>
-	    <origin xyz="ANKLEPOSX 0 -FOOTHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="FOOTGAMMA FOOTALFA FOOTBETA"/>
-            </geometry>
-        </collision>
-    </link>
-        
-    <link name="RightToe">
-        <inertial>
-            <mass value="TOEMASS"/>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <inertia ixx="TOEINERTIAIXX" iyy="TOEINERTIAIYY" izz="TOEINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="TOEGAMMA TOEALFA TOEBETA"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="TOEHALFGAMMA 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="TOEGAMMA TOEALFA TOEBETA"/>
-            </geometry>
-        </collision>
-    </link>
-	
-	<link name="LeftShoulder">
-        <inertial>
-            <mass value="SHOULDERMASS"/>
-            <origin xyz="0 SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
-            <inertia ixx="SHOULDERINERTIAIXX" iyy="SHOULDERINERTIAIYY" izz="SHOULDERINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
-            <geometry>
-                <box size="SHOULDERDIAMETER SHOULDERHEIGHT SHOULDERDIAMETER"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
-            <geometry>
-                <box size="SHOULDERDIAMETER SHOULDERHEIGHT SHOULDERDIAMETER"/>
-            </geometry>
-        </collision>
-    </link>
-	
-    <link name="LeftUpperArm">
-        <inertial>
-            <mass value="UPPERARMMASS"/>
-            <origin xyz="0 UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
-            <inertia ixx="UPPERARMINERTIAIXX" iyy="UPPERARMINERTIAIYY" izz="UPPERARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERARMHEIGHT" radius="UPPERARMRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="UPPERARMHEIGHT" radius="UPPERARMRADIUS"/>
-            </geometry>
-        </collision>
-    </link>	
-	
-	<link name="LeftForeArm">
-        <inertial>
-            <mass value="FOREARMMASS"/>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="FOREARMINERTIAIXX" iyy="FOREARMINERTIAIYY" izz="FOREARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="FOREARMHEIGHT" radius="FOREARMRADIUS"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
-            <geometry>
-                <cylinder length="FOREARMHEIGHT" radius="FOREARMRADIUS"/>
-            </geometry>
-        </collision>
-    </link>
-	
-	<link name="LeftHand">
-        <inertial>
-            <mass value="HANDMASS"/>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
-            <inertia ixx="HANDINERTIAIXX" iyy="HANDINERTIAIYY" izz="HANDINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="HANDGAMMA HANDALFA HANDBETA"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
-            <geometry>
-                <box size="HANDGAMMA HANDALFA HANDBETA"/>
-            </geometry>
-        </collision>
-    </link>
-	
+	<!--Chain from (8) to (11)-->
 	<link name="RightShoulder">
         <inertial>
-            <mass value="SHOULDERMASS"/>
-            <origin xyz="0 -SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
-            <inertia ixx="SHOULDERINERTIAIXX" iyy="SHOULDERINERTIAIYY" izz="SHOULDERINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+            <mass value="RIGHTSHOULDERMASS"/>
+			<!--COM origin wrt jRightC7Shoulder-->
+            <origin xyz="RIGHTSHOULDER_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTSHOULDERINERTIAIXX" iyy="RIGHTSHOULDERINERTIAIYY" izz="RIGHTSHOULDERINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 -SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
+			<!--box origin wrt jRightC7Shoulder. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTSHOULDER_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <box size="SHOULDERDIAMETER SHOULDERHEIGHT SHOULDERDIAMETER"/>
+                <cylinder length="RIGHTSHOULDERHEIGHT" radius="RIGHTSHOULDERRADIUS"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 -SHOULDERHALFHEIGHT 0" rpy="0 0 0" />
+			<!--box origin wrt jRightC7Shoulder. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTSHOULDER_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <box size="SHOULDERDIAMETER SHOULDERHEIGHT SHOULDERDIAMETER"/>
+                <cylinder length="RIGHTSHOULDERHEIGHT" radius="RIGHTSHOULDERRADIUS"/>
             </geometry>
         </collision>
     </link>
-	
     <link name="RightUpperArm">
         <inertial>
-            <mass value="UPPERARMMASS"/>
-            <origin xyz="0 -UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
-            <inertia ixx="UPPERARMINERTIAIXX" iyy="UPPERARMINERTIAIYY" izz="UPPERARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+            <mass value="RIGHTUPPERARMMASS"/>
+			<!--COM origin wrt jRightShoulder-->
+            <origin xyz="RIGHTUPPERARM_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTUPPERARMINERTIAIXX" iyy="RIGHTUPPERARMINERTIAIYY" izz="RIGHTUPPERARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 -UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
+			<!--box origin wrt jRightShoulder. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTUPPERARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <cylinder length="UPPERARMHEIGHT" radius="UPPERARMRADIUS"/>
+                <cylinder length="RIGHTUPPERARMHEIGHT" radius="RIGHTUPPERARMRADIUS"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 -UPPERARMRADIUS -ARMPOSZ" rpy="0 0 0" />
+			<!--box origin wrt jRightShoulder. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTUPPERARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <cylinder length="UPPERARMHEIGHT" radius="UPPERARMRADIUS"/>
+                <cylinder length="RIGHTUPPERARMHEIGHT" radius="RIGHTUPPERARMRADIUS"/>
             </geometry>
         </collision>
     </link>	
-	
 	<link name="RightForeArm">
         <inertial>
-            <mass value="FOREARMMASS"/>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
-            <inertia ixx="FOREARMINERTIAIXX" iyy="FOREARMINERTIAIYY" izz="FOREARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+            <mass value="RIGHTFOREARMMASS"/>
+			<!--COM origin wrt jRightElbow-->
+            <origin xyz="RIGHTFOREARM_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTFOREARMINERTIAIXX" iyy="RIGHTFOREARMINERTIAIYY" izz="RIGHTFOREARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
+			<!--box origin wrt jRightElbow. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <cylinder length="FOREARMHEIGHT" radius="FOREARMRADIUS"/>
+                <cylinder length="RIGHTFOREARMHEIGHT" radius="RIGHTFOREARMRADIUS"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 -FOREARMHALFHEIGHT" rpy="0 0 0" />
+			<!--box origin wrt jRightElbow. RPY rotated of pi/2.-->
+            <origin xyz="RIGHTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
-                <cylinder length="FOREARMHEIGHT" radius="FOREARMRADIUS"/>
+                <cylinder length="RIGHTFOREARMHEIGHT" radius="RIGHTFOREARMRADIUS"/>
             </geometry>
         </collision>
     </link>
-	
 	<link name="RightHand">
         <inertial>
-            <mass value="HANDMASS"/>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
-            <inertia ixx="HANDINERTIAIXX" iyy="HANDINERTIAIYY" izz="HANDINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+            <mass value="RIGHTHANDMASS"/>
+			<!--COM origin wrt jRightWrist-->
+            <origin xyz="RIGHTHAND_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTHANDINERTIAIXX" iyy="RIGHTHANDINERTIAIYY" izz="RIGHTHANDINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
+			<!--box origin wrt jRightWrist-->
+            <origin xyz="RIGHTHAND_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="HANDGAMMA HANDALFA HANDBETA"/>
+                <box size="RIGHTHAND_BOX_SIZE"/>
             </geometry>
         </visual>
 
         <collision>
-            <origin xyz="0 0 -HANDHALFBETA" rpy="0 0 0" />
+			<!--box origin wrt jRightWrist-->
+            <origin xyz="RIGHTHAND_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
-                <box size="HANDGAMMA HANDALFA HANDBETA"/>
+                <box size="RIGHTHAND_BOX_SIZE"/>
             </geometry>
         </collision>
     </link>
-	
-	
-    <joint name="jGround_LeftFoot" type="fixed">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <parent link="Ground"/>
-        <child link="LeftFoot"/>
-    </joint>       
-	
-	<joint name="jLeftBallFoot" type="revolute">
-        <origin xyz="FOOTHALFGAMMA 0 FOOTHALFBETA" rpy="0 0 0"/>
-        <parent link="LeftFoot"/>
-        <child link="LeftToe"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
+	<!--Chain from (12) to (15)-->
+	<link name="LeftShoulder">
+        <inertial>
+            <mass value="LEFTSHOULDERMASS"/>
+			<!--COM origin wrt jLeftC7Shoulder-->
+            <origin xyz="LEFTSHOULDER_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTSHOULDERINERTIAIXX" iyy="LEFTSHOULDERINERTIAIYY" izz="LEFTSHOULDERINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
 
-    <joint name="jLeftAnkle" type="revolute">
-        <origin xyz="-ANKLEPOSX 0 FOOTBETA" rpy="0 0 0"/>
-        <parent link="LeftFoot"/>
-        <child link="LeftLowerLeg"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
+        <visual>
+			<!--box origin wrt jLeftC7Shoulder. RPY rotated of pi/2.-->
+            <origin xyz="LEFTSHOULDER_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTSHOULDERHEIGHT" radius="LEFTSHOULDERRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftC7Shoulder. RPY rotated of pi/2.-->
+            <origin xyz="LEFTSHOULDER_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTSHOULDERHEIGHT" radius="LEFTSHOULDERRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="LeftUpperArm">
+        <inertial>
+            <mass value="LEFTUPPERARMMASS"/>
+			<!--COM origin wrt jLeftShoulder-->
+            <origin xyz="LEFTUPPERARM_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTUPPERARMINERTIAIXX" iyy="LEFTUPPERARMINERTIAIYY" izz="LEFTUPPERARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftShoulder. RPY rotated of pi/2.-->
+            <origin xyz="LEFTUPPERARM_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTUPPERARMHEIGHT" radius="LEFTUPPERARMRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftShoulder. RPY rotated of pi/2.-->
+            <origin xyz="LEFTUPPERARM_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTUPPERARMHEIGHT" radius="LEFTUPPERARMRADIUS"/>
+            </geometry>
+        </collision>
+    </link>	
+	<link name="LeftForeArm">
+        <inertial>
+            <mass value="LEFTFOREARMMASS"/>
+			<!--COM origin wrt jLeftElbow-->
+            <origin xyz="LEFTFOREARM_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTFOREARMINERTIAIXX" iyy="LEFTFOREARMINERTIAIYY" izz="LEFTFOREARMINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftElbow. RPY rotated of pi/2.-->
+            <origin xyz="LEFTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTFOREARMHEIGHT" radius="LEFTFOREARMRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftElbow. RPY rotated of pi/2.-->
+            <origin xyz="LEFTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
+            <geometry>
+                <cylinder length="LEFTFOREARMHEIGHT" radius="LEFTFOREARMRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftHand">
+        <inertial>
+            <mass value="LEFTHANDMASS"/>
+			<!--COM origin wrt jLeftWrist-->
+            <origin xyz="LEFTHAND_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTHANDINERTIAIXX" iyy="LEFTHANDINERTIAIYY" izz="LEFTHANDINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--COM origin wrt jLeftWrist-->
+            <origin xyz="LEFTHAND_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="LEFTHAND_BOX_SIZE"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--COM origin wrt jLeftWrist-->
+            <origin xyz="LEFTHAND_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="LEFTHAND_BOX_SIZE"/>
+            </geometry>
+        </collision>
+    </link>
+	<!--Chain from (16) to (19)-->
+    <link name="RightUpperLeg">
+        <inertial>
+            <mass value="RIGHTUPPERLEGMASS"/>
+			<!--COM origin wrt jRightHip-->
+            <origin xyz="RIGHTUPPERLEG_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTUPPERLEGINERTIAIXX" iyy="RIGHTUPPERLEGINERTIAIYY" izz="RIGHTUPPERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jRightHip-->
+            <origin xyz="RIGHTUPPERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="RIGHTUPPERLEGHEIGHT" radius="RIGHTUPPERLEGRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jRightHip-->
+            <origin xyz="RIGHTUPPERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="RIGHTUPPERLEGHEIGHT" radius="RIGHTUPPERLEGRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="RightLowerLeg">
+        <inertial>
+            <mass value="RIGHTLOWERLEGMASS"/>
+			<!--COM origin wrt jRightKnee-->
+            <origin xyz="RIGHTLOWERLEG_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTLOWERLEGINERTIAIXX" iyy="RIGHTLOWERLEGINERTIAIYY" izz="RIGHTLOWERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jRightKnee-->
+            <origin xyz="RIGHTLOWERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="RIGHTLOWERLEGHEIGHT" radius="RIGHTLOWERLEGRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jRightKnee-->
+            <origin xyz="RIGHTLOWERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="RIGHTLOWERLEGHEIGHT" radius="RIGHTLOWERLEGRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="RightFoot">
+        <inertial>
+            <mass value="RIGHTFOOTMASS"/>
+			<!--COM origin wrt jRightAnkle-->
+            <origin xyz="RIGHTFOOT_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTFOOTINERTIAIXX" iyy="RIGHTFOOTINERTIAIYY" izz="RIGHTFOOTINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jRightAnkle-->
+	    	<origin xyz="RIGHTFOOT_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="RIGHTFOOT_BOX_SIZE"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jRightAnkle-->
+		    <origin xyz="RIGHTFOOT_BOX_ORIGIN" rpy="0 0 0" />
+	            <geometry>
+	                <box size="RIGHTFOOT_BOX_SIZE"/>
+	            </geometry>
+        </collision>
+    </link>   
+    <link name="RightToe">
+        <inertial>
+            <mass value="RIGHTTOEMASS"/>
+			<!--COM origin wrt jRightBallFoot-->
+            <origin xyz="RIGHTTOE_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="RIGHTTOEINERTIAIXX" iyy="RIGHTTOEINERTIAIYY" izz="RIGHTTOEINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jRightBallFoot-->
+            <origin xyz="RIGHTTOE_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="RIGHTTOE_BOX_SIZE"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jRightBallFoot-->
+            <origin xyz="RIGHTTOE_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="RIGHTTOE_BOX_SIZE"/>
+            </geometry>
+        </collision>
+    </link>
+	<!--Chain from (20) to (23)-->
+    <link name="LeftUpperLeg">
+        <inertial>
+            <mass value="LEFTUPPERLEGMASS"/>
+			<!--COM origin wrt jLeftHip-->
+            <origin xyz="LEFTUPPERLEG_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTUPPERLEGINERTIAIXX" iyy="LEFTUPPERLEGINERTIAIYY" izz="LEFTUPPERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftHip-->
+            <origin xyz="LEFTUPPERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="LEFTUPPERLEGHEIGHT" radius="LEFTUPPERLEGRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftHip-->
+            <origin xyz="LEFTUPPERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="LEFTUPPERLEGHEIGHT" radius="LEFTUPPERLEGRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftLowerLeg">
+        <inertial>
+            <mass value="LEFTLOWERLEGMASS"/>
+			<!--COM origin wrt jLeftKnee-->
+            <origin xyz="LEFTLOWERLEG_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTLOWERLEGINERTIAIXX" iyy="LEFTLOWERLEGINERTIAIYY" izz="LEFTLOWERLEGINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftKnee-->
+            <origin xyz="LEFTLOWERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+		<cylinder length="LEFTLOWERLEGHEIGHT" radius="LEFTLOWERLEGRADIUS"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftKnee-->
+            <origin xyz="LEFTLOWERLEG_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+		<cylinder length="LEFTLOWERLEGHEIGHT" radius="LEFTLOWERLEGRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="LeftFoot">
+        <inertial>
+            <mass value="LEFTFOOTMASS"/>
+			<!--COM origin wrt jLeftAnkle-->
+            <origin xyz="LEFTFOOT_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTFOOTINERTIAIXX" iyy="LEFTFOOTINERTIAIYY" izz="LEFTFOOTINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftAnkle-->
+	   	 	<origin xyz="LEFTFOOT_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="LEFTFOOT_BOX_SIZE"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftAnkle-->
+		    <origin xyz="LEFTFOOT_BOX_ORIGIN" rpy="0 0 0" />
+	            <geometry>
+	                <box size="LEFTFOOT_BOX_SIZE"/>
+	            </geometry>
+        </collision>
+    </link>
+	<link name="LeftToe">
+        <inertial>
+            <mass value="LEFTTOEMASS"/>
+			<!--COM origin wrt jLeftBallFoot-->
+            <origin xyz="LEFTTOE_COM_ORIGIN" rpy="0 0 0" />
+            <inertia ixx="LEFTTOEINERTIAIXX" iyy="LEFTTOEINERTIAIYY" izz="LEFTTOEINERTIAIZZ" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+			<!--box origin wrt jLeftBallFoot-->
+            <origin xyz="LEFTTOE_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="LEFTTOE_BOX_SIZE"/>
+            </geometry>
+        </visual>
+
+        <collision>
+			<!--box origin wrt jLeftBallFoot-->
+            <origin xyz="LEFTTOE_BOX_ORIGIN" rpy="0 0 0" />
+            <geometry>
+                <box size="LEFTTOE_BOX_SIZE"/>
+            </geometry>
+        </collision>
+    </link>
 
 
-    <joint name="jLeftKnee" type="revolute">
-        <origin xyz="0 0 LOWERLEGHEIGHT" rpy="0 0 0"/>
-        <parent link="LeftLowerLeg"/>
-        <child link="LeftUpperLeg"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-    
-    <joint name="jLeftHip" type="revolute">
-        <origin xyz="0 0 UPPERLEGHEIGHT" rpy="0 0 0"/>
-        <parent link="LeftUpperLeg"/>
-        <child link="Pelvis"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-
+	<!--JOINTS-->
 	<joint name="jL5S1" type="revolute">
-        <origin xyz="0 -HIPPOSY PELVISBETA" rpy="0 0 0"/>
+		<!--Origin of child frame (jL5S1) wrt the parent frame (pHipOrigin)-->
+        <origin xyz="jL5S1_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
         <child link="L5"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-	
 	<joint name="jL4L3" type="revolute">
-        <origin xyz="0 0 L5HEIGHT" rpy="0 0 0"/>
+		<!--Origin of child frame (jL4L3) wrt the parent frame (jL5S1)-->
+        <origin xyz="jL4L3_ORIGIN" rpy="0 0 0"/>
         <parent link="L5"/>
         <child link="L3"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-	
 	<joint name="jL1T12" type="revolute">
-        <origin xyz="0 0 L3HEIGHT" rpy="0 0 0"/>
+		<!--Origin of child frame (jL1T12) wrt the parent frame (jL4L3)-->
+        <origin xyz="jL1T12_ORIGIN" rpy="0 0 0"/>
         <parent link="L3"/>
         <child link="T12"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-	
 	<joint name="jT9T8" type="revolute">
-        <origin xyz="0 0 T12HEIGHT" rpy="0 0 0"/>
+		<!--Origin of child frame (jT9T8) wrt the parent frame (jL1T12)-->
+        <origin xyz="jT9T8_ORIGIN" rpy="0 0 0"/>
         <parent link="T12"/>
         <child link="T8"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	
 	<joint name="jT1C7" type="revolute">
-        <origin xyz="0 0 T8BETA" rpy="0 0 0"/>
+		<!--Origin of child frame (jT1C7) wrt the parent frame (jT9T8)-->
+        <origin xyz="jT1C7_ORIGIN" rpy="0 0 0"/>
         <parent link="T8"/>
         <child link="Neck"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
-	
+    </joint>
 	<joint name="jC1Head" type="revolute">
-        <origin xyz="0 0 NECKHEIGHT" rpy="0 0 0"/>
+		<!--Origin of child frame (jC1Head) wrt the parent frame (jT1C7)-->
+        <origin xyz="jC1Head_ORIGIN" rpy="0 0 0"/>
         <parent link="Neck"/>
         <child link="Head"/>
         <dynamics damping="0.1" friction="0.0"/>
@@ -628,71 +617,73 @@
         <axis xyz="0 0 1" />
     </joint>
 	
-    <joint name="jRightHip" type="revolute">
-        <origin xyz="0 -HIPDOUBLEPOSY 0" rpy="0 0 0"/>
-        <parent link="Pelvis"/>
-        <child link="RightUpperLeg"/>
+	<joint name="jRightC7Shoulder" type="revolute">
+		<!--Origin of child frame (jRightC7Shoulder) wrt the parent frame (jT8)-->
+        <origin xyz="jRightC7Shoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="T8"/>
+        <child link="RightShoulder"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-
-    <joint name="jRightKnee" type="revolute">
-        <origin xyz="0 0 -UPPERLEGHEIGHT" rpy="0 0 0"/>
-        <parent link="RightUpperLeg"/>
-        <child link="RightLowerLeg"/>
+    <joint name="jRightShoulder" type="revolute">
+		<!--Origin of child frame (jRightShoulder) wrt the parent frame (jRightC7Shoulder)-->
+        <origin xyz="jRightShoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightShoulder"/>
+        <child link="RightUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>
-
-    <joint name="jRightAnkle" type="revolute">
-        <origin xyz="0 0 -LOWERLEGHEIGHT" rpy="0 0 0"/>
-        <parent link="RightLowerLeg"/>
-        <child link="RightFoot"/>
+    </joint>	
+    <joint name="jRightElbow" type="revolute">
+		<!--Origin of child frame (jRightElbow) wrt the parent frame (jRightC7Shoulder)-->
+        <origin xyz="jRightElbow_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightUpperArm"/>
+        <child link="RightForeArm"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+	<joint name="jRightWrist" type="revolute">
+		<!--Origin of child frame (jRightWrist) wrt the parent frame (jRightElbow)-->
+        <origin xyz="jRightWrist_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightForeArm"/>
+        <child link="RightHand"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
 	
-	<joint name="jRightBallFoot" type="revolute">
-        <origin xyz="TOEPOSX 0 -FOOTHALFBETA" rpy="0 0 0"/>
-        <parent link="RightFoot"/>
-        <child link="RightToe"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-
 	<joint name="jLeftC7Shoulder" type="revolute">
-        <origin xyz="0 T8HALFALFA SHOULDERURDFPOSZ" rpy="0 0 0"/>
+		<!--Origin of child frame (jLeftC7Shoulder) wrt the parent frame (jT8)-->
+        <origin xyz="jLeftC7Shoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="T8"/>
         <child link="LeftShoulder"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-
     <joint name="jLeftShoulder" type="revolute">
-        <origin xyz="0 SHOULDERHEIGHT 0" rpy="0 0 0"/>
+		<!--Origin of child frame (jLeftShoulder) wrt the parent frame (jLeftC7Shoulder)-->
+        <origin xyz="jLeftShoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftShoulder"/>
         <child link="LeftUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	
     <joint name="jLeftElbow" type="revolute">
-        <origin xyz="0 UPPERARMRADIUS -ARMURDFPOSZ" rpy="0 0 0"/>
+		<!--Origin of child frame (jLeftElbow) wrt the parent frame (jLeftC7Shoulder)-->
+        <origin xyz="jLeftElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperArm"/>
         <child link="LeftForeArm"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	
 	<joint name="jLeftWrist" type="revolute">
-        <origin xyz="0 0 -FOREARMHEIGHT" rpy="0 0 0"/>
+		<!--Origin of child frame (jLeftWrist) wrt the parent frame (jLeftElbow)-->
+        <origin xyz="jLeftWrist_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftForeArm"/>
         <child link="LeftHand"/>
         <dynamics damping="0.1" friction="0.0"/>
@@ -700,37 +691,75 @@
         <axis xyz="0 1 0" />
     </joint>
 	
-	<joint name="jRightC7Shoulder" type="revolute">
-        <origin xyz="0 -T8HALFALFA SHOULDERURDFPOSZ" rpy="0 0 0"/>
-        <parent link="T8"/>
-        <child link="RightShoulder"/>
+    <joint name="jRightHip" type="revolute">
+		<!--Origin of child frame (jRightHip) wrt the parent frame (pHipOrigin)-->
+        <origin xyz="jRightHip_ORIGIN" rpy="0 0 0"/>
+        <parent link="Pelvis"/>
+        <child link="RightUpperLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
-
-    <joint name="jRightShoulder" type="revolute">
-        <origin xyz="0 -SHOULDERHEIGHT 0" rpy="0 0 0"/>
-        <parent link="RightShoulder"/>
-        <child link="RightUpperArm"/>
+    <joint name="jRightKnee" type="revolute">
+		<!--Origin of child frame (jRightKnee) wrt the parent frame (jRightHip)-->
+        <origin xyz="jRightKnee_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightUpperLeg"/>
+        <child link="RightLowerLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
-	
-    <joint name="jRightElbow" type="revolute">
-        <origin xyz="0 -UPPERARMRADIUS -ARMURDFPOSZ" rpy="0 0 0"/>
-        <parent link="RightUpperArm"/>
-        <child link="RightForeArm"/>
+    </joint>
+    <joint name="jRightAnkle" type="revolute">
+		<!--Origin of child frame (jRightAnkle) wrt the parent frame (jRightKnee)-->
+        <origin xyz="jRightAnkle_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightLowerLeg"/>
+        <child link="RightFoot"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
+	<joint name="jRightBallFoot" type="revolute">
+		<!--Origin of child frame (jRightBallFoot)  wrt the parent frame (jRightAnkle) -->
+        <origin xyz="jRightBallFoot_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightFoot"/>
+        <child link="RightToe"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
 	
-	<joint name="jRightWrist" type="revolute">
-        <origin xyz="0 0 -FOREARMHEIGHT" rpy="0 0 0"/>
-        <parent link="RightForeArm"/>
-        <child link="RightHand"/>
+    <joint name="jLeftHip" type="revolute">
+		<!--Origin of child frame (jLeftHip) wrt the parent frame (pHipOrigin)-->
+        <origin xyz="jLeftHip_ORIGIN" rpy="0 0 0"/>
+        <parent link="Pelvis"/>
+        <child link="LeftUpperLeg"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jLeftKnee" type="revolute">
+		<!--Origin of child frame (jLeftKnee) wrt the parent frame (jLeftHip)-->
+        <origin xyz="jLeftKnee_ORIGIN" rpy="0 0 0"/>
+        <parent link="LeftUpperLeg"/>
+        <child link="LeftLowerLeg"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+	<joint name="jLeftAnkle" type="revolute">
+		<!--Origin of child frame (jLeftAnkle) wrt the parent frame (jLeftKnee)-->
+        <origin xyz="jLeftAnkle_ORIGIN" rpy="0 0 0"/>
+        <parent link="LeftLowerLeg"/>
+        <child link="LeftFoot"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+	<joint name="jLeftBallFoot" type="revolute">
+		<!--Origin of child frame (jLeftBallFoot) wrt the parent frame (jLeftAnkle)-->
+        <origin xyz="jLeftBallFoot_ORIGIN" rpy="0 0 0"/>
+        <parent link="LeftFoot"/>
+        <child link="LeftToe"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />

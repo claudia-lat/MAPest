@@ -4,6 +4,7 @@ rng(1); % forcing the casual generator to be const
 
 %% Add src to the path
 addpath(genpath('src')); 
+addpath(genpath('templates')); 
 addpath(genpath('../../src'));
 
 %% Java path needed by OSIM
@@ -43,23 +44,29 @@ if ~found
     fclose(fid);
 end
 
-%% Generate subject URDF model
-subjectID = 1;
-H = 1.70; % set manually the heigth in [m] of the subject;
-M = 61;   % set manually the mass in [kg] of the subject;
-subjectParams  = findAnthropometricParams(H,M);
-filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
-URDFmodel = createXsensLikeURDFmodel(subjectParams,filenameURDF);
-
 %% Load measurements from sensors
 % SUIT
 mvnxFilename = 'data/S_1bowingtask.mvnx';
 suit = extractSuitData(mvnxFilename,'data');
 % FORCEPLATE  --> to be done!
 
+%% Extract subject parameters from suit data 
+subjectID = 1;
+M = 60;
+subjectParamsFromData = subjectParamsComputation(suit, M);
+
+%% Create URDF model
+filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
+URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData,filenameURDF);
+
 %% Generate subject OSIM model
 filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
-OSIMmodel = createXsensLikeOSIMmodel(subjectParams, suit, filenameOSIM);
+OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
+
+%% Inverse Kinematic computation 
+setupFile = ('fileSetup.xml');
+trcFile = ('data/S_1bowingtask.trc');
+IK(filenameOSIM, trcFile, setupFile);
 
 %% Load URDF model
 % model.FileName = sprintf('models/XSensURDF_subj%d.urdf',subjectID);

@@ -32,6 +32,15 @@ subjectParams.pelvisMass     = 0.08 * M;
 subjectParams.pelvisIxx      = (subjectParams.pelvisMass/12) * (pelvis_y^2 + pelvis_z^2);
 subjectParams.pelvisIyy      = (subjectParams.pelvisMass/12) * (pelvis_z^2 + pelvis_x^2);
 subjectParams.pelvisIzz      = (subjectParams.pelvisMass/12) * (pelvis_x^2 + pelvis_y^2);
+% markers 
+[subjectParams.pHipOrigin, ~] = pointsFromName(pelvis_struct.points, 'pHipOrigin');
+[subjectParams.pRightASI, ~] = pointsFromName(pelvis_struct.points, 'pRightASI');
+[subjectParams.pLeftASI, ~] = pointsFromName(pelvis_struct.points, 'pLeftASI');
+[subjectParams.pRightCSI, ~] = pointsFromName(pelvis_struct.points, 'pRightCSI');
+[subjectParams.pLeftCSI, ~] = pointsFromName(pelvis_struct.points, 'pLeftCSI');
+[subjectParams.pRightIschialTub, ~] = pointsFromName(pelvis_struct.points, 'pRightIschialTub');
+[subjectParams.pLeftIschialTub, ~] = pointsFromName(pelvis_struct.points, 'pLeftIschialTub');
+[subjectParams.pSacrum, ~] = pointsFromName(pelvis_struct.points, 'pSacrum');
 %% -- CHAIN LINKS 2-7
 %% L5 (solid: box)
 % joints
@@ -49,6 +58,8 @@ subjectParams.L5Mass       = 0.102 * M;
 subjectParams.L5Ixx        = (subjectParams.L5Mass/12) * (3 * L5_y^2 + L5_z^2);
 subjectParams.L5Iyy        = (subjectParams.L5Mass/12) * (3 * L5_x^2 + L5_z^2);
 subjectParams.L5Izz        = (subjectParams.L5Mass/2) * (L5_x * L5_y);
+% markers 
+[subjectParams.pL5SpinalProcess, ~] = pointsFromName(L5_struct.points, 'pL5SpinalProcess');
 %% L3 (solid: box)
 % joints
 [L3_struct, ~] = linksFromName(suit.links, 'L3');
@@ -65,6 +76,8 @@ subjectParams.L3Mass       = 0.102 * M;
 subjectParams.L3Ixx        = (subjectParams.L3Mass/12) * (3 * L3_y^2 + L3_z^2);
 subjectParams.L3Iyy        = (subjectParams.L3Mass/12) * (3 * L3_x^2 + L3_z^2);
 subjectParams.L3Izz        = (subjectParams.L3Mass/2) * (L3_x * L3_y);
+% markers 
+[subjectParams.pL3SpinalProcess, ~] = pointsFromName(L3_struct.points, 'pL3SpinalProcess');
 %% T12 (solid: box)
 % joints
 [T12_struct, ~] = linksFromName(suit.links, 'T12');
@@ -81,6 +94,8 @@ subjectParams.T12Mass       = 0.102 * M;
 subjectParams.T12Ixx        = (subjectParams.T12Mass/12) * (3 * T12_y^2 + T12_z^2);
 subjectParams.T12Iyy        = (subjectParams.T12Mass/12) * (3 * T12_x^2 + T12_z^2);
 subjectParams.T12Izz        = (subjectParams.T12Mass/2) * (T12_x * T12_y);
+% markers 
+[subjectParams.pT12SpinalProcess, ~] = pointsFromName(T12_struct.points, 'pT12SpinalProcess');
 %% T8 (solid: box)
 % joints
 [T8_struct, ~] = linksFromName(suit.links, 'T8');
@@ -101,6 +116,12 @@ subjectParams.T8Mass     = 0.04 * M;
 subjectParams.T8Ixx      = (subjectParams.T8Mass/12) * (T8_y^2 + T8_z^2);
 subjectParams.T8Iyy      = (subjectParams.T8Mass/12) * (T8_z^2 + T8_x^2);
 subjectParams.T8Izz      = (subjectParams.T8Mass/12) * (T8_x^2 + T8_y^2);
+% markers
+[subjectParams.pPX, ~] = pointsFromName(T8_struct.points, 'pPX');
+[subjectParams.pIJ, ~] = pointsFromName(T8_struct.points, 'pIJ');
+[subjectParams.pT4SpinalProcess, ~] = pointsFromName(T8_struct.points, 'pT4SpinalProcess');
+[subjectParams.pT8SpinalProcess, ~] = pointsFromName(T8_struct.points, 'pT8SpinalProcess');
+[subjectParams.pC7SpinalProcess, ~] = pointsFromName(T8_struct.points, 'pC7SpinalProcess');
 %% NECK (solid: cylinder)
 % joints
 [neck_struct, ~] = linksFromName(suit.links, 'Neck');
@@ -128,6 +149,11 @@ subjectParams.headMass     = 0.036 * M;
 subjectParams.headIxx      = (2 * subjectParams.headMass/5) * ((subjectParams.head_z/2)^2);
 subjectParams.headIyy      = (2 * subjectParams.headMass/5) * ((subjectParams.head_z/2)^2);
 subjectParams.headIzz      = (2 * subjectParams.headMass/5) * ((subjectParams.head_z/2)^2);
+% markers
+[subjectParams.pTopOfHead, ~] = pointsFromName(head_struct.points, 'pTopOfHead');
+[subjectParams.pRightAuricularis, ~] = pointsFromName(head_struct.points, 'pRightAuricularis');
+[subjectParams.pLeftAuricularis, ~] = pointsFromName(head_struct.points, 'pLeftAuricularis');
+[subjectParams.pBackOfHead, ~] = pointsFromName(head_struct.points, 'pBackOfHead');
 %% -- CHAIN LINKS 8-11
 %% RIGHT SHOULDER (solid: cylinder)
 % joints
@@ -144,6 +170,8 @@ subjectParams.rightShoulderMass       = 0.031 * M;
 subjectParams.rightShoulderIxx        = (subjectParams.rightShoulderMass/12) * (3 * (subjectParams.rightSho_z/2)^2 + subjectParams.rightSho_y^2);
 subjectParams.rightShoulderIyy        = (subjectParams.rightShoulderMass/2) * ((subjectParams.rightSho_z/2)^2);
 subjectParams.rightShoulderIzz        = (subjectParams.rightShoulderMass/12) * (3 * (subjectParams.rightSho_z/2)^2 + subjectParams.rightSho_y^2);
+% markers
+[subjectParams.pRightAcromion, ~] = pointsFromName(rightShoulder_struct.points, 'pRightAcromion');
 %% RIGHT UPPER ARM (solid: cylinder)
 % joints
 [rightUpperArm_struct, ~] = linksFromName(suit.links, 'RightUpperArm');
@@ -160,6 +188,9 @@ subjectParams.rightUpperArmMass       = 0.030 * M;
 subjectParams.rightUpperArmIxx        = (subjectParams.rightUpperArmMass/12) * (3 * (subjectParams.rightUpperArm_z/2)^2 + subjectParams.rightUpperArm_y^2);
 subjectParams.rightUpperArmIyy        = (subjectParams.rightUpperArmMass/12) * (3 * (subjectParams.rightUpperArm_z/2)^2 + subjectParams.rightUpperArm_y^2);
 subjectParams.rightUpperArmIzz        = (subjectParams.rightUpperArmMass/2) * ((subjectParams.rightUpperArm_z/2)^2);
+% markers
+[subjectParams.pRightArmLatEpicondyle, ~] = pointsFromName(rightUpperArm_struct.points, 'pRightArmLatEpicondyle');
+[subjectParams.pRightArmMedEpicondyle, ~] = pointsFromName(rightUpperArm_struct.points, 'pRightArmMedEpicondyle');
 %% RIGHT FOREARM (solid: cylinder)
 % joints
 [rightForearm_struct, ~] = linksFromName(suit.links, 'RightForeArm');
@@ -174,6 +205,10 @@ subjectParams.rightForeArmMass       = 0.020 * M;
 subjectParams.rightForeArmIxx        = (subjectParams.rightForeArmMass/12) * (3 * (subjectParams.rightForeArm_z/2)^2 + subjectParams.rightForeArm_y^2);
 subjectParams.rightForeArmIyy        = (subjectParams.rightForeArmMass/12) * (3 * (subjectParams.rightForeArm_z/2)^2 + subjectParams.rightForeArm_y^2);
 subjectParams.rightForeArmIzz        = (subjectParams.rightForeArmMass/2) * ((subjectParams.rightForeArm_z/2)^2);
+% markers
+[subjectParams.pRightUlnarStyloid, ~] = pointsFromName(rightForearm_struct.points, 'pRightUlnarStyloid');
+[subjectParams.pRightRadialStyloid, ~] = pointsFromName(rightForearm_struct.points, 'pRightRadialStyloid');
+[subjectParams.pRightOlecranon, ~] = pointsFromName(rightForearm_struct.points, 'pRightOlecranon');
 %% RIGHT HAND (solid: box)
 % box sizes
 [rightHand_struct, ~] = linksFromName(suit.links, 'RightHand');
@@ -189,6 +224,10 @@ subjectParams.rightHandMass     = 0.006 * M;
 subjectParams.rightHandIxx      = (subjectParams.rightHandMass/12) * (rightHand_y^2 + rightHand_z^2);
 subjectParams.rightHandIyy      = (subjectParams.rightHandMass/12) * (rightHand_x^2 + rightHand_z^2);
 subjectParams.rightHandIzz      = (subjectParams.rightHandMass/12) * (rightHand_x^2 + rightHand_y^2);
+% markers
+[subjectParams.pRightTopOfHand, ~] = pointsFromName(rightHand_struct.points, 'pRightTopOfHand');
+[subjectParams.pRightPinky, ~] = pointsFromName(rightHand_struct.points, 'pRightPinky');
+[subjectParams.pRightBallHand, ~] = pointsFromName(rightHand_struct.points, 'pRightBallHand');
 %% -- CHAIN LINKS 12-15
 %% LEFT SHOULDER (solid: cylinder)
 % joints
@@ -205,6 +244,8 @@ subjectParams.leftShoulderMass       = 0.031 * M;
 subjectParams.leftShoulderIxx        = (subjectParams.leftShoulderMass/12) * (3 * (subjectParams.leftSho_z/2)^2 + subjectParams.leftSho_y^2);
 subjectParams.leftShoulderIyy        = (subjectParams.leftShoulderMass/2) * ((subjectParams.leftSho_z/2)^2);
 subjectParams.leftShoulderIzz        = (subjectParams.leftShoulderMass/12) * (3 * (subjectParams.leftSho_z/2)^2 + subjectParams.leftSho_y^2);
+% markers
+[subjectParams.pLeftAcromion, ~] = pointsFromName(leftShoulder_struct.points, 'pLeftAcromion');
 %% LEFT UPPER ARM (solid: cylinder)
 [leftUpperArm_struct, ~] = linksFromName(suit.links, 'LeftUpperArm');
 [subjectParams.jLeftElbow, ~] = pointsFromName(leftUpperArm_struct.points, 'jLeftElbow');
@@ -220,6 +261,9 @@ subjectParams.leftUpperArmMass       = 0.030 * M;
 subjectParams.leftUpperArmIxx        = (subjectParams.leftUpperArmMass/12) * (3 * (subjectParams.leftUpperArm_z/2)^2 + subjectParams.leftUpperArm_y^2);
 subjectParams.leftUpperArmIyy        = (subjectParams.leftUpperArmMass/12) * (3 * (subjectParams.leftUpperArm_z/2)^2 + subjectParams.leftUpperArm_y^2);
 subjectParams.leftUpperArmIzz        = (subjectParams.leftUpperArmMass/2) * ((subjectParams.leftUpperArm_z/2)^2);
+% markers
+[subjectParams.pLeftArmLatEpicondyle, ~] = pointsFromName(leftUpperArm_struct.points, 'pLeftArmLatEpicondyle');
+[subjectParams.pLeftArmMedEpicondyle, ~] = pointsFromName(leftUpperArm_struct.points, 'pLeftArmMedEpicondyle');
 %% LEFT FOREARM (solid: cylinder)
 [leftForearm_struct, ~] = linksFromName(suit.links, 'LeftForeArm');
 [subjectParams.jLeftWrist, ~] = pointsFromName(leftForearm_struct.points, 'jLeftWrist');
@@ -233,6 +277,10 @@ subjectParams.leftForeArmMass       = 0.020 * M;
 subjectParams.leftForeArmIxx        = (subjectParams.leftForeArmMass/12) * (3 * (subjectParams.leftForeArm_z/2)^2 + subjectParams.leftForeArm_y^2);
 subjectParams.leftForeArmIyy        = (subjectParams.leftForeArmMass/12) * (3 * (subjectParams.leftForeArm_z/2)^2 + subjectParams.leftForeArm_y^2);
 subjectParams.leftForeArmIzz        = (subjectParams.leftForeArmMass/2) * ((subjectParams.leftForeArm_z/2)^2);
+% markers
+[subjectParams.pLeftUlnarStyloid, ~] = pointsFromName(leftForearm_struct.points, 'pLeftUlnarStyloid');
+[subjectParams.pLeftRadialStyloid, ~] = pointsFromName(leftForearm_struct.points, 'pLeftRadialStyloid');
+[subjectParams.pLeftOlecranon, ~] = pointsFromName(leftForearm_struct.points, 'pLeftOlecranon');
 %% LEFT HAND (solid: box)
 % box sizes
 [leftHand_struct, ~] = linksFromName(suit.links, 'LeftHand');
@@ -248,6 +296,10 @@ subjectParams.leftHandMass     = 0.006 * M;
 subjectParams.leftHandIxx      = (subjectParams.leftHandMass/12) * (leftHand_y^2 + leftHand_z^2);
 subjectParams.leftHandIyy      = (subjectParams.leftHandMass/12) * (leftHand_x^2 + leftHand_z^2);
 subjectParams.leftHandIzz      = (subjectParams.leftHandMass/12) * (leftHand_x^2 + leftHand_y^2);
+% markers
+[subjectParams.pLeftTopOfHand, ~] = pointsFromName(leftHand_struct.points, 'pLeftTopOfHand');
+[subjectParams.pLeftPinky, ~] = pointsFromName(leftHand_struct.points, 'pLeftPinky');
+[subjectParams.pLeftBallHand, ~] = pointsFromName(leftHand_struct.points, 'pLeftBallHand');
 %% -- CHAIN LINKS 16-19
 %% RIGHT UPPER LEG (solid: cylinder)
 % joints
@@ -265,6 +317,9 @@ subjectParams.rightUpperLegMass       = 0.125 * M;
 subjectParams.rightUpperLegIxx        = (subjectParams.rightUpperLegMass/12) * (3 * (subjectParams.rightUpperLeg_x/2)^2 + subjectParams.rightUpperLeg_z^2);
 subjectParams.rightUpperLegIyy        = (subjectParams.rightUpperLegMass/12) * (3 * (subjectParams.rightUpperLeg_x/2)^2 + subjectParams.rightUpperLeg_z^2);
 subjectParams.rightUpperLegIzz        = (subjectParams.rightUpperLegMass/2) * ((subjectParams.rightUpperLeg_x/2)^2);
+% markers
+[subjectParams.pRightGreaterTrochanter, ~] = pointsFromName(rightUpperLeg_struct.points, 'pRightGreaterTrochanter');
+[subjectParams.pRightPatella, ~] = pointsFromName(rightUpperLeg_struct.points, 'pRightPatella');
 %% RIGHT LOWER LEG (solid: cylinder)
 % joints
 [rightLowerLeg_struct, ~] = linksFromName(suit.links, 'RightLowerLeg');
@@ -281,6 +336,12 @@ subjectParams.rightLowerLegMass     = 0.0365 * M;
 subjectParams.rightLowerLegIxx      = (subjectParams.rightLowerLegMass/12) * (3 * (subjectParams.rightLowerLeg_x/2)^2 + subjectParams.rightLowerLeg_z^2);
 subjectParams.rightLowerLegIyy      = (subjectParams.rightLowerLegMass/12) * (3 * (subjectParams.rightLowerLeg_x/2)^2 + subjectParams.rightLowerLeg_z^2);
 subjectParams.rightLowerLegIzz      = (subjectParams.rightLowerLegMass/2) * ((subjectParams.rightLowerLeg_x/2)^2);
+% markers
+[subjectParams.pRightKneeLatEpicondyle, ~] = pointsFromName(rightLowerLeg_struct.points, 'pRightKneeLatEpicondyle');
+[subjectParams.pRightKneeMedEpicondyle, ~] = pointsFromName(rightLowerLeg_struct.points, 'pRightKneeMedEpicondyle');
+[subjectParams.pRightLatMalleolus, ~] = pointsFromName(rightLowerLeg_struct.points, 'pRightLatMalleolus');
+[subjectParams.pRightMedMalleolus, ~] = pointsFromName(rightLowerLeg_struct.points, 'pRightMedMalleolus');
+[subjectParams.pRightTibialTub, ~] = pointsFromName(rightLowerLeg_struct.points, 'pRightTibialTub');
 %% RIGHT FOOT (solid: box)
 % joints
 [rightFoot_struct, ~] = linksFromName(suit.links, 'RightFoot');
@@ -299,6 +360,12 @@ subjectParams.rightFootMass      = 0.0130 *  M;
 subjectParams.rightFootIxx       = (subjectParams.rightFootMass/12) * (rightFoot_y^2 + rightFoot_z^2);
 subjectParams.rightFootIyy       = (subjectParams.rightFootMass/12) * (rightFoot_x^2 + rightFoot_z^2);
 subjectParams.rightFootIzz       = (subjectParams.rightFootMass/12) * (rightFoot_x^2 + rightFoot_y^2);
+% markers
+[subjectParams.pRightHeelFoot, ~] = pointsFromName(rightFoot_struct.points, 'pRightHeelFoot');
+[subjectParams.pRightFirstMetatarsal, ~] = pointsFromName(rightFoot_struct.points, 'pRightFirstMetatarsal');
+[subjectParams.pRightFifthMetatarsal, ~] = pointsFromName(rightFoot_struct.points, 'pRightFifthMetatarsal');
+[subjectParams.pRightPivotFoot, ~] = pointsFromName(rightFoot_struct.points, 'pRightPivotFoot');
+[subjectParams.pRightHeelCenter, ~] = pointsFromName(rightFoot_struct.points, 'pRightHeelCenter');
 %% RIGHT TOE (solid: box)
 % box sizes
 [rightToe_struct, ~] = linksFromName(suit.links, 'RightToe');
@@ -314,6 +381,8 @@ subjectParams.rightToeMass      = 0.0015 * M;
 subjectParams.rightToeIxx       = (subjectParams.rightToeMass/12) * (rightToe_y^2 + rightToe_z^2);
 subjectParams.rightToeIyy       = (subjectParams.rightToeMass/12) * (rightToe_x^2 + rightToe_z^2);
 subjectParams.rightToeIzz       = (subjectParams.rightToeMass/12) * (rightToe_x^2 + rightToe_y^2);
+% markers
+[subjectParams.pRightToe, ~] = pointsFromName(rightToe_struct.points, 'pRightToe');
 %% -- CHAIN LINKS 20-23
 %% LEFT UPPER LEG (solid: cylinder)
 % joints
@@ -331,6 +400,9 @@ subjectParams.leftUpperLegMass       = 0.125 * M;
 subjectParams.leftUpperLegIxx        = (subjectParams.leftUpperLegMass/12) * (3 * (subjectParams.leftUpperLeg_x/2)^2 + subjectParams.leftUpperLeg_z^2);
 subjectParams.leftUpperLegIyy        = (subjectParams.leftUpperLegMass/12) * (3 * (subjectParams.leftUpperLeg_x/2)^2 + subjectParams.leftUpperLeg_z^2);
 subjectParams.leftUpperLegIzz        = (subjectParams.leftUpperLegMass/2) * ((subjectParams.leftUpperLeg_x/2)^2);
+% markers
+[subjectParams.pLeftGreaterTrochanter, ~] = pointsFromName(leftUpperLeg_struct.points, 'pLeftGreaterTrochanter');
+[subjectParams.pLeftPatella, ~] = pointsFromName(leftUpperLeg_struct.points, 'pLeftPatella');
 %% LEFT LOWER LEG (solid: cylinder)
 % joints
 [leftLowerLeg_struct, ~] = linksFromName(suit.links, 'LeftLowerLeg');
@@ -347,6 +419,12 @@ subjectParams.leftLowerLegMass     = 0.0365 * M;
 subjectParams.leftLowerLegIxx      = (subjectParams.leftLowerLegMass/12) * (3 * (subjectParams.leftLowerLeg_x/2)^2 + subjectParams.leftLowerLeg_z^2);
 subjectParams.leftLowerLegIyy      = (subjectParams.leftLowerLegMass/12) * (3 * (subjectParams.leftLowerLeg_x/2)^2 + subjectParams.leftLowerLeg_z^2);
 subjectParams.leftLowerLegIzz      = (subjectParams.leftLowerLegMass/2) * ((subjectParams.leftLowerLeg_x/2)^2);
+% markers
+[subjectParams.pLeftKneeLatEpicondyle, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftKneeLatEpicondyle');
+[subjectParams.pLeftKneeMedEpicondyle, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftKneeMedEpicondyle');
+[subjectParams.pLeftLatMalleolus, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftLatMalleolus');
+[subjectParams.pLeftMedMalleolus, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftMedMalleolus');
+[subjectParams.pLeftTibialTub, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftTibialTub');
 %% LEFT FOOT (solid: box)
 % joints
 [leftFoot_struct, ~] = linksFromName(suit.links, 'LeftFoot');
@@ -365,6 +443,12 @@ subjectParams.leftFootMass      = 0.0130 *  M;
 subjectParams.leftFootIxx       = (subjectParams.leftFootMass/12) * (leftFoot_y^2 + leftFoot_z^2);
 subjectParams.leftFootIyy       = (subjectParams.leftFootMass/12) * (leftFoot_x^2 + leftFoot_z^2);
 subjectParams.leftFootIzz       = (subjectParams.leftFootMass/12) * (leftFoot_x^2 + leftFoot_y^2);
+% markers
+[subjectParams.pLeftHeelFoot, ~] = pointsFromName(leftFoot_struct.points, 'pLeftHeelFoot');
+[subjectParams.pLeftFirstMetatarsal, ~] = pointsFromName(leftFoot_struct.points, 'pLeftFirstMetatarsal');
+[subjectParams.pLeftFifthMetatarsal, ~] = pointsFromName(leftFoot_struct.points, 'pLeftFifthMetatarsal');
+[subjectParams.pLeftPivotFoot, ~] = pointsFromName(leftFoot_struct.points, 'pLeftPivotFoot');
+[subjectParams.pLeftHeelCenter, ~] = pointsFromName(leftFoot_struct.points, 'pLeftHeelCenter');
 %% LEFT TOE (solid: box)
 % box sizes
 [leftToe_struct, ~] = linksFromName(suit.links, 'LeftToe');
@@ -380,9 +464,8 @@ subjectParams.leftToeMass      = 0.0015 * M;
 subjectParams.leftToeIxx       = (subjectParams.leftToeMass/12) * (leftToe_y^2 + leftToe_z^2);
 subjectParams.leftToeIyy       = (subjectParams.leftToeMass/12) * (leftToe_x^2 + leftToe_z^2);
 subjectParams.leftToeIzz       = (subjectParams.leftToeMass/12) * (leftToe_x^2 + leftToe_y^2);
-% % % %% TOTAL HEIGHT
-% % % H = footBeta + lowerLegHeight + upperLegHeight + pelvisBeta +...
-% % %     L5Height + L3Height + T12Height + T8Beta + neckHeight + headDiameter;
+% markers
+[subjectParams.pLeftToe, ~] = pointsFromName(leftToe_struct.points, 'pLeftToe');
 end
 
 
