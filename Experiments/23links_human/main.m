@@ -65,7 +65,7 @@ OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
 
 %% Inverse Kinematic computation 
 setupFile = ('fileSetup.xml');
-trcFile = ('data/S_1bowingtask.trc');
+trcFile = ('data/S_1bowingtaskForIK.trc');
 IK(filenameOSIM, trcFile, setupFile);
 
 %% Load URDF model
