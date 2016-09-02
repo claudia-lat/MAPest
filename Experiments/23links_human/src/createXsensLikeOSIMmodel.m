@@ -1,18 +1,16 @@
 function [osimModelTemplate] = createXsensLikeOSIMmodel(subjectParams, filename)
-%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. 
+%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. Joints of 
+% the OSIM model are spherical joints.  The base of the model (pelvis) is 
+% defined as floating base.
 %
 % Inputs : 
 % -  subjectParams  : anthropometric parameters;
-% -  suit           : suit data stuct. Point in suit They represents 
-%                     location of fake markerss in global suit
-%                     reference frame;
 % -  filename       : (optional) allows to save the file.osim in a folder 
 %                      called 'Models'.  
-% TEMPLATE FOR OSIM : SPHERICAL JOINTS, FLOATING BASE
     
 osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate.osim');
 %% -- LINK BASE
-%% PELVIS
+%% PELVIS (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'PELVIS_BOX_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'PELVIS_BOX_SIZE',num2str(subjectParams.pelvisBox));
 osimModelTemplate = strrep(osimModelTemplate,'PELVIS_COM_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));
@@ -31,7 +29,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PRIGHTISCHIALTUB',num2str(subjectP
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTISCHIALTUB',num2str(subjectParams.pLeftIschialTub'));
 osimModelTemplate = strrep(osimModelTemplate,'PSACRUM',num2str(subjectParams.pSacrum'));
 %% -- CHAIN LINKS 2-7
-%% L5
+%% L5 (solid: elliptic cylinder  )
 osimModelTemplate = strrep(osimModelTemplate,'L5_BOX_ORIGIN',num2str(subjectParams.L5BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'L5_COM_ORIGIN',num2str(subjectParams.L5BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'jL5S1_ORIGIN',num2str(subjectParams.jL5S1'));
@@ -42,7 +40,7 @@ osimModelTemplate = strrep(osimModelTemplate,'L5INERTIAIYY',num2str(subjectParam
 osimModelTemplate = strrep(osimModelTemplate,'L5INERTIAIZZ',num2str(subjectParams.L5Izz));
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PL5SPINALPROCESS',num2str(subjectParams.pL5SpinalProcess'));
-%% L3
+%% L3 (solid: elliptic cylinder  )
 osimModelTemplate = strrep(osimModelTemplate,'L3_BOX_ORIGIN',num2str(subjectParams.L3BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'L3_COM_ORIGIN',num2str(subjectParams.L3BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'jL4L3_ORIGIN',num2str(subjectParams.jL4L3'));
@@ -53,7 +51,7 @@ osimModelTemplate = strrep(osimModelTemplate,'L3INERTIAIYY',num2str(subjectParam
 osimModelTemplate = strrep(osimModelTemplate,'L3INERTIAIZZ',num2str(subjectParams.L3Izz));
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PL3SPINALPROCESS',num2str(subjectParams.pL3SpinalProcess'));
-%% T12
+%% T12 (solid: elliptic cylinder  )
 osimModelTemplate = strrep(osimModelTemplate,'T12_BOX_ORIGIN',num2str(subjectParams.T12BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'T12_COM_ORIGIN',num2str(subjectParams.T12BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'jL1T12_ORIGIN',num2str(subjectParams.jL1T12'));
@@ -64,7 +62,7 @@ osimModelTemplate = strrep(osimModelTemplate,'T12INERTIAIYY',num2str(subjectPara
 osimModelTemplate = strrep(osimModelTemplate,'T12INERTIAIZZ',num2str(subjectParams.T12Izz));
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PT12SPINALPROCESS',num2str(subjectParams.pT12SpinalProcess'));
-%% T8
+%% T8 (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'T8_BOX_ORIGIN',num2str(subjectParams.T8BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'T8_COM_ORIGIN',num2str(subjectParams.T8BoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'T8_BOX_SIZE',num2str(subjectParams.T8Box));
@@ -79,7 +77,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PIJ',num2str(subjectParams.pIJ'));
 osimModelTemplate = strrep(osimModelTemplate,'PT4SPINALPROCESS',num2str(subjectParams.pT4SpinalProcess'));
 osimModelTemplate = strrep(osimModelTemplate,'PT8SPINALPROCESS',num2str(subjectParams.pT8SpinalProcess'));
 osimModelTemplate = strrep(osimModelTemplate,'PC7SPINALPROCESS',num2str(subjectParams.pC7SpinalProcess'));
-%% NECK
+%% NECK (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'NECK_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'NECK_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'NECKHEIGHT',num2str(subjectParams.neck_z));
@@ -89,7 +87,7 @@ osimModelTemplate = strrep(osimModelTemplate,'NECKMASS',num2str(subjectParams.ne
 osimModelTemplate = strrep(osimModelTemplate,'NECKINERTIAIXX',num2str(subjectParams.neckIxx));
 osimModelTemplate = strrep(osimModelTemplate,'NECKINERTIAIYY',num2str(subjectParams.neckIyy));
 osimModelTemplate = strrep(osimModelTemplate,'NECKINERTIAIZZ',num2str(subjectParams.neckIzz));
-%% HEAD
+%% HEAD (solid: sphere)
 osimModelTemplate = strrep(osimModelTemplate,'HEAD_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'HEAD_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'jC1Head_ORIGIN',num2str(subjectParams.jC1Head'));
@@ -105,7 +103,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PRIGHTAURICULARIS',num2str(subject
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTAURICULARIS',num2str(subjectParams.pLeftAuricularis'));
 osimModelTemplate = strrep(osimModelTemplate,'PBACKOFHEAD',num2str(subjectParams.pBackOfHead'));
 %% -- CHAIN LINKS 8-11
-%% RIGHT SHOULDER
+%% RIGHT SHOULDER (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDER_BOX_ORIGIN',num2str(subjectParams.rightShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDER_COM_ORIGIN',num2str(subjectParams.rightShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERHEIGHT',num2str(subjectParams.rightSho_y));
@@ -117,7 +115,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERINERTIAIYY',num2str(s
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERINERTIAIZZ',num2str(subjectParams.rightShoulderIzz));
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTACROMION',num2str(subjectParams.pRightAcromion'));
-%% RIGHT UPPER ARM
+%% RIGHT UPPER ARM (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERARM_BOX_ORIGIN',num2str(subjectParams.rightUpperArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERARM_COM_ORIGIN',num2str(subjectParams.rightUpperArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERARMHEIGHT',num2str(subjectParams.rightUpperArm_y));
@@ -130,7 +128,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERARMINERTIAIZZ',num2str(s
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTARMLATEPICONDYLE',num2str(subjectParams.pRightArmLatEpicondyle'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTARMMEDEPICONDYLE',num2str(subjectParams.pRightArmMedEpicondyle'));
-%% RIGHT FORE ARM
+%% RIGHT FORE ARM (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOREARM_BOX_ORIGIN',num2str(subjectParams.rightForeArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOREARM_COM_ORIGIN',num2str(subjectParams.rightForeArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOREARMHEIGHT',num2str(subjectParams.rightForeArm_y));
@@ -144,7 +142,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOREARMINERTIAIZZ',num2str(su
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTULNARSTYLOID',num2str(subjectParams.pRightUlnarStyloid'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTRADIALSTYLOID',num2str(subjectParams.pRightRadialStyloid'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTOLECRANON',num2str(subjectParams.pRightOlecranon'));
-%% RIGHT HAND
+%% RIGHT HAND (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTHAND_BOX_ORIGIN',num2str(subjectParams.rightHandBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTHAND_COM_ORIGIN',num2str(subjectParams.rightHandBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTHAND_BOX_SIZE',num2str(subjectParams.rightHandBox));
@@ -158,7 +156,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PRIGHTTOPOFHAND',num2str(subjectPa
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTPINKY',num2str(subjectParams.pRightPinky'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTBALLHAND',num2str(subjectParams.pRightBallHand'));
 %% -- CHAIN LINKS 12-15
-%% LEFT SHOULDER
+%% LEFT SHOULDER (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDER_BOX_ORIGIN',num2str(subjectParams.leftShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDER_COM_ORIGIN',num2str(subjectParams.leftShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERHEIGHT',num2str(subjectParams.leftSho_y));
@@ -170,7 +168,7 @@ osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERINERTIAIYY',num2str(su
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERINERTIAIZZ',num2str(subjectParams.leftShoulderIzz));
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTACROMION',num2str(subjectParams.pLeftAcromion'));
-%% LEFT UPPER ARM
+%% LEFT UPPER ARM (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERARM_BOX_ORIGIN',num2str(subjectParams.leftUpperArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERARM_COM_ORIGIN',num2str(subjectParams.leftUpperArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERARMHEIGHT',num2str(subjectParams.leftUpperArm_y));
@@ -183,7 +181,7 @@ osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERARMINERTIAIZZ',num2str(su
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTARMLATEPICONDYLE',num2str(subjectParams.pLeftArmLatEpicondyle'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTARMMEDEPICONDYLE',num2str(subjectParams.pLeftArmMedEpicondyle'));
-%% LEFT FORE ARM
+%% LEFT FORE ARM (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOREARM_BOX_ORIGIN',num2str(subjectParams.leftForeArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOREARM_COM_ORIGIN',num2str(subjectParams.leftForeArmBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOREARMHEIGHT',num2str(subjectParams.leftForeArm_y));
@@ -197,7 +195,7 @@ osimModelTemplate = strrep(osimModelTemplate,'LEFTFOREARMINERTIAIZZ',num2str(sub
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTULNARSTYLOID',num2str(subjectParams.pLeftUlnarStyloid'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTRADIALSTYLOID',num2str(subjectParams.pLeftRadialStyloid'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTOLECRANON',num2str(subjectParams.pLeftOlecranon'));
-%% LEFT HAND
+%% LEFT HAND (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTHAND_BOX_ORIGIN',num2str(subjectParams.leftHandBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTHAND_COM_ORIGIN',num2str(subjectParams.leftHandBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTHAND_BOX_SIZE',num2str(subjectParams.leftHandBox));
@@ -211,7 +209,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PLEFTTOPOFHAND',num2str(subjectPar
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTPINKY',num2str(subjectParams.pLeftPinky'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTBALLHAND',num2str(subjectParams.pLeftBallHand'));
 %% -- CHAIN LINKS 16-19
-%% RIGHT UPPER LEG
+%% RIGHT UPPER LEG (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERLEG_BOX_ORIGIN',num2str(subjectParams.rightUpperLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERLEG_COM_ORIGIN',num2str(subjectParams.rightUpperLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERLEGHEIGHT',num2str(subjectParams.rightUpperLeg_z));
@@ -224,7 +222,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTUPPERLEGINERTIAIZZ',num2str(s
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTGREATERTROCHANTER',num2str(subjectParams.pRightGreaterTrochanter'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTPATELLA',num2str(subjectParams.pRightPatella'));
-%% RIGHT LOWER LEG
+%% RIGHT LOWER LEG (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTLOWERLEG_BOX_ORIGIN',num2str(subjectParams.rightLowerLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTLOWERLEG_COM_ORIGIN',num2str(subjectParams.rightLowerLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTLOWERLEGHEIGHT',num2str(subjectParams.rightLowerLeg_z));
@@ -240,7 +238,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PRIGHTKNEEMEDEPICONDYLE',num2str(s
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTLATMALLEOLUS',num2str(subjectParams.pRightLatMalleolus'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTMEDMALLEOLUS',num2str(subjectParams.pRightMedMalleolus'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTTIBIALTUB',num2str(subjectParams.pRightTibialTub'));
-%% RIGHT FOOT
+%% RIGHT FOOT (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOOT_BOX_ORIGIN',num2str(subjectParams.rightFootBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOOT_COM_ORIGIN',num2str(subjectParams.rightFootBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTFOOT_BOX_SIZE',num2str(subjectParams.rightFootBox));
@@ -255,7 +253,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PRIGHTFIRSTMETATARSAL',num2str(sub
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTFIFTHMETATARSAL',num2str(subjectParams.pRightFifthMetatarsal'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTPIVOTFOOT',num2str(subjectParams.pRightPivotFoot'));
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTHEELCENTER',num2str(subjectParams.pRightHeelCenter'));
-%% RIGHT TOE
+%% RIGHT TOE (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTTOE_BOX_ORIGIN',num2str(subjectParams.rightToeBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTTOE_COM_ORIGIN',num2str(subjectParams.rightToeBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTTOE_BOX_SIZE',num2str(subjectParams.rightToeBox));
@@ -267,7 +265,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTTOEINERTIAIZZ',num2str(subjec
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PRIGHTTOE',num2str(subjectParams.pRightToe'));
 %% -- CHAIN LINKS 20-23
-%% LEFT UPPER LEG
+%% LEFT UPPER LEG (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERLEG_BOX_ORIGIN',num2str(subjectParams.leftUpperLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERLEG_COM_ORIGIN',num2str(subjectParams.leftUpperLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERLEGHEIGHT',num2str(subjectParams.leftUpperLeg_z));
@@ -280,7 +278,7 @@ osimModelTemplate = strrep(osimModelTemplate,'LEFTUPPERLEGINERTIAIZZ',num2str(su
 % Markers
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTGREATERTROCHANTER',num2str(subjectParams.pLeftGreaterTrochanter'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTPATELLA',num2str(subjectParams.pLeftPatella'));
-%% LEFT LOWER LEG
+%% LEFT LOWER LEG (solid: cylinder)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTLOWERLEG_BOX_ORIGIN',num2str(subjectParams.leftLowerLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTLOWERLEG_COM_ORIGIN',num2str(subjectParams.leftLowerLegBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTLOWERLEGHEIGHT',num2str(subjectParams.leftLowerLeg_z));
@@ -296,7 +294,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PLEFTKNEEMEDEPICONDYLE',num2str(su
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTLATMALLEOLUS',num2str(subjectParams.pLeftLatMalleolus'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTMEDMALLEOLUS',num2str(subjectParams.pLeftMedMalleolus'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTTIBIALTUB',num2str(subjectParams.pLeftTibialTub'));
-%% LEFT FOOT
+%% LEFT FOOT (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOOT_BOX_ORIGIN',num2str(subjectParams.leftFootBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOOT_COM_ORIGIN',num2str(subjectParams.leftFootBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTFOOT_BOX_SIZE',num2str(subjectParams.leftFootBox));
@@ -311,7 +309,7 @@ osimModelTemplate = strrep(osimModelTemplate,'PLEFTFIRSTMETATARSAL',num2str(subj
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTFIFTHMETATARSAL',num2str(subjectParams.pLeftFifthMetatarsal'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTPIVOTFOOT',num2str(subjectParams.pLeftPivotFoot'));
 osimModelTemplate = strrep(osimModelTemplate,'PLEFTHEELCENTER',num2str(subjectParams.pLeftHeelCenter'));
-%% LEFT TOE
+%% LEFT TOE (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'LEFTTOE_BOX_ORIGIN',num2str(subjectParams.leftToeBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTTOE_COM_ORIGIN',num2str(subjectParams.leftToeBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTTOE_BOX_SIZE',num2str(subjectParams.leftToeBox));
