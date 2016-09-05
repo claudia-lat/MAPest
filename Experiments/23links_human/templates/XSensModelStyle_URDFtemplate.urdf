@@ -27,6 +27,48 @@
         </collision>
     </link>
     <!--Chain from (2) to (7)-->
+	<link name="L5_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="L5_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
 	<link name="L5">
         <inertial>
             <mass value="L5MASS"/>
@@ -51,6 +93,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="L3_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="L3_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="L3">
         <inertial>
             <mass value="L3MASS"/>
@@ -75,6 +159,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="T12_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="T12_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="T12">
         <inertial>
             <mass value="T12MASS"/>
@@ -99,6 +225,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="T8_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="T8_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="T8">
         <inertial>
             <mass value="T8MASS"/>
@@ -123,6 +291,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="Neck_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="Neck_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="Neck">
         <inertial>
             <mass value="NECKMASS"/>
@@ -144,6 +354,48 @@
             <origin xyz="NECK_BOX_ORIGIN" rpy="0 0 0" />
             <geometry>
                 <cylinder length="NECKHEIGHT" radius="NECKRADIUS"/>
+            </geometry>
+        </collision>
+    </link>	
+	<link name="Head_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="Head_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
             </geometry>
         </collision>
     </link>	
@@ -172,6 +424,48 @@
         </collision>
     </link>
 	<!--Chain from (8) to (11)-->
+	<link name="RightShoulder_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightShoulder_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
 	<link name="RightShoulder">
         <inertial>
             <mass value="RIGHTSHOULDERMASS"/>
@@ -193,6 +487,48 @@
             <origin xyz="RIGHTSHOULDER_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
                 <cylinder length="RIGHTSHOULDERHEIGHT" radius="RIGHTSHOULDERRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightUpperArm_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightUpperArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
             </geometry>
         </collision>
     </link>
@@ -220,6 +556,48 @@
             </geometry>
         </collision>
     </link>	
+	<link name="RightForeArm_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightForeArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
 	<link name="RightForeArm">
         <inertial>
             <mass value="RIGHTFOREARMMASS"/>
@@ -241,6 +619,48 @@
             <origin xyz="RIGHTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
                 <cylinder length="RIGHTFOREARMHEIGHT" radius="RIGHTFOREARMRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightHand_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightHand_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
             </geometry>
         </collision>
     </link>
@@ -269,6 +689,48 @@
         </collision>
     </link>
 	<!--Chain from (12) to (15)-->
+	<link name="LeftShoulder_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftShoulder_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="LeftShoulder">
         <inertial>
             <mass value="LEFTSHOULDERMASS"/>
@@ -293,7 +755,49 @@
             </geometry>
         </collision>
     </link>
-    <link name="LeftUpperArm">
+	<link name="LeftUpperArm_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftUpperArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftUpperArm">
         <inertial>
             <mass value="LEFTUPPERARMMASS"/>
 			<!--COM origin wrt jLeftShoulder-->
@@ -317,6 +821,48 @@
             </geometry>
         </collision>
     </link>	
+	<link name="LeftForeArm_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftForeArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
 	<link name="LeftForeArm">
         <inertial>
             <mass value="LEFTFOREARMMASS"/>
@@ -338,6 +884,48 @@
             <origin xyz="LEFTFOREARM_BOX_ORIGIN" rpy="1.5708 0 0" />
             <geometry>
                 <cylinder length="LEFTFOREARMHEIGHT" radius="LEFTFOREARMRADIUS"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftHand_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftHand_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
             </geometry>
         </collision>
     </link>
@@ -366,6 +954,48 @@
         </collision>
     </link>
 	<!--Chain from (16) to (19)-->
+	<link name="RightUpperLeg_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightUpperLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
     <link name="RightUpperLeg">
         <inertial>
             <mass value="RIGHTUPPERLEGMASS"/>
@@ -390,6 +1020,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="RightLowerLeg_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightLowerLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
     <link name="RightLowerLeg">
         <inertial>
             <mass value="RIGHTLOWERLEGMASS"/>
@@ -414,6 +1086,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="RightFoot_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightFoot_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
     <link name="RightFoot">
         <inertial>
             <mass value="RIGHTFOOTMASS"/>
@@ -437,7 +1151,49 @@
 	                <box size="RIGHTFOOT_BOX_SIZE"/>
 	            </geometry>
         </collision>
-    </link>   
+    </link> 
+	<link name="RightToe_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="RightToe_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
     <link name="RightToe">
         <inertial>
             <mass value="RIGHTTOEMASS"/>
@@ -463,6 +1219,48 @@
         </collision>
     </link>
 	<!--Chain from (20) to (23)-->
+	<link name="LeftUpperLeg_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftUpperLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
     <link name="LeftUpperLeg">
         <inertial>
             <mass value="LEFTUPPERLEGMASS"/>
@@ -487,6 +1285,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="LeftLowerLeg_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftLowerLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
 	<link name="LeftLowerLeg">
         <inertial>
             <mass value="LEFTLOWERLEGMASS"/>
@@ -511,6 +1351,48 @@
             </geometry>
         </collision>
     </link>
+	<link name="LeftFoot_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftFoot_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>	
     <link name="LeftFoot">
         <inertial>
             <mass value="LEFTFOOTMASS"/>
@@ -533,6 +1415,48 @@
 	            <geometry>
 	                <box size="LEFTFOOT_BOX_SIZE"/>
 	            </geometry>
+        </collision>
+    </link>
+	<link name="LeftToe_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </collision>
+    </link>
+	<link name="LeftToe_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+            </geometry>
         </collision>
     </link>
 	<link name="LeftToe">
@@ -562,207 +1486,538 @@
 
 
 	<!--JOINTS-->
-	<joint name="jL5S1" type="revolute">
-		<!--Origin of child frame (jL5S1) wrt the parent frame (pHipOrigin)-->
+	<!--Chain from (2) to (7)-->
+	<joint name="jL5S1_rotx" type="revolute">
         <origin xyz="jL5S1_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
+        <child link="L5_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jL5S1_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L5_f1"/>
+        <child link="L5_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jL5S1_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L5_f2"/>
         <child link="L5"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jL4L3" type="revolute">
-		<!--Origin of child frame (jL4L3) wrt the parent frame (jL5S1)-->
+	<joint name="jL4L3_rotx" type="revolute">
         <origin xyz="jL4L3_ORIGIN" rpy="0 0 0"/>
         <parent link="L5"/>
+        <child link="L3_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jL4L3_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L3_f1"/>
+        <child link="L3_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jL4L3_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L3_f2"/>
         <child link="L3"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jL1T12" type="revolute">
-		<!--Origin of child frame (jL1T12) wrt the parent frame (jL4L3)-->
+	<joint name="jL1T12_rotx" type="revolute">
         <origin xyz="jL1T12_ORIGIN" rpy="0 0 0"/>
         <parent link="L3"/>
+        <child link="T12_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jL1T12_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="T12_f1"/>
+        <child link="T12_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jL1T12_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="T12_f2"/>
         <child link="T12"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jT9T8" type="revolute">
-		<!--Origin of child frame (jT9T8) wrt the parent frame (jL1T12)-->
+	<joint name="jT9T8_rotx" type="revolute">
         <origin xyz="jT9T8_ORIGIN" rpy="0 0 0"/>
         <parent link="T12"/>
+        <child link="T8_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jT9T8_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="T8_f1"/>
+        <child link="T8_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jT9T8_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="T8_f2"/>
         <child link="T8"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>	
+	<joint name="jT1C7_rotx" type="revolute">
+        <origin xyz="jT1C7_ORIGIN" rpy="0 0 0"/>
+        <parent link="T8"/>
+        <child link="Neck_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jT1C7_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="Neck_f1"/>
+        <child link="Neck_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jT1C7_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="Neck_f2"/>
+        <child link="Neck"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+	<joint name="jC1Head_rotx" type="revolute">
+        <origin xyz="jC1Head_ORIGIN" rpy="0 0 0"/>
+        <parent link="Neck"/>
+        <child link="Head_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jC1Head_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="Head_f1"/>
+        <child link="Head_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jC1Head_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="Head_f2"/>
+        <child link="Head"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+	<!--Chain from (8) to (11)-->
+	<joint name="jRightC7Shoulder_rotx" type="revolute">
+        <origin xyz="jRightC7Shoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="T8"/>
+        <child link="RightShoulder_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightC7Shoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightShoulder_f1"/>
+        <child link="RightShoulder_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightC7Shoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightShoulder_f2"/>
+        <child link="RightShoulder"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+	<joint name="jRightShoulder_rotx" type="revolute">
+        <origin xyz="jRightShoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightShoulder"/>
+        <child link="RightUpperArm_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightShoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightUpperArm_f1"/>
+        <child link="RightUpperArm_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	<joint name="jT1C7" type="revolute">
-		<!--Origin of child frame (jT1C7) wrt the parent frame (jT9T8)-->
-        <origin xyz="jT1C7_ORIGIN" rpy="0 0 0"/>
-        <parent link="T8"/>
-        <child link="Neck"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-	<joint name="jC1Head" type="revolute">
-		<!--Origin of child frame (jC1Head) wrt the parent frame (jT1C7)-->
-        <origin xyz="jC1Head_ORIGIN" rpy="0 0 0"/>
-        <parent link="Neck"/>
-        <child link="Head"/>
+    <joint name="jRightShoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightUpperArm_f2"/>
+        <child link="RightUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	
-	<joint name="jRightC7Shoulder" type="revolute">
-		<!--Origin of child frame (jRightC7Shoulder) wrt the parent frame (jT8)-->
-        <origin xyz="jRightC7Shoulder_ORIGIN" rpy="0 0 0"/>
-        <parent link="T8"/>
-        <child link="RightShoulder"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-    <joint name="jRightShoulder" type="revolute">
-		<!--Origin of child frame (jRightShoulder) wrt the parent frame (jRightC7Shoulder)-->
-        <origin xyz="jRightShoulder_ORIGIN" rpy="0 0 0"/>
-        <parent link="RightShoulder"/>
-        <child link="RightUpperArm"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>	
-    <joint name="jRightElbow" type="revolute">
-		<!--Origin of child frame (jRightElbow) wrt the parent frame (jRightC7Shoulder)-->
+	<joint name="jRightElbow_rotx" type="revolute">
         <origin xyz="jRightElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="RightUpperArm"/>
+        <child link="RightForeArm_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightElbow_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightForeArm_f1"/>
+        <child link="RightForeArm_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightElbow_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightForeArm_f2"/>
         <child link="RightForeArm"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>	
+	<joint name="jRightWrist_rotx" type="revolute">
+        <origin xyz="jRightWrist_ORIGIN" rpy="0 0 0"/>
+        <parent link="RightForeArm"/>
+        <child link="RightHand_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightWrist_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightHand_f1"/>
+        <child link="RightHand_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightWrist_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightHand_f2"/>
+        <child link="RightHand"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+	<!--Chain from (12) to (15)-->
+	<joint name="jLeftC7Shoulder_rotx" type="revolute">
+        <origin xyz="jLeftC7Shoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="T8"/>
+        <child link="LeftShoulder_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftC7Shoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftShoulder_f1"/>
+        <child link="LeftShoulder_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftC7Shoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftShoulder_f2"/>
+        <child link="LeftShoulder"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+	<joint name="jLeftShoulder_rotx" type="revolute">
+        <origin xyz="jLeftShoulder_ORIGIN" rpy="0 0 0"/>
+        <parent link="LeftShoulder"/>
+        <child link="LeftUpperArm_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftShoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftUpperArm_f1"/>
+        <child link="LeftUpperArm_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	<joint name="jRightWrist" type="revolute">
-		<!--Origin of child frame (jRightWrist) wrt the parent frame (jRightElbow)-->
-        <origin xyz="jRightWrist_ORIGIN" rpy="0 0 0"/>
-        <parent link="RightForeArm"/>
-        <child link="RightHand"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-	
-	<joint name="jLeftC7Shoulder" type="revolute">
-		<!--Origin of child frame (jLeftC7Shoulder) wrt the parent frame (jT8)-->
-        <origin xyz="jLeftC7Shoulder_ORIGIN" rpy="0 0 0"/>
-        <parent link="T8"/>
-        <child link="LeftShoulder"/>
-        <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
-    </joint>
-    <joint name="jLeftShoulder" type="revolute">
-		<!--Origin of child frame (jLeftShoulder) wrt the parent frame (jLeftC7Shoulder)-->
-        <origin xyz="jLeftShoulder_ORIGIN" rpy="0 0 0"/>
-        <parent link="LeftShoulder"/>
+    <joint name="jLeftShoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftUpperArm_f2"/>
         <child link="LeftUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <axis xyz="0 0 1" />
     </joint>	
-    <joint name="jLeftElbow" type="revolute">
-		<!--Origin of child frame (jLeftElbow) wrt the parent frame (jLeftC7Shoulder)-->
+    <joint name="jLeftElbow_rotx" type="revolute">
         <origin xyz="jLeftElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperArm"/>
-        <child link="LeftForeArm"/>
+        <child link="LeftForeArm_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftElbow_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftForeArm_f1"/>
+        <child link="LeftForeArm_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
     </joint>	
-	<joint name="jLeftWrist" type="revolute">
-		<!--Origin of child frame (jLeftWrist) wrt the parent frame (jLeftElbow)-->
+    <joint name="jLeftElbow_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftForeArm_f2"/>
+        <child link="LeftForeArm"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
+    </joint>	
+	<joint name="jLeftWrist_rotx" type="revolute">
         <origin xyz="jLeftWrist_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftForeArm"/>
+        <child link="LeftHand_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftWrist_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftHand_f1"/>
+        <child link="LeftHand_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftWrist_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftHand_f2"/>
         <child link="LeftHand"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	
-    <joint name="jRightHip" type="revolute">
-		<!--Origin of child frame (jRightHip) wrt the parent frame (pHipOrigin)-->
+	<!--Chain from (16) to (19)-->	
+	<joint name="jRightHip_rotx" type="revolute">
         <origin xyz="jRightHip_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
+        <child link="RightUpperLeg_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightHip_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightUpperLeg_f1"/>
+        <child link="RightUpperLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightHip_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightUpperLeg_f2"/>
         <child link="RightUpperLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-    <joint name="jRightKnee" type="revolute">
-		<!--Origin of child frame (jRightKnee) wrt the parent frame (jRightHip)-->
+	<joint name="jRightKnee_rotx" type="revolute">
         <origin xyz="jRightKnee_ORIGIN" rpy="0 0 0"/>
         <parent link="RightUpperLeg"/>
+        <child link="RightLowerLeg_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightKnee_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightLowerLeg_f1"/>
+        <child link="RightLowerLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightKnee_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightLowerLeg_f2"/>
         <child link="RightLowerLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-    <joint name="jRightAnkle" type="revolute">
-		<!--Origin of child frame (jRightAnkle) wrt the parent frame (jRightKnee)-->
+	<joint name="jRightAnkle_rotx" type="revolute">
         <origin xyz="jRightAnkle_ORIGIN" rpy="0 0 0"/>
         <parent link="RightLowerLeg"/>
+        <child link="RightFoot_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightAnkle_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightFoot_f1"/>
+        <child link="RightFoot_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightAnkle_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightFoot_f2"/>
         <child link="RightFoot"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jRightBallFoot" type="revolute">
-		<!--Origin of child frame (jRightBallFoot)  wrt the parent frame (jRightAnkle) -->
+	<joint name="jRightBallFoot_rotx" type="revolute">
         <origin xyz="jRightBallFoot_ORIGIN" rpy="0 0 0"/>
         <parent link="RightFoot"/>
+        <child link="RightToe_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightBallFoot_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightToe_f1"/>
+        <child link="RightToe_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jRightBallFoot_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightToe_f2"/>
         <child link="RightToe"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	
-    <joint name="jLeftHip" type="revolute">
-		<!--Origin of child frame (jLeftHip) wrt the parent frame (pHipOrigin)-->
+	<!--Chain from (20) to (23)-->	
+	<joint name="jLeftHip_rotx" type="revolute">
         <origin xyz="jLeftHip_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
+        <child link="LeftUpperLeg_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftHip_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftUpperLeg_f1"/>
+        <child link="LeftUpperLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftHip_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftUpperLeg_f2"/>
         <child link="LeftUpperLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-    <joint name="jLeftKnee" type="revolute">
-		<!--Origin of child frame (jLeftKnee) wrt the parent frame (jLeftHip)-->
+	<joint name="jLeftKnee_rotx" type="revolute">
         <origin xyz="jLeftKnee_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperLeg"/>
+        <child link="LeftLowerLeg_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftKnee_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftLowerLeg_f1"/>
+        <child link="LeftLowerLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftKnee_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftLowerLeg_f2"/>
         <child link="LeftLowerLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jLeftAnkle" type="revolute">
-		<!--Origin of child frame (jLeftAnkle) wrt the parent frame (jLeftKnee)-->
+	<joint name="jLeftAnkle_rotx" type="revolute">
         <origin xyz="jLeftAnkle_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftLowerLeg"/>
+        <child link="LeftFoot_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftAnkle_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftFoot_f1"/>
+        <child link="LeftFoot_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftAnkle_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftFoot_f2"/>
         <child link="LeftFoot"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
-	<joint name="jLeftBallFoot" type="revolute">
-		<!--Origin of child frame (jLeftBallFoot) wrt the parent frame (jLeftAnkle)-->
+	<joint name="jLeftBallFoot_rotx" type="revolute">
         <origin xyz="jLeftBallFoot_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftFoot"/>
+        <child link="LeftToe_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftBallFoot_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftToe_f1"/>
+        <child link="LeftToe_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>	
+    <joint name="jLeftBallFoot_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftToe_f2"/>
         <child link="LeftToe"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	
 </robot>
