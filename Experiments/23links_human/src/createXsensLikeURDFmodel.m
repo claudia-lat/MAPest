@@ -1,4 +1,4 @@
-function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,filename)
+function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,varargin)
 %CREATEXSENSLIKEURDFMODEL generates a URDF model of the subject.
 %
 % Inputs : 
@@ -6,6 +6,35 @@ function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,filename)
 %                    function;
 % -  filename      : (optional) allows to save the file.urdf in a folder 
 %                     called 'Models'.  
+% -  GazeboModel   : (optional) true or false. If true a model for Gazebo
+%                    is generated with masses and inertias different from 0
+
+options = struct(   ...
+    'FILENAME',      '',...  
+    'GAZEBOMODEL',  false... 
+    );
+
+% read the acceptable names
+optionNames = fieldnames(options);
+
+% count arguments
+nArgs = length(varargin);
+if round(nArgs/2)~=nArgs/2
+    error('createXsensLikeURDFmodel needs propertyName/propertyValue pairs')
+end
+
+for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
+    inpName = upper(pair{1}); % make case insensitive
+    
+    if any(strcmp(inpName,optionNames))
+        % overwrite options. If you want you can test for the right class here
+        % Also, if you find out that there is an option you keep getting wrong,
+        % you can use "if strcmp(inpName,'problemOption'),testMore,end"-statements
+        options.(inpName) = pair{2};
+    else
+        error('%s is not a recognized parameter name',inpName)
+    end
+end 
 
 
 urdfModelTemplate = fileread('XSensModelStyle_URDFtemplate.urdf');
@@ -234,14 +263,26 @@ urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIXX',num2str(subject
 urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIYY',num2str(subjectParams.leftToeIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIZZ',num2str(subjectParams.leftToeIzz));
 
+fakemass=0;
+fakein=0;
 
-if nargin == 2
-    [dir,~,~] = fileparts(filename);
+if options.GAZEBOMODEL == 1
+    fakemass=0.0001;
+    fakein=0.0003;
+end
+
+urdfModelTemplate = strrep(urdfModelTemplate,'FAKEMASS',num2str(fakemass));
+urdfModelTemplate = strrep(urdfModelTemplate,'FAKEIN',num2str(fakein));
+
+if ~isempty(options.FILENAME)
+    [dir,~,~] = fileparts(options.FILENAME);
+    dir = fullfile(pwd, dir);
     if ~exist(dir,'dir')
         mkdir(dir);
     end
-fileID = fopen(filename,'w');
-fprintf(fileID,'%s', urdfModelTemplate);
-fclose(fileID);
+    fileID = fopen(options.FILENAME,'w');
+    fprintf(fileID,'%s', urdfModelTemplate);
+    fclose(fileID);
 end
+
 end
