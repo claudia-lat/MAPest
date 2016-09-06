@@ -57,7 +57,7 @@ subjectParamsFromData = subjectParamsComputation(suit, M);
 
 %% Create URDF model
 filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
-URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData,filenameURDF);
+URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData,'filename',filenameURDF,'GazeboModel',false);
 
 %% Generate subject OSIM model
 filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
