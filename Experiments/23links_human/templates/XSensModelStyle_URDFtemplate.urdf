@@ -1,4 +1,5 @@
 <robot name="XSensStyleModel_template">
+<!--To open this model with Gazebo replace the null masses, inertias and dimensions of the 'fake link f1 and f2'-->
 	
 	<!--LINKS-->
 	<!--Link base (1)-->
@@ -29,43 +30,43 @@
     <!--Chain from (2) to (7)-->
 	<link name="L5_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="L5_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -95,43 +96,43 @@
     </link>
 	<link name="L3_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="L3_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -161,43 +162,43 @@
     </link>
 	<link name="T12_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="T12_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -227,43 +228,43 @@
     </link>
 	<link name="T8_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="T8_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -293,43 +294,43 @@
     </link>
 	<link name="Neck_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="Neck_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -359,43 +360,43 @@
     </link>	
 	<link name="Head_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="Head_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -426,43 +427,43 @@
 	<!--Chain from (8) to (11)-->
 	<link name="RightShoulder_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightShoulder_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -492,43 +493,43 @@
     </link>
 	<link name="RightUpperArm_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightUpperArm_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -558,43 +559,43 @@
     </link>	
 	<link name="RightForeArm_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightForeArm_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -624,43 +625,43 @@
     </link>
 	<link name="RightHand_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightHand_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -691,43 +692,43 @@
 	<!--Chain from (12) to (15)-->
 	<link name="LeftShoulder_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftShoulder_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -757,43 +758,43 @@
     </link>
 	<link name="LeftUpperArm_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftUpperArm_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -823,43 +824,43 @@
     </link>	
 	<link name="LeftForeArm_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftForeArm_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -889,43 +890,43 @@
     </link>
 	<link name="LeftHand_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftHand_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -956,43 +957,43 @@
 	<!--Chain from (16) to (19)-->
 	<link name="RightUpperLeg_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightUpperLeg_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -1022,43 +1023,43 @@
     </link>
 	<link name="RightLowerLeg_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightLowerLeg_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -1088,43 +1089,43 @@
     </link>
 	<link name="RightFoot_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightFoot_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -1154,43 +1155,43 @@
     </link> 
 	<link name="RightToe_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="RightToe_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -1221,43 +1222,43 @@
 	<!--Chain from (20) to (23)-->
 	<link name="LeftUpperLeg_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftUpperLeg_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
@@ -1287,43 +1288,43 @@
     </link>
 	<link name="LeftLowerLeg_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftLowerLeg_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -1353,43 +1354,43 @@
     </link>
 	<link name="LeftFoot_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftFoot_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>	
@@ -1419,43 +1420,43 @@
     </link>
 	<link name="LeftToe_f1">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
 	<link name="LeftToe_f2">
         <inertial>
-            <mass value="FAKEMASS"/>
+            <mass value="0 0 0"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
-            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+            <inertia ixx="0" iyy="0" izz="0" ixy="0" ixz="0" iyz="0"/>
         </inertial>
 
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </visual>
 
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <box size="FAKEDIM FAKEDIM FAKEDIM"/>
+                <box size="0 0 0"/>
             </geometry>
         </collision>
     </link>
