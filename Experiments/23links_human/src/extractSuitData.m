@@ -12,8 +12,8 @@ function [ suit ] = extractSuitData(mvnxFilename, outputDir)
 
 
 %% Load and read file .mvnx
- addpath(genpath('../../external'));
-%  mvnxData = xml_read(mvnxFilename);
+addpath(genpath('../../external'));
+mvnxData = xml_read(mvnxFilename);
 %% Create data struct
 suit =[];
 % PROPERTIES
@@ -72,7 +72,8 @@ end
 % SENSORS
 suit.sensors = cell(suit.properties.nrOfSensors,1);
 for i = 1 : suit.properties.nrOfSensors
-    suit.sensors{i}.label                      = mvnxData.subject.sensors.sensor(i).ATTRIBUTE;
+    suit.sensors{i}.label                      = mvnxData.subject.sensors.sensor(i).ATTRIBUTE.label;
+    suit.sensors{i}.attachedLink               = suit.sensors{i}.label; % assumption: the label of the sensor is the same one of the link on which the sensor isattached  
     suit.sensors{i}.meas.sensorAcceleration    = zeros(3, suit.properties.lenData);
     suit.sensors{i}.meas.sensorAngularVelocity = zeros(3, suit.properties.lenData);
     suit.sensors{i}.meas.sensorOrientation     = zeros(4, suit.properties.lenData);
@@ -81,6 +82,14 @@ end
 a = 4; %dimension of quaternions
 b = 3; %dimension of vectors
 j = 1;
+
+tposeFound = false;
+nposeFound = false;
+
+%temporary variables
+G_quat_Np = iDynTree.Vector4();
+G_R_link_Np = iDynTree.Rotation();
+G_R_link_Tp = iDynTree.Rotation();
 for frameIdx = 1 : nrOfFrames
     
     currentFrame = mvnxData.subject.frames.frame(frameIdx);
@@ -90,8 +99,11 @@ for frameIdx = 1 : nrOfFrames
         suit.calibration.npose.index       = currentFrame.ATTRIBUTE.index;
         suit.calibration.npose.orientation = zeros(4, suit.properties.nrOfLinks);
         suit.calibration.npose.position    = zeros(3, suit.properties.nrOfLinks);
+        
+        nposeFound = true;
+        
         for i = 1 : suit.properties.nrOfLinks
-            suit.calibration.npose.orientation(:,i) = currentFrame.orientation(1, a*(i-1)+1 : a*i);
+            suit.calibration.npose.orientation(:,i) = currentFrame.orientation(1, a*(i-1)+1 : a*i);       
             suit.calibration.npose.position(:,i)    = currentFrame.position(1, b*(i-1)+1 : b*i);
         end
         continue;
@@ -101,21 +113,61 @@ for frameIdx = 1 : nrOfFrames
         suit.calibration.tpose.index       = currentFrame.ATTRIBUTE.index;
         suit.calibration.tpose.orientation = zeros(4, suit.properties.nrOfLinks);
         suit.calibration.tpose.position    = zeros(3, suit.properties.nrOfLinks);
+        
+        tposeFound = true;
+        
         for i = 1 : suit.properties.nrOfLinks
-            suit.calibration.tpose.orientation(:,i) = currentFrame.orientation(1, a*(i-1)+1 : a*i);
+            suit.calibration.tpose.orientation(:,i) = currentFrame.orientation(1, a*(i-1)+1 : a*i);   
             suit.calibration.tpose.position(:,i)    = currentFrame.position(1, b*(i-1)+1 : b*i);
         end
         continue;
     end       
+    
+    if (tposeFound && nposeFound)
+        %I found both npose and tpose
+        %then I reset the variables as I do the computation only one.
+        tposeFound = false;
+        nposeFound = false;
+        
+        quaternion = iDynTree.Vector4();
+        RiDyn = iDynTree.Rotation();
+
+        suit.calibration.Np_R_Tp    = zeros(3,3,suit.properties.nrOfLinks);
+        
+        for i = 1 : suit.properties.nrOfLinks
+            % get rotation matrix G_R_Np
+            quaternion.fromMatlab(suit.calibration.npose.orientation(:,i));
+            RiDyn.fromQuaternion(quaternion);
+            G_R_Np = RiDyn.toMatlab();
+            
+            % get rotation matrix G_R_Tp
+            quaternion.fromMatlab(suit.calibration.tpose.orientation(:,i));
+            RiDyn.fromQuaternion(quaternion);
+            G_R_Tp = RiDyn.toMatlab();
+            
+            % COMPUTE ROTATION MATRIX Tp_R_Np
+            suit.calibration.Np_R_Tp(:,:,i) = G_R_Np' * G_R_Tp;
+        end
+    end
+
     % /The frame from now on is neither 'tpose' nor 'npose', thus
     % it is normal./
+    
     % TIME
     suit.time(1,j) = currentFrame.ATTRIBUTE.ms;
     % COM
     suit.COM(:,j) = currentFrame.centerOfMass';
     % LINKS
     for i = 1 : suit.properties.nrOfLinks
-        suit.links{i}.meas.orientation(:,j)         = currentFrame.orientation(1, a*(i-1)+1 : a*i); 
+        
+        %This is ^G quaternion_link_Np
+        G_quat_Np.fromMatlab(currentFrame.orientation(1, a*(i-1)+1 : a*i));
+        G_R_link_Np.fromQuaternion(G_quat_Np);
+        G_R_link_Tp.fromMatlab(G_R_link_Np.toMatlab() * suit.calibration.Np_R_Tp(:,:,i));
+        
+        G_quat_link_Tp = G_R_link_Tp.asQuaternion();
+        
+        suit.links{i}.meas.orientation(:,j)         = G_quat_link_Tp.toMatlab();
         suit.links{i}.meas.position(:,j)            = currentFrame.position(1, b*(i-1)+1 : b*i);
         suit.links{i}.meas.velocity(:,j)            = currentFrame.velocity(1, b*(i-1)+1 : b*i);
         suit.links{i}.meas.acceleration(:,j)        = currentFrame.acceleration(1, b*(i-1)+1 : b*i);

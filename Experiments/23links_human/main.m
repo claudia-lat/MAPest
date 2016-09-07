@@ -50,6 +50,9 @@ mvnxFilename = 'data/S_1bowingtask.mvnx';
 suit = extractSuitData(mvnxFilename,'data');
 % FORCEPLATE  --> to be done!
 
+%% Obtain sensor position suit = computeSuitSensorPosition(suit);
+suit = computeSuitSensorPosition(suit);
+
 %% Extract subject parameters from suit data 
 subjectID = 1;
 M = 60;
