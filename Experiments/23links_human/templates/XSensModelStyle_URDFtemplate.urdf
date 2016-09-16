@@ -26,6 +26,7 @@
                 <box size="PELVIS_BOX_SIZE"/>
             </geometry>
         </collision>
+		
     </link>
     <!--Chain from (2) to (7)-->
 	<link name="L5_f1">
@@ -179,6 +180,7 @@
                 <box size="T8_BOX_SIZE"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="Neck_f1">
         <inertial>
@@ -255,6 +257,7 @@
                 <sphere radius="HEADRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<!--Chain from (8) to (11)-->
 	<link name="RightShoulder_f1">
@@ -294,6 +297,7 @@
                 <cylinder length="RIGHTSHOULDERHEIGHT" radius="RIGHTSHOULDERRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="RightUpperArm_f1">
         <inertial>
@@ -332,6 +336,7 @@
                 <cylinder length="RIGHTUPPERARMHEIGHT" radius="RIGHTUPPERARMRADIUS"/>
             </geometry>
         </collision>
+		
     </link>	
 	<link name="RightForeArm_f1">
         <inertial>
@@ -370,6 +375,7 @@
                 <cylinder length="RIGHTFOREARMHEIGHT" radius="RIGHTFOREARMRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="RightHand_f1">
         <inertial>
@@ -408,6 +414,7 @@
                 <box size="RIGHTHAND_BOX_SIZE"/>
             </geometry>
         </collision>
+		
     </link>
 	<!--Chain from (12) to (15)-->
 	<link name="LeftShoulder_f1">
@@ -447,6 +454,7 @@
                 <cylinder length="LEFTSHOULDERHEIGHT" radius="LEFTSHOULDERRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="LeftUpperArm_f1">
         <inertial>
@@ -485,6 +493,7 @@
                 <cylinder length="LEFTUPPERARMHEIGHT" radius="LEFTUPPERARMRADIUS"/>
             </geometry>
         </collision>
+		
     </link>	
 	<link name="LeftForeArm_f1">
         <inertial>
@@ -523,6 +532,7 @@
                 <cylinder length="LEFTFOREARMHEIGHT" radius="LEFTFOREARMRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="LeftHand_f1">
         <inertial>
@@ -561,6 +571,7 @@
                 <box size="LEFTHAND_BOX_SIZE"/>
             </geometry>
         </collision>
+		
     </link>
 	<!--Chain from (16) to (19)-->
 	<link name="RightUpperLeg_f1">
@@ -600,6 +611,7 @@
                 <cylinder length="RIGHTUPPERLEGHEIGHT" radius="RIGHTUPPERLEGRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="RightLowerLeg_f1">
         <inertial>
@@ -638,6 +650,7 @@
                 <cylinder length="RIGHTLOWERLEGHEIGHT" radius="RIGHTLOWERLEGRADIUS"/>
             </geometry>
         </collision>
+	
     </link>
 	<link name="RightFoot_f1">
         <inertial>
@@ -676,6 +689,7 @@
 	                <box size="RIGHTFOOT_BOX_SIZE"/>
 	            </geometry>
         </collision>
+		
     </link> 
 	<link name="RightToe_f1">
         <inertial>
@@ -753,6 +767,7 @@
                 <cylinder length="LEFTUPPERLEGHEIGHT" radius="LEFTUPPERLEGRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="LeftLowerLeg_f1">
         <inertial>
@@ -791,6 +806,7 @@
 		<cylinder length="LEFTLOWERLEGHEIGHT" radius="LEFTLOWERLEGRADIUS"/>
             </geometry>
         </collision>
+		
     </link>
 	<link name="LeftFoot_f1">
         <inertial>
@@ -829,6 +845,7 @@
 	                <box size="LEFTFOOT_BOX_SIZE"/>
 	            </geometry>
         </collision>
+		
     </link>
 	<link name="LeftToe_f1">
         <inertial>
@@ -1404,5 +1421,158 @@
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	
+    
+	<!-- Sensor 1 -->
+	<sensor name="Pelvis_gyro" type="gyroscope">
+		<parent link="Pelvis"/>
+		<origin xyz="PELVISSENSORPOS" rpy="PELVISSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="Pelvis_accelerometer" type="accelerometer">
+		<parent link="Pelvis"/>
+		<origin xyz="PELVISSENSORPOS" rpy="PELVISSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 2 -->
+	<sensor name="T8_gyro" type="gyroscope">
+		<parent link="T8"/>
+		<origin xyz="T8SENSORPOS" rpy="T8SENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="T8_accelerometer" type="accelerometer">
+		<parent link="T8"/>
+		<origin xyz="T8SENSORPOS" rpy="T8SENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 3 -->
+	<sensor name="Head_gyro" type="gyroscope">
+		<parent link="Head"/>
+		<origin xyz="HEADSENSORPOS" rpy="HEADSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="Head_accelerometer" type="accelerometer">
+		<parent link="Head"/>
+		<origin xyz="HEADSENSORPOS" rpy="HEADSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 4 -->
+	<sensor name="RightShoulder_gyro" type="gyroscope">
+		<parent link="RightShoulder"/>
+		<origin xyz="RIGHTSHOULDERSENSORPOS" rpy="RIGHTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightShoulder_accelerometer" type="accelerometer">
+		<parent link="RightShoulder"/>
+		<origin xyz="RIGHTSHOULDERSENSORPOS" rpy="RIGHTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 5 -->
+	<sensor name="RightUpperArm_gyro" type="gyroscope">
+		<parent link="RightUpperArm"/>
+		<origin xyz="RIGHTUPPERARMSENSORPOS" rpy="RIGHTUPPERARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightUpperArm_accelerometer" type="accelerometer">
+		<parent link="RightUpperArm"/>
+		<origin xyz="RIGHTUPPERARMSENSORPOS" rpy="RIGHTUPPERARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 6 -->
+	<sensor name="RightForeArm_gyro" type="gyroscope">
+		<parent link="RightForeArm"/>
+		<origin xyz="RIGHTFOREARMSENSORPOS" rpy="RIGHTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightForeArm_accelerometer" type="accelerometer">
+		<parent link="RightForeArm"/>
+		<origin xyz="RIGHTFOREARMSENSORPOS" rpy="RIGHTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>	
+	<!-- Sensor 7 -->
+	<sensor name="RightHand_gyro" type="gyroscope">
+		<parent link="RightHand"/>
+		<origin xyz="RIGHTHANDSENSORPOS" rpy="RIGHTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightHand_accelerometer" type="accelerometer">
+		<parent link="RightHand"/>
+		<origin xyz="RIGHTHANDSENSORPOS" rpy="RIGHTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 8 -->
+	<sensor name="LeftShoulder_gyro" type="gyroscope">
+		<parent link="LeftShoulder"/>
+		<origin xyz="LEFTSHOULDERSENSORPOS" rpy="LEFTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftShoulder_accelerometer" type="accelerometer">
+		<parent link="LeftShoulder"/>
+		<origin xyz="LEFTSHOULDERSENSORPOS" rpy="LEFTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>	
+	<!-- Sensor 9 -->
+	<sensor name="LeftUpperArm_gyro" type="gyroscope">
+		<parent link="LeftUpperArm"/>
+		<origin xyz="LEFTUPPERAMRSENSORPOS" rpy="LEFTUPPERAMRSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftUpperArm_accelerometer" type="accelerometer">
+		<parent link="LeftUpperArm"/>
+		<origin xyz="LEFTUPPERAMRSENSORPOS" rpy="LEFTUPPERAMRSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 10 -->		
+	<sensor name="LeftForeArm_gyro" type="gyroscope">
+		<parent link="LeftForeArm"/>
+		<origin xyz="LEFTFOREARMSENSORPOS" rpy="LEFTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftForeArm_accelerometer" type="accelerometer">
+		<parent link="LeftForeArm"/>
+		<origin xyz="LEFTFOREARMSENSORPOS" rpy="LEFTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 11 -->
+	<sensor name="LeftHand_gyro" type="gyroscope">
+		<parent link="LeftHand"/>
+		<origin xyz="LEFTHANDSENSORPOS" rpy="LEFTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftHand_accelerometer" type="accelerometer">
+		<parent link="LeftHand"/>
+		<origin xyz="LEFTHANDSENSORPOS" rpy="LEFTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>	
+	<!-- Sensor 12 -->
+	<sensor name="RightUpperLeg_gyro" type="gyroscope">
+		<parent link="RightUpperLeg"/>
+		<origin xyz="RIGHTUPPERLEGSENSORPOS" rpy="RIGHTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightUpperLeg_accelerometer" type="accelerometer">
+		<parent link="RightUpperLeg"/>
+		<origin xyz="RIGHTUPPERLEGSENSORPOS" rpy="RIGHTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 13 -->
+	<sensor name="RightLowerLeg_gyro" type="gyroscope">
+		<parent link="RightLowerLeg"/>
+		<origin xyz="RIGHTLOWERLEGSENSORPOS" rpy="RIGHTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightLowerLeg_accelerometer" type="accelerometer">
+		<parent link="RightLowerLeg"/>
+		<origin xyz="RIGHTLOWERLEGSENSORPOS" rpy="RIGHTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 14 -->		
+	<sensor name="RightFoot_gyro" type="gyroscope">
+		<parent link="RightFoot"/>
+		<origin xyz="RIGHTFOOTSENSORPOS" rpy="RIGHTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="RightFoot_accelerometer" type="accelerometer">
+		<parent link="RightFoot"/>
+		<origin xyz="RIGHTFOOTSENSORPOS" rpy="RIGHTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 15 -->
+	<sensor name="LeftUpperLeg_gyro" type="gyroscope">
+		<parent link="LeftUpperLeg"/>
+		<origin xyz="LEFTUPPERLEGSENSORPOS" rpy="LEFTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftUpperLeg_accelerometer" type="accelerometer">
+		<parent link="LeftUpperLeg"/>
+		<origin xyz="LEFTUPPERLEGSENSORPOS" rpy="LEFTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>	
+	<!-- Sensor 16 -->
+	<sensor name="LeftLowerLeg_gyro" type="gyroscope">
+		<parent link="LeftLowerLeg"/>
+		<origin xyz="LEFTLOWERLEGSENSORPOS" rpy="LEFTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftLowerLeg_accelerometer" type="accelerometer">
+		<parent link="LeftLowerLeg"/>
+		<origin xyz="LEFTLOWERLEGSENSORPOS" rpy="LEFTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<!-- Sensor 17 -->		
+	<sensor name="LeftFoot_gyro" type="gyroscope">
+		<parent link="LeftFoot"/>
+		<origin xyz="LEFTFOOTSENSORPOS" rpy="LEFTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>
+	<sensor name="LeftFoot_accelerometer" type="accelerometer">
+		<parent link="LeftFoot"/>
+		<origin xyz="LEFTFOOTSENSORPOS" rpy="LEFTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
+	</sensor>	
 </robot>
