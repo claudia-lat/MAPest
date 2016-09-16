@@ -9,11 +9,11 @@ for sIdx = 1: suit.properties.nrOfSensors
     sensor = suit.sensors{sIdx};
     [link, ~] = linksFromName(suit.links, sensor.attachedLink);
     A = zeros(3*len,3);
-    b = zeros(3*len,1); 
-    
-    for i = 1 : len    
+    b = zeros(3*len,1);
+
+    for i = 1 : len
         S1 = skewMatrix(link.meas.angularAcceleration(:,i));
-        S2 = skewMatrix(link.meas.angularVelocity(:,i)); 
+        S2 = skewMatrix(link.meas.angularVelocity(:,i));
         quaternion = iDynTree.Vector4();
         quaternion.fromMatlab(link.meas.orientation(:,i));
         G_R_L = iDynTree.Rotation();
@@ -31,13 +31,22 @@ for sIdx = 1: suit.properties.nrOfSensors
         G_acc_L = link.meas.acceleration(:,i);
 
         b(3*i-2:3*i) = G_acc_S - G_acc_L;
+
+        % compute S_R_L = S_R_G x G_R_L
+        S_R_L = G_R_S' * G_R_L;
+        L_R_S = S_R_L' ;
+        rot = iDynTree.Rotation();
+        rot.fromMatlab(L_R_S);
+        L_RPY_S(i,:) = rot.asRPY.toMatlab() / pi * 180; SALVARE IN RADIANTI!!!!!!!!!!!!!!!!
     end
-    % matrix system 
+    % matrix system
     B_pos_SL = A\b;
- 
-    sensor.origin = B_pos_SL; 
-    suit.sensors{sIdx}.position = sensor.origin;   
-end  
+
+    sensor.origin = B_pos_SL;
+    suit.sensors{sIdx}.position = sensor.origin;
+    suit.sensors{sIdx}.RPY = mean(L_RPY_S);
+
+end
 end
 
 function [ S ] = skewMatrix(x)
