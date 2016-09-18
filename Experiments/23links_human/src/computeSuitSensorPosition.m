@@ -37,7 +37,7 @@ for sIdx = 1: suit.properties.nrOfSensors
         L_R_S = S_R_L' ;
         rot = iDynTree.Rotation();
         rot.fromMatlab(L_R_S);
-        L_RPY_S(i,:) = rot.asRPY.toMatlab() / pi * 180; SALVARE IN RADIANTI!!!!!!!!!!!!!!!!
+        L_RPY_S(i,:) = rot.asRPY.toMatlab(); %RPY in rad
     end
     % matrix system
     B_pos_SL = A\b;
