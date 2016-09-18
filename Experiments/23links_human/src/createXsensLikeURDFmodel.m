@@ -1,17 +1,18 @@
-function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams,varargin)
+function [urdfModelTemplate] = createXsensLikeURDFmodel(subjectParams, sensors, varargin)
 %CREATEXSENSLIKEURDFMODEL generates a URDF model of the subject.
 %
-% Inputs : 
+% Inputs :
 % -  subjectParams : anthropometric parameters coming from the previous
 %                    function;
-% -  filename      : (optional) allows to save the file.urdf in a folder 
-%                     called 'Models'.  
+% -  sensors       :  sensors information coming from suit;
+% -  filename      : (optional) allows to save the file.urdf in a folder
+%                     called 'Models'.
 % -  GazeboModel   : (optional) true or false. If true a model for Gazebo
 %                    is generated with masses and inertias different from 0
 
 options = struct(   ...
-    'FILENAME',      '',...  
-    'GAZEBOMODEL',  false... 
+    'FILENAME',      '',...
+    'GAZEBOMODEL',  false...
     );
 
 % read the acceptable names
@@ -25,7 +26,7 @@ end
 
 for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     inpName = upper(pair{1}); % make case insensitive
-    
+
     if any(strcmp(inpName,optionNames))
         % overwrite options. If you want you can test for the right class here
         % Also, if you find out that there is an option you keep getting wrong,
@@ -34,10 +35,30 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     else
         error('%s is not a recognized parameter name',inpName)
     end
-end 
+end
 
 
-urdfModelTemplate = fileread('XSensModelStyle_URDFtemplate.urdf');
+fileUrdfName = 'XSensModelStyle_URDFtemplate.urdf';
+urdfModelTemplate = fileread(fileUrdfName);
+%% Check sensor existence
+if exist('sensors', 'var')
+   fileID = fopen(fileUrdfName, 'w');
+    for i = 1 : size(sensors,1)
+        fprintf(fileID,sprintf('<!-- Sensor % d-->\n',i));
+        fprintf(fileID,sprintf('<sensor name="%s_gyro" type="gyroscope">\n',sensors{i, 1}.label));
+        fprintf(fileID,sprintf('<parent link="%s"/>\n',sensors{i, 1}.attachedLink));
+        fprintf(fileID,sprintf('<origin xyz="%s" rpy="%s"/>\n</sensor>\n',num2str(sensors{i, 1}.position'),num2str(sensors{i, 1}.RPY)));
+        fprintf(fileID,sprintf('<sensor name="%s_accelerometer" type="accelerometer">\n',sensors{i, 1}.label));
+        fprintf(fileID,sprintf('<parent link="%s"/>\n',sensors{i, 1}.attachedLink));
+        fprintf(fileID,sprintf('<origin xyz="%s" rpy="%s"/>\n</sensor>\n',num2str(sensors{i, 1}.position'),num2str(sensors{i, 1}.RPY)));
+    end
+    sensorFile = fileread('XSensModelStyle_URDFtemplate.urdf');
+    delete(fullfile(pwd,fileUrdfName));
+    fclose(fileID);
+    sensorsInsertingPoint = '<!--Insert sensors here, if any.-->';
+    urdfModelTemplate = strrep(urdfModelTemplate,sensorsInsertingPoint,sensorFile);
+end
+
 %% --LINK BASE
 %% PELVIS (solid: box)
 urdfModelTemplate = strrep(urdfModelTemplate,'PELVIS_BOX_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));
@@ -216,6 +237,7 @@ urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOOTINERTIAIXX',num2str(subje
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOOTINERTIAIYY',num2str(subjectParams.rightFootIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOOTINERTIAIZZ',num2str(subjectParams.rightFootIzz));
 urdfModelTemplate = strrep(urdfModelTemplate,'jRightBallFoot_ORIGIN',num2str(subjectParams.jRightBallFoot'));
+
 %% RIGHT TOE (solid: box)
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTTOE_BOX_ORIGIN',num2str(subjectParams.rightToeBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTTOE_COM_ORIGIN',num2str(subjectParams.rightToeBoxOrigin));
@@ -263,17 +285,17 @@ urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIXX',num2str(subject
 urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIYY',num2str(subjectParams.leftToeIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'LEFTTOEINERTIAIZZ',num2str(subjectParams.leftToeIzz));
 
+%% Options
+%Gazebo
 fakemass=0;
 fakein=0;
-
 if options.GAZEBOMODEL == 1
     fakemass=0.0001;
     fakein=0.0003;
 end
-
 urdfModelTemplate = strrep(urdfModelTemplate,'FAKEMASS',num2str(fakemass));
 urdfModelTemplate = strrep(urdfModelTemplate,'FAKEIN',num2str(fakein));
-
+% Filename
 if ~isempty(options.FILENAME)
     [dir,~,~] = fileparts(options.FILENAME);
     dir = fullfile(pwd, dir);

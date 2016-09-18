@@ -60,14 +60,14 @@ subjectParamsFromData = subjectParamsComputation(suit, M);
 
 %% Create URDF model
 filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
-URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData,'filename',filenameURDF,'GazeboModel',false);
+URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, suit.sensors,'filename',filenameURDF,'GazeboModel',false);
 
 %% Generate subject OSIM model
 filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
 OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
 
 %% Inverse Kinematic computation 
-setupFile = ('fileSetup.xml');
+setupFile = ('data/fileSetup.xml');
 trcFile = ('data/S_1bowingtaskForIK.trc');
 IK(filenameOSIM, trcFile, setupFile);
 

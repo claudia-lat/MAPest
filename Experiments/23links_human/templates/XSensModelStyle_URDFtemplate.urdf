@@ -1,7 +1,6 @@
 <robot name="XSensStyleModel_template">
 <!--To open this model with Gazebo replace the null masses, inertias and dimensions of the 'fake links f1 and f2'-->
-	
-	<!--LINKS-->
+    <!--LINKS-->
 	<!--Link base (1)-->
 	<link name="Pelvis">
         <inertial>
@@ -26,7 +25,7 @@
                 <box size="PELVIS_BOX_SIZE"/>
             </geometry>
         </collision>
-		
+
     </link>
     <!--Chain from (2) to (7)-->
 	<link name="L5_f1">
@@ -80,7 +79,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="L3">
         <inertial>
             <mass value="L3MASS"/>
@@ -118,7 +117,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="T12">
         <inertial>
             <mass value="T12MASS"/>
@@ -156,7 +155,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="T8">
         <inertial>
             <mass value="T8MASS"/>
@@ -180,7 +179,7 @@
                 <box size="T8_BOX_SIZE"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="Neck_f1">
         <inertial>
@@ -195,7 +194,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="Neck">
         <inertial>
             <mass value="NECKMASS"/>
@@ -219,7 +218,7 @@
                 <cylinder length="NECKHEIGHT" radius="NECKRADIUS"/>
             </geometry>
         </collision>
-    </link>	
+    </link>
 	<link name="Head_f1">
         <inertial>
             <mass value="FAKEMASS"/>
@@ -233,7 +232,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="Head">
         <inertial>
             <mass value="HEADMASS"/>
@@ -257,7 +256,7 @@
                 <sphere radius="HEADRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<!--Chain from (8) to (11)-->
 	<link name="RightShoulder_f1">
@@ -297,7 +296,7 @@
                 <cylinder length="RIGHTSHOULDERHEIGHT" radius="RIGHTSHOULDERRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="RightUpperArm_f1">
         <inertial>
@@ -336,8 +335,8 @@
                 <cylinder length="RIGHTUPPERARMHEIGHT" radius="RIGHTUPPERARMRADIUS"/>
             </geometry>
         </collision>
-		
-    </link>	
+
+    </link>
 	<link name="RightForeArm_f1">
         <inertial>
             <mass value="FAKEMASS"/>
@@ -375,7 +374,7 @@
                 <cylinder length="RIGHTFOREARMHEIGHT" radius="RIGHTFOREARMRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="RightHand_f1">
         <inertial>
@@ -414,7 +413,7 @@
                 <box size="RIGHTHAND_BOX_SIZE"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<!--Chain from (12) to (15)-->
 	<link name="LeftShoulder_f1">
@@ -430,7 +429,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="LeftShoulder">
         <inertial>
             <mass value="LEFTSHOULDERMASS"/>
@@ -454,7 +453,7 @@
                 <cylinder length="LEFTSHOULDERHEIGHT" radius="LEFTSHOULDERRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="LeftUpperArm_f1">
         <inertial>
@@ -493,8 +492,8 @@
                 <cylinder length="LEFTUPPERARMHEIGHT" radius="LEFTUPPERARMRADIUS"/>
             </geometry>
         </collision>
-		
-    </link>	
+
+    </link>
 	<link name="LeftForeArm_f1">
         <inertial>
             <mass value="FAKEMASS"/>
@@ -532,7 +531,7 @@
                 <cylinder length="LEFTFOREARMHEIGHT" radius="LEFTFOREARMRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="LeftHand_f1">
         <inertial>
@@ -571,7 +570,7 @@
                 <box size="LEFTHAND_BOX_SIZE"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<!--Chain from (16) to (19)-->
 	<link name="RightUpperLeg_f1">
@@ -611,7 +610,7 @@
                 <cylinder length="RIGHTUPPERLEGHEIGHT" radius="RIGHTUPPERLEGRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="RightLowerLeg_f1">
         <inertial>
@@ -626,7 +625,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
     <link name="RightLowerLeg">
         <inertial>
             <mass value="RIGHTLOWERLEGMASS"/>
@@ -650,7 +649,7 @@
                 <cylinder length="RIGHTLOWERLEGHEIGHT" radius="RIGHTLOWERLEGRADIUS"/>
             </geometry>
         </collision>
-	
+
     </link>
 	<link name="RightFoot_f1">
         <inertial>
@@ -665,7 +664,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
     <link name="RightFoot">
         <inertial>
             <mass value="RIGHTFOOTMASS"/>
@@ -689,8 +688,8 @@
 	                <box size="RIGHTFOOT_BOX_SIZE"/>
 	            </geometry>
         </collision>
-		
-    </link> 
+
+    </link>
 	<link name="RightToe_f1">
         <inertial>
             <mass value="FAKEMASS"/>
@@ -704,7 +703,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
     <link name="RightToe">
         <inertial>
             <mass value="RIGHTTOEMASS"/>
@@ -767,7 +766,7 @@
                 <cylinder length="LEFTUPPERLEGHEIGHT" radius="LEFTUPPERLEGRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="LeftLowerLeg_f1">
         <inertial>
@@ -782,7 +781,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
 	<link name="LeftLowerLeg">
         <inertial>
             <mass value="LEFTLOWERLEGMASS"/>
@@ -806,7 +805,7 @@
 		<cylinder length="LEFTLOWERLEGHEIGHT" radius="LEFTLOWERLEGRADIUS"/>
             </geometry>
         </collision>
-		
+
     </link>
 	<link name="LeftFoot_f1">
         <inertial>
@@ -821,7 +820,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
-    </link>	
+    </link>
     <link name="LeftFoot">
         <inertial>
             <mass value="LEFTFOOTMASS"/>
@@ -845,7 +844,7 @@
 	                <box size="LEFTFOOT_BOX_SIZE"/>
 	            </geometry>
         </collision>
-		
+
     </link>
 	<link name="LeftToe_f1">
         <inertial>
@@ -904,7 +903,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jL5S1_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="L5_f2"/>
@@ -928,7 +927,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jL4L3_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="L3_f2"/>
@@ -952,7 +951,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jL1T12_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="T12_f2"/>
@@ -976,7 +975,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jT9T8_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="T8_f2"/>
@@ -984,7 +983,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
-    </joint>	
+    </joint>
 	<joint name="jT1C7_rotx" type="revolute">
         <origin xyz="jT1C7_ORIGIN" rpy="0 0 0"/>
         <parent link="T8"/>
@@ -1000,7 +999,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jT1C7_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="Neck_f2"/>
@@ -1024,7 +1023,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jC1Head_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="Head_f2"/>
@@ -1049,7 +1048,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightC7Shoulder_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightShoulder_f2"/>
@@ -1073,7 +1072,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightShoulder_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightUpperArm_f2"/>
@@ -1097,7 +1096,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightElbow_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightForeArm_f2"/>
@@ -1105,7 +1104,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
-    </joint>	
+    </joint>
 	<joint name="jRightWrist_rotx" type="revolute">
         <origin xyz="jRightWrist_ORIGIN" rpy="0 0 0"/>
         <parent link="RightForeArm"/>
@@ -1121,7 +1120,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightWrist_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightHand_f2"/>
@@ -1146,7 +1145,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftC7Shoulder_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftShoulder_f2"/>
@@ -1170,7 +1169,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftShoulder_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftUpperArm_f2"/>
@@ -1178,7 +1177,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
-    </joint>	
+    </joint>
     <joint name="jLeftElbow_rotx" type="revolute">
         <origin xyz="jLeftElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperArm"/>
@@ -1194,7 +1193,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftElbow_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftForeArm_f2"/>
@@ -1202,7 +1201,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
-    </joint>	
+    </joint>
 	<joint name="jLeftWrist_rotx" type="revolute">
         <origin xyz="jLeftWrist_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftForeArm"/>
@@ -1218,7 +1217,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftWrist_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftHand_f2"/>
@@ -1227,7 +1226,7 @@
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<!--Chain from (16) to (19)-->	
+	<!--Chain from (16) to (19)-->
 	<joint name="jRightHip_rotx" type="revolute">
         <origin xyz="jRightHip_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
@@ -1243,7 +1242,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightHip_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightUpperLeg_f2"/>
@@ -1267,7 +1266,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightKnee_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightLowerLeg_f2"/>
@@ -1291,7 +1290,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightAnkle_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightFoot_f2"/>
@@ -1315,7 +1314,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jRightBallFoot_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightToe_f2"/>
@@ -1324,7 +1323,7 @@
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<!--Chain from (20) to (23)-->	
+	<!--Chain from (20) to (23)-->
 	<joint name="jLeftHip_rotx" type="revolute">
         <origin xyz="jLeftHip_ORIGIN" rpy="0 0 0"/>
         <parent link="Pelvis"/>
@@ -1340,7 +1339,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftHip_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftUpperLeg_f2"/>
@@ -1364,7 +1363,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftKnee_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftLowerLeg_f2"/>
@@ -1388,7 +1387,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftAnkle_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftFoot_f2"/>
@@ -1412,7 +1411,7 @@
         <dynamics damping="0.1" friction="0.0"/>
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 1 0" />
-    </joint>	
+    </joint>
     <joint name="jLeftBallFoot_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftToe_f2"/>
@@ -1421,158 +1420,7 @@
         <limit effort="30" velocity="1.0" lower="-10.0" Fore="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-    
-	<!-- Sensor 1 -->
-	<sensor name="Pelvis_gyro" type="gyroscope">
-		<parent link="Pelvis"/>
-		<origin xyz="PELVISSENSORPOS" rpy="PELVISSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="Pelvis_accelerometer" type="accelerometer">
-		<parent link="Pelvis"/>
-		<origin xyz="PELVISSENSORPOS" rpy="PELVISSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 2 -->
-	<sensor name="T8_gyro" type="gyroscope">
-		<parent link="T8"/>
-		<origin xyz="T8SENSORPOS" rpy="T8SENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="T8_accelerometer" type="accelerometer">
-		<parent link="T8"/>
-		<origin xyz="T8SENSORPOS" rpy="T8SENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 3 -->
-	<sensor name="Head_gyro" type="gyroscope">
-		<parent link="Head"/>
-		<origin xyz="HEADSENSORPOS" rpy="HEADSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="Head_accelerometer" type="accelerometer">
-		<parent link="Head"/>
-		<origin xyz="HEADSENSORPOS" rpy="HEADSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 4 -->
-	<sensor name="RightShoulder_gyro" type="gyroscope">
-		<parent link="RightShoulder"/>
-		<origin xyz="RIGHTSHOULDERSENSORPOS" rpy="RIGHTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightShoulder_accelerometer" type="accelerometer">
-		<parent link="RightShoulder"/>
-		<origin xyz="RIGHTSHOULDERSENSORPOS" rpy="RIGHTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 5 -->
-	<sensor name="RightUpperArm_gyro" type="gyroscope">
-		<parent link="RightUpperArm"/>
-		<origin xyz="RIGHTUPPERARMSENSORPOS" rpy="RIGHTUPPERARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightUpperArm_accelerometer" type="accelerometer">
-		<parent link="RightUpperArm"/>
-		<origin xyz="RIGHTUPPERARMSENSORPOS" rpy="RIGHTUPPERARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 6 -->
-	<sensor name="RightForeArm_gyro" type="gyroscope">
-		<parent link="RightForeArm"/>
-		<origin xyz="RIGHTFOREARMSENSORPOS" rpy="RIGHTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightForeArm_accelerometer" type="accelerometer">
-		<parent link="RightForeArm"/>
-		<origin xyz="RIGHTFOREARMSENSORPOS" rpy="RIGHTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>	
-	<!-- Sensor 7 -->
-	<sensor name="RightHand_gyro" type="gyroscope">
-		<parent link="RightHand"/>
-		<origin xyz="RIGHTHANDSENSORPOS" rpy="RIGHTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightHand_accelerometer" type="accelerometer">
-		<parent link="RightHand"/>
-		<origin xyz="RIGHTHANDSENSORPOS" rpy="RIGHTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 8 -->
-	<sensor name="LeftShoulder_gyro" type="gyroscope">
-		<parent link="LeftShoulder"/>
-		<origin xyz="LEFTSHOULDERSENSORPOS" rpy="LEFTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftShoulder_accelerometer" type="accelerometer">
-		<parent link="LeftShoulder"/>
-		<origin xyz="LEFTSHOULDERSENSORPOS" rpy="LEFTSHOULDERSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>	
-	<!-- Sensor 9 -->
-	<sensor name="LeftUpperArm_gyro" type="gyroscope">
-		<parent link="LeftUpperArm"/>
-		<origin xyz="LEFTUPPERAMRSENSORPOS" rpy="LEFTUPPERAMRSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftUpperArm_accelerometer" type="accelerometer">
-		<parent link="LeftUpperArm"/>
-		<origin xyz="LEFTUPPERAMRSENSORPOS" rpy="LEFTUPPERAMRSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 10 -->		
-	<sensor name="LeftForeArm_gyro" type="gyroscope">
-		<parent link="LeftForeArm"/>
-		<origin xyz="LEFTFOREARMSENSORPOS" rpy="LEFTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftForeArm_accelerometer" type="accelerometer">
-		<parent link="LeftForeArm"/>
-		<origin xyz="LEFTFOREARMSENSORPOS" rpy="LEFTFOREARMSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 11 -->
-	<sensor name="LeftHand_gyro" type="gyroscope">
-		<parent link="LeftHand"/>
-		<origin xyz="LEFTHANDSENSORPOS" rpy="LEFTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftHand_accelerometer" type="accelerometer">
-		<parent link="LeftHand"/>
-		<origin xyz="LEFTHANDSENSORPOS" rpy="LEFTHANDSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>	
-	<!-- Sensor 12 -->
-	<sensor name="RightUpperLeg_gyro" type="gyroscope">
-		<parent link="RightUpperLeg"/>
-		<origin xyz="RIGHTUPPERLEGSENSORPOS" rpy="RIGHTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightUpperLeg_accelerometer" type="accelerometer">
-		<parent link="RightUpperLeg"/>
-		<origin xyz="RIGHTUPPERLEGSENSORPOS" rpy="RIGHTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 13 -->
-	<sensor name="RightLowerLeg_gyro" type="gyroscope">
-		<parent link="RightLowerLeg"/>
-		<origin xyz="RIGHTLOWERLEGSENSORPOS" rpy="RIGHTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightLowerLeg_accelerometer" type="accelerometer">
-		<parent link="RightLowerLeg"/>
-		<origin xyz="RIGHTLOWERLEGSENSORPOS" rpy="RIGHTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 14 -->		
-	<sensor name="RightFoot_gyro" type="gyroscope">
-		<parent link="RightFoot"/>
-		<origin xyz="RIGHTFOOTSENSORPOS" rpy="RIGHTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="RightFoot_accelerometer" type="accelerometer">
-		<parent link="RightFoot"/>
-		<origin xyz="RIGHTFOOTSENSORPOS" rpy="RIGHTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 15 -->
-	<sensor name="LeftUpperLeg_gyro" type="gyroscope">
-		<parent link="LeftUpperLeg"/>
-		<origin xyz="LEFTUPPERLEGSENSORPOS" rpy="LEFTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftUpperLeg_accelerometer" type="accelerometer">
-		<parent link="LeftUpperLeg"/>
-		<origin xyz="LEFTUPPERLEGSENSORPOS" rpy="LEFTUPPERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>	
-	<!-- Sensor 16 -->
-	<sensor name="LeftLowerLeg_gyro" type="gyroscope">
-		<parent link="LeftLowerLeg"/>
-		<origin xyz="LEFTLOWERLEGSENSORPOS" rpy="LEFTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftLowerLeg_accelerometer" type="accelerometer">
-		<parent link="LeftLowerLeg"/>
-		<origin xyz="LEFTLOWERLEGSENSORPOS" rpy="LEFTLOWERLEGSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<!-- Sensor 17 -->		
-	<sensor name="LeftFoot_gyro" type="gyroscope">
-		<parent link="LeftFoot"/>
-		<origin xyz="LEFTFOOTSENSORPOS" rpy="LEFTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>
-	<sensor name="LeftFoot_accelerometer" type="accelerometer">
-		<parent link="LeftFoot"/>
-		<origin xyz="LEFTFOOTSENSORPOS" rpy="LEFTFOOTSENSORRPY"/> <!-- position of the sensor with respect to the link frame -->
-	</sensor>	
+
+	<!--Insert sensors here, if any.-->
+
 </robot>
