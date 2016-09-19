@@ -69,22 +69,37 @@ OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
 %% Inverse Kinematic computation 
 setupFile = ('data/fileSetup.xml');
 trcFile = ('data/S_1bowingtaskForIK.trc');
-IK(filenameOSIM, trcFile, setupFile);
+[state, ~, selectedJoints] = IK(filenameOSIM, trcFile, setupFile);
 
 %% Load URDF model
-% model.FileName = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
 model.filename = filenameURDF;
 modelLoader = iDynTree.ModelLoader();
-if ~modelLoader.loadModelFromFile(model.filename);
+if ~modelLoader.loadReducedModelFromFile(model.filename, selectedJoints);
     fprint('Something wrong with the model loading.')
 end
+%--------------------------------------------------------------------------
+% IMPORTANT NOTE:
+% ---------------
+% Until this point the base link was 'Pelvis' but from now on  we decided
+% to change it with the LeftFoot as is really fixed during the experiment.
+%--------------------------------------------------------------------------
+% initialize berdy
+model   = modelLoader.model();
+sensors = modelLoader.sensors();
+berdyOptions = iDynTree.BerdyOptions;
+berdyOptions.baseLink = 'LeftFoot';
+% load berdy
+berdy = iDynTree.BerdyHelper;
+berdy.init(model, sensors, berdyOptions);
+% get the current traversal
+traversal = berdy.dynamicTraversal;
+currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
+disp(strcat('Current base is: ', currentBase));
+% get how the tree is visited
+linkNames = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
+for i = 0 : traversal.getNrOfVisitedLinks() - 1
+    link = traversal.getLink(i);
+    linkNames{i + 1} = berdy.model().getLinkName(link.getIndex());
+end
 
-% % LOAD MODEL FROM STRING  --> to be fixed, it doesn't work yet!!!
-% modelLoader = iDynTree.ModelLoader();
-% if ~modelLoader.loadModelFromString('urdfModel');
-%     fprint('Something wrong with the model loading.')
-% end
 
-model   = modelLoader.model(); 
-% sensors = modelLoader.sensors(); ->TO BE ADDED
-                 
