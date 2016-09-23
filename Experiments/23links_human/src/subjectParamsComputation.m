@@ -449,14 +449,14 @@ subjectParams.leftLowerLegIzz      = (subjectParams.leftLowerLegMass/2) * ((subj
 leftFoot_x = subjectParams.jLeftBallFoot(1) - pLeftHeel(1);
 leftFoot_y = subjectParams.leftLowerLeg_x; % assumption!!!
 subjectParams.leftFoot_z = abs(pLeftHeel(3));
-subjectParams.leftFootBox = [leftFoot_x, leftFoot_y, leftFoot_z];
+subjectParams.leftFootBox = [leftFoot_x, leftFoot_y, subjectParams.leftFoot_z];
 % box origin
-originWrtLeftHeel = 0.5 * [leftFoot_x, 0, leftFoot_z]; %wrt pLeftHeelFoot
+originWrtLeftHeel = 0.5 * [leftFoot_x, 0, subjectParams.leftFoot_z]; %wrt pLeftHeelFoot
 subjectParams.leftFootBoxOrigin = pLeftHeel' + originWrtLeftHeel ;%wrt jLeftAnkle
 % mass and inertia
 subjectParams.leftFootMass      = 0.0130 *  M;
-subjectParams.leftFootIxx       = (subjectParams.leftFootMass/12) * (leftFoot_y^2 + leftFoot_z^2);
-subjectParams.leftFootIyy       = (subjectParams.leftFootMass/12) * (leftFoot_x^2 + leftFoot_z^2);
+subjectParams.leftFootIxx       = (subjectParams.leftFootMass/12) * (leftFoot_y^2 + subjectParams.leftFoot_z^2);
+subjectParams.leftFootIyy       = (subjectParams.leftFootMass/12) * (leftFoot_x^2 + subjectParams.leftFoot_z^2);
 subjectParams.leftFootIzz       = (subjectParams.leftFootMass/12) * (leftFoot_x^2 + leftFoot_y^2);
 % markers
 [subjectParams.pLeftHeelFoot, ~] = pointsFromName(leftFoot_struct.points, 'pLeftHeelFoot');

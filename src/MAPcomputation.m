@@ -77,14 +77,8 @@ for i = 1 : samples
                            berdyMatrices.b_D,...
                            berdyMatrices.Y,...
                            berdyMatrices.b_Y);
-%     tic;
+
     D = sparse(berdyMatrices.D.toMatlab());
-%     toc;
-%     
-%     tic;
-%     D = sparse(D);
-%     toc;
-    
     b_D = berdyMatrices.b_D.toMatlab();
     Y   = sparse(berdyMatrices.Y.toMatlab());
     b_Y = berdyMatrices.b_Y.toMatlab();
