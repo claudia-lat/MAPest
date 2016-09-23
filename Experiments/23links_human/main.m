@@ -44,16 +44,20 @@ if ~found
     fclose(fid);
 end
 
-%% Load measurements from sensors
-% SUIT
+%% Load measurements from SUIT
 mvnxFilename = 'data/S_1bowingtask.mvnx';
-suit = extractSuitData(mvnxFilename,'data');
-% FORCEPLATE  --> to be done!
+% suit = extractSuitData(mvnxFilename,'data');
 
 %% Obtain sensor position suit = computeSuitSensorPosition(suit);
-suit = computeSuitSensorPosition(suit);
+% suit = computeSuitSensorPosition(suit);
 
-%% Extract subject parameters from suit data 
+%% cutting
+% FORCEPLATE  --> to be done!
+% ROBOT       --> to be done!
+% suit
+% cut index
+
+%% Extract subject parameters from SUIT
 subjectID = 1;
 M = 60;
 subjectParamsFromData = subjectParamsComputation(suit, M);
@@ -62,14 +66,14 @@ subjectParamsFromData = subjectParamsComputation(suit, M);
 filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
 URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, suit.sensors,'filename',filenameURDF,'GazeboModel',false);
 
-%% Generate subject OSIM model
+%% Create OSIM model
 filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
 OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
 
 %% Inverse Kinematic computation 
 setupFile = ('data/fileSetup.xml');
-trcFile = ('data/S_1bowingtaskForIK.trc');
-[state, ~, selectedJoints] = IK(filenameOSIM, trcFile, setupFile);
+trcFile = ('data/Meri-002.trc');
+[state, ddq, selectedJoints] = IK(filenameOSIM, trcFile, setupFile);
 
 %% Load URDF model
 model.filename = filenameURDF;
@@ -81,20 +85,28 @@ end
 % IMPORTANT NOTE:
 % ---------------
 % Until this point the base link was 'Pelvis' but from now on  we decided
-% to change it with the LeftFoot as is really fixed during the experiment.
+% to change it with the 'LeftFoot' since it is really fixed during the
+% experiment.
 %--------------------------------------------------------------------------
 % initialize berdy
 model   = modelLoader.model();
 sensors = modelLoader.sensors();
+% specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
-berdyOptions.baseLink = 'LeftFoot';
+berdyOptions.baseLink = 'LeftFoot'; % change of the base link
+berdyOptions.includeAllNetExternalWrenchesAsSensors          = true;
+berdyOptions.includeAllNetExternalWrenchesAsDynamicVariables = true;
+berdyOptions.includeAllJointAccelerationsAsSensors           = true;
+berdyOptions.includeAllJointTorquesAsSensors                 = false;
+berdyOptions.includeFixedBaseExternalWrench                  = true;
 % load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(model, sensors, berdyOptions);
 % get the current traversal
-traversal = berdy.dynamicTraversal;
+traversal = berdy.dynamicTraversaql;
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
-disp(strcat('Current base is: ', currentBase));
+disp(strcat('Current base is < ', currentBase,'>.'));
+disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
 % get how the tree is visited
 linkNames = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 for i = 0 : traversal.getNrOfVisitedLinks() - 1
@@ -102,4 +114,20 @@ for i = 0 : traversal.getNrOfVisitedLinks() - 1
     linkNames{i + 1} = berdy.model().getLinkName(link.getIndex());
 end
 
+%% Measurements wrapping
 
+% ddq and the state to be cutted!
+
+data = dataPackaging(model,sensors, suit, forceplate, ddq, robot);
+[y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
+
+%% MAP
+% set priors
+priors        = struct;
+priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
+priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables());
+priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
+priors.Sigmay = Sigmay;
+tic;
+[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors);
+toc;

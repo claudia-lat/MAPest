@@ -18,7 +18,7 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors)
 % and a_i is the link-i spatial acceleration, fB_i is the net spatial
 % force on the link-i, f_i is spatial wrench transmitted to link-i from
 % its parent, tau_i is torque on joint-i, fx_i is the external force on
-% link-i and ddq_i is acceleration of joint-i. 
+% link-i and ddq_i is acceleration of joint-i.  
 % The relationship between d and the sensor measurements y is given by
 %
 %                      Y(q, dq) d + b_Y = y                   (1)
@@ -51,15 +51,17 @@ berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
                                  berdyMatrices.b_Y);
 % Set priors
 mud        = priors.mud;
-Sigmad_inv = inv(priors.Sigmad);
-SigmaD_inv = inv(priors.SigmaD);
-Sigmay_inv = inv(priors.Sigmay);
+Sigmad_inv = sparse(inv(priors.Sigmad));
+SigmaD_inv = sparse(inv(priors.SigmaD));
+Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs
 samples = size(y, 2); 
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
-Sigma_dgiveny = zeros(nrOfDynVariables, nrOfDynVariables, samples);
+% Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
+Sigma_dgiveny =  cell(samples,1);
+% Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 
 % MAP Computation
 q  = iDynTree.JointPosDoubleArray(berdy.model());
@@ -75,17 +77,23 @@ for i = 1 : samples
                            berdyMatrices.b_D,...
                            berdyMatrices.Y,...
                            berdyMatrices.b_Y);
-
-    D   = berdyMatrices.D.toMatlab();
+%     tic;
+    D = sparse(berdyMatrices.D.toMatlab());
+%     toc;
+%     
+%     tic;
+%     D = sparse(D);
+%     toc;
+    
     b_D = berdyMatrices.b_D.toMatlab();
-    Y   = berdyMatrices.Y.toMatlab();
+    Y   = sparse(berdyMatrices.Y.toMatlab());
     b_Y = berdyMatrices.b_Y.toMatlab();
 
     SigmaBarD_inv = D' * SigmaD_inv * D + Sigmad_inv;
     muBarD        = SigmaBarD_inv \ (Sigmad_inv * mud - D' * SigmaD_inv * b_D);
 
-    Sigma_dgiveny(:,:,i) = inv(SigmaBarD_inv + Y' * Sigmay_inv * Y);
-    mu_dgiveny(:,i)      = Sigma_dgiveny(:,:,i) * (Y' * Sigmay_inv * (y(:,i) - b_Y) ...
+    Sigma_dgiveny{i} = inv(SigmaBarD_inv + Y' * Sigmay_inv * Y);
+    mu_dgiveny(:,i)      = Sigma_dgiveny{i} * (Y' * Sigmay_inv * (y(:,i) - b_Y) ...
                           + SigmaBarD_inv * muBarD);
 end
 
