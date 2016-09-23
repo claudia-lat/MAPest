@@ -1,4 +1,4 @@
-function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile)
+function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, suitSyncIndex)
 %IK function computes the Inverse Kinematics computation by using the
 % OpenSim API.  After computing q angles, it uses  Savitzi-Golay for
 % obtaining dq and ddq.
@@ -47,4 +47,12 @@ state.q = motionData.data(:, 8:end)';
 for i = 1 : size((state.q),1)
     [state.dq(i,:),ddq(i,:)] = SgolayDerivation(Sg.polinomialOrder,Sg.window,state.q(i,:),Sg.samplingTime);
 end
+
+%% Cut state and ddq
+% Before storing the state and ddq, an eventual cut has to be done.  Since
+% their are computed with IK that, in turn, uses the .trc file from the
+% Xsens acquisition ==> the cut index used is suitSyncIndex.
+ddq      = ddq(:,suitSyncIndex);
+state.q  = state.q(:,suitSyncIndex);
+state.dq = state.dq(:,suitSyncIndex);
 end
