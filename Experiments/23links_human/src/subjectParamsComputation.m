@@ -1,20 +1,26 @@
-function [subjectParams] = subjectParamsComputation(suit, M)
-% SUBJECTPARAMS computes sizes for bounding boxes by extracting dimensions
-% directly from suit data. The convention for the reference frame is that
-% one in Figure 60 of MVN user manual. 
+function [subjectParams] = processRobotWrenches(suit, M)
+% PROCESSROBOTWRANCHES process raw external wrenches estimates coming from the robot  
 %
-% Important note1: 
-% - for pelvis link (the base) the reference frame is located in the point
-%   pHipOrigin. This is also the point of the location of the bounding
-%   box (so, the point wrt the COM is expressed).
-% - for all the other links, the location of the joint reference frame
-%   coincides with the bounding box origi (so, the point wrt the COM is 
-%   expressed).
+% External wrenches are estimated by the robot in a frame (origin and
+% orientation) that is local to the contact link. Furthermore is tipically 
+% estimating the wrench *applied* on the robot. 
+% For the human estimation we need to get from this wrenches but: 
+% * multiplied by -1 (as the wrench applied on the human is exactly the \
+%   opposite of the one excerted on the robot)
+% Express in the frame of the human link in contact. 
+% This function computes the fwd kinematics of the robot and the human,
+% and using this information and the relative information between the
+% human and the robot, given by the fixture.pdf file, correctly processes 
+% the robot wrenches  
+
+% Important Robot Frames:
+% l_sole frame on the sole of the robot, used as a reference in fixture.pdf
+% l_elbow_1, r_elbow_1 (link) frames in which the external wrenches are expressed
 %
-% Important note: 
-% For those links which are defined with a parallelepiped bounding box, the
-% convention for the size vector is: [DIM ALONG x, DIM ALONG y, DIM ALONG z].
-% For cylinder bounding boxes x dimension is the diameter.
+% Important human frames:
+% LeftSole frame on the sole of the human, used as a reference in
+% fixture.pdf 
+% LeftFoot (link)  
 
 %% --LINK BASE
 %% PELVIS
@@ -442,7 +448,7 @@ subjectParams.leftLowerLegIzz      = (subjectParams.leftLowerLegMass/2) * ((subj
 [pLeftHeel, ~] = pointsFromName(leftFoot_struct.points, 'pLeftHeelFoot');
 leftFoot_x = subjectParams.jLeftBallFoot(1) - pLeftHeel(1);
 leftFoot_y = subjectParams.leftLowerLeg_x; % assumption!!!
-leftFoot_z = abs(pLeftHeel(3));
+subjectParams.leftFoot_z = abs(pLeftHeel(3));
 subjectParams.leftFootBox = [leftFoot_x, leftFoot_y, leftFoot_z];
 % box origin
 originWrtLeftHeel = 0.5 * [leftFoot_x, 0, leftFoot_z]; %wrt pLeftHeelFoot
