@@ -94,8 +94,8 @@ data.ddq.var = 6.66e-6; %from datasheet
 % Both sensors are considered as external force acting as follow:
 % - on rightFoot --> force platform1;
 % - on leftFoot  --> force platform2;
-% - on rightHand --> robot;
-% - on leftHand  --> robot;
+% - on rightHand --> robot(left arm);
+% - on leftHand  --> robot(right arm);
 % - null meas for all the others.
 % ---------------------------------------------------------------
 nOfSensor.fext = model.getNrOfLinks;
@@ -119,8 +119,8 @@ wrench = zeros(6,size(forceplate.data.plateforms.plateform1.forces,2));
 contactLink = cell(2,1);
 contactLink{1} = forceplate.data.plateforms.plateform1.contactLink;
 contactLink{2} = forceplate.data.plateforms.plateform2.contactLink;
-contactLink{3} = robot.data.right.contactLink;
-contactLink{4} = robot.data.left.contactLink;
+contactLink{3} = robot.data.links.rightarm.contactLink;
+contactLink{4} = robot.data.links.leftarm.contactLink;
 index = cell(size(contactLink));
 for i = 1: size(contactLink,1)
     for indx = 1 : nOfSensor.fext
@@ -145,12 +145,12 @@ for i =  1 : nOfSensor.fext
      end
      % <FROM ROBOT>
      if i == index{3}
-        wrench_fake(1:3,:) = robot.data.right.forces;
-        wrench_fake(4:6,:) = robot.data.right.moments;
+        wrench_fake(1:3,:) = robot.data.links.rightarm.forces;
+        wrench_fake(4:6,:) = robot.data.links.rightarm.moments;
         data.fext.meas{i} = wrench_fake;
       elseif i == index{4}
-        wrench_fake(1:3,:) = robot.data.left.forces;
-        wrench_fake(4:6,:) = robot.data.left.moments;
+        wrench_fake(1:3,:) = robot.data.links.leftarm.forces;
+        wrench_fake(4:6,:) = robot.data.links.leftarm.moments;
         data.fext.meas{i} = wrench_fake;
      end
 end
