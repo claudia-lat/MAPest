@@ -7,93 +7,91 @@ addpath(genpath('src'));
 addpath(genpath('templates')); 
 addpath(genpath('../../src'));
 
+% create a structure 'bucket' where storing different stuff generating by
+% running the code
+bucket = struct;
 %% Java path needed by OSIM
-JAVA_OSIM_PATH = '/usr/local/Cellar/opensim-core/4.0/share/doc/OpenSim/Java';
-JAVA_OSIM_LIB_FOLDER = '/usr/local/Cellar/opensim-core/4.0/lib';
+bucket.JAVA_OSIM_PATH = '/usr/local/Cellar/opensim-core/4.0/share/doc/OpenSim/Java';
+bucket.JAVA_OSIM_LIB_FOLDER = '/usr/local/Cellar/opensim-core/4.0/lib';
 %get current class path
-javacpath = javaclasspath('-dynamic');
+bucket.javacpath = javaclasspath('-dynamic');
 found = false;
-for i = 1:size(javacpath)
-    if (strcmp(javacpath{i}, JAVA_OSIM_PATH))
+for i = 1:size(bucket.javacpath)
+    if (strcmp(bucket.javacpath{i}, bucket.JAVA_OSIM_PATH))
         found = true;
         break;
     end
 end
 if ~found
-    javaaddpath(JAVA_OSIM_PATH);
+    javaaddpath(bucket.JAVA_OSIM_PATH);
 end
-javapathFile = fullfile(prefdir, 'javalibrarypath.txt');
+bucket.javapathFile = fullfile(prefdir, 'javalibrarypath.txt');
 found = false;
-if exist(javapathFile, 'file')
+if exist(bucket.javapathFile, 'file')
     %open and check file
-    fid = fopen(javapathFile,'r');
+    bucket.fid = fopen(bucket.javapathFile,'r');
     %for each line, trim and compare with JAVA_OSIM_LIB_FOLDER
-    tline = fgetl(fid);
-    while ischar(tline)
-        if strcmp(strtrim(tline), JAVA_OSIM_LIB_FOLDER)
+    bucket.tline = fgetl(bucket.fid);
+    while ischar(bucket.tline)
+        if strcmp(strtrim(bucket.tline), bucket.JAVA_OSIM_LIB_FOLDER)
             found = true;
             break;
         end
-        tline = fgetl(fid);
+        bucket.tline = fgetl(bucket.fid);
     end
-    fclose(fid);
+    fclose(bucket.fid);
 end
 if ~found
-    fid = fopen(javapathFile,'a');
-    fprintf(fid, strcat(JAVA_OSIM_LIB_FOLDER, '\n'));
-    fclose(fid);
+    bucket.fid = fopen(bucket.javapathFile,'a');
+    fprintf(bucket.fid, strcat(bucket.JAVA_OSIM_LIB_FOLDER, '\n'));
+    fclose(bucket.fid);
 end
 
 %% Load measurements from SUIT
-mvnxFilename = 'data/S_1bowingtask.mvnx';
-% suit = extractSuitData(mvnxFilename,'data');
+bucket.mvnxFilename = 'data/Meri-002.mvnx';
+suit = extractSuitData(bucket.mvnxFilename,'data');
+suit = computeSuitSensorPosition(suit); % obtain sensors position
 
-%% Obtain sensor position suit = computeSuitSensorPosition(suit);
-% suit = computeSuitSensorPosition(suit);
-
-%% Load measurements from the forceplates
-
-AMTIfilename = 'AMTIdata002.txt';
-TSfilename = 'TSdata002.txt';
-suitTimeInit = suit.time;
-ROBOTfilenameRight = 'robotRight.txt';
-ROBOTfilenameLeft = 'robotLeft.txt';
-
-contactLink = cell(4,1);
-contactLink{1} = 'RightFoot'; %Link in contact with forceplate 1
-contactLink{2} = 'LeftFoot'; %Link in contact with forceplate 2
-contactLink{3} = 'LeftHand'; %Link in contact with right robot forearm
-contactLink{4} = 'RightHand'; %Link in contact with left robot forearm
-
-% Synchronization between suit and forceplates data
-[forceplate, suitIndex] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, 'outputdir', 'data', 'alldata', true );
-
-%% Load measurements from the robot and synchronization with suit and forceplates data
-timeSeries = suitTimeInit(suitIndex);
-[robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenameRight, timeSeries, contactLink, 'outputdir', 'data', 'alldata', true);
-[suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, syncIndex, suitTimeInit);
-
+%% Load measurements from FORCEPLATES and ROBOT
+bucket.AMTIfilename       = 'data/AMTIdata002.txt';
+bucket.TSfilename         = 'data/TSdata002.txt';
+bucket.ROBOTfilenameRight = 'data/robotRight002.txt';
+bucket.ROBOTfilenameLeft  = 'data/robotLeft002.txt';
+% -------------------------------------------------------------------------
+% Following configuration is customized for this particular experiment:%
+bucket.contactLink = cell(4,1);
+bucket.contactLink{1} = 'RightFoot'; %Link in contact with forceplate 1
+bucket.contactLink{2} = 'LeftFoot';  %Link in contact with forceplate 2
+bucket.contactLink{3} = 'LeftHand';  %Link in contact with right robot forearm
+bucket.contactLink{4} = 'RightHand'; %Link in contact with left robot forearm
+% -------------------------------------------------------------------------
+%% Extract and synchronised measurements
+bucket.suitTimeInit = suit.time;
+[forceplate, bucket.suitIndex] = extractForceplateData(bucket.AMTIfilename, bucket.TSfilename, bucket.suitTimeInit, bucket.contactLink, 'outputdir', 'data');
+bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
+[robot , bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, bucket.ROBOTfilenameRight, bucket.timeSeries, bucket.contactLink, 'outputdir', 'data');
+[suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, bucket.syncIndex, bucket.suitTimeInit);
 
 %% Extract subject parameters from SUIT
 subjectID = 1;
-M = 60;
-subjectParamsFromData = subjectParamsComputation(suit, M);
+bucket.M = 60;
+subjectParamsFromData = subjectParamsComputation(suit, bucket.M);
 
 %% Create URDF model
-filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
-URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, suit.sensors,'filename',filenameURDF,'GazeboModel',false);
+bucket.filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
+bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, suit.sensors,'filename',bucket.filenameURDF,'GazeboModel',false);
 
 %% Create OSIM model
-filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
-OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, filenameOSIM);
+bucket.filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
+bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, bucket.filenameOSIM);
 
 %% Inverse Kinematic computation 
-setupFile = ('data/fileSetup.xml');
-trcFile = ('data/Meri-002.trc');
-[state, ddq, selectedJoints] = IK(filenameOSIM, trcFile, setupFile);
+bucket.setupFile = ('data/fileSetup.xml');
+bucket.trcFile = ('data/Meri-002.trc');
+[state, ddq, selectedJoints] = IK(bucket.filenameOSIM, bucket.trcFile, bucket.setupFile, suitSyncIndex);
 
 %% Load URDF model
-model.filename = filenameURDF;
+model.filename = bucket.filenameURDF;
 modelLoader = iDynTree.ModelLoader();
 if ~modelLoader.loadReducedModelFromFile(model.filename, selectedJoints);
     fprint('Something wrong with the model loading.')
@@ -120,21 +118,18 @@ berdyOptions.includeFixedBaseExternalWrench                  = true;
 berdy = iDynTree.BerdyHelper;
 berdy.init(model, sensors, berdyOptions);
 % get the current traversal
-traversal = berdy.dynamicTraversaql;
+traversal = berdy.dynamicTraversal;
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('Current base is < ', currentBase,'>.'));
 disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
-% get how the tree is visited
-linkNames = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
+% get the tree is visited IS the ordere of variables in vector d
+dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 for i = 0 : traversal.getNrOfVisitedLinks() - 1
     link = traversal.getLink(i);
-    linkNames{i + 1} = berdy.model().getLinkName(link.getIndex());
+    dVectorOrder{i + 1} = berdy.model().getLinkName(link.getIndex());
 end
 
 %% Measurements wrapping
-
-% ddq and the state to be cutted!
-
 data = dataPackaging(model,sensors, suit, forceplate, ddq, robot);
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 
