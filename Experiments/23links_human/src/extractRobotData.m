@@ -41,11 +41,10 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
 end
 
 %% Load and read file .txt
-delimiterIn = '\t';
-robotDatasetRight = dlmread(ROBOTfilenameRight, delimiterIn);
+robotDatasetRight = importdata(fullfile(pwd,ROBOTfilenameRight));
 robotTimeRight = (robotDatasetRight(:,2)*1000);
 
-robotDatasetLeft = dlmread(ROBOTfilenameLeft, delimiterIn);
+robotDatasetLeft = importdata(fullfile(pwd,ROBOTfilenameLeft));
 robotTimeLeft = (robotDatasetLeft(:,2)*1000);
 
 [tIndexLeft, tIndexRight] = timeCmp(robotTimeRight, robotTimeLeft, 1);
@@ -66,15 +65,12 @@ robotTime = robotTimeRight;
 
 %% Create data struct for all data coming from the robot
 allData = [];
-
 % PROPERTIES
 allData.properties.frameRate = 240;
 nrOfFrames = size(robotDataRight,1);
 allData.properties.nrOfFrame = nrOfFrames;
-
 % TIME
 allData.time.unixTime = robotTime';
-
 % ROBOT DATA
 allData.links.rightarm.forces = robotDataRight(:,1:3)';
 allData.links.rightarm.moments = robotDataRight(:,4:6)';
@@ -84,9 +80,7 @@ allData.links.leftarm.moments = robotDataLeft(:,4:6)';
 allData.links.leftarm.contactLink = contactLink{4};
 
 %% Sychronization with the suit data
-
 [robotIndex, syncIndex] = timeCmp(timeSeries, robotTime, 6);
-
 syncTime = timeSeries(syncIndex)';
 robotDataRight = robotDataRight(robotIndex(1):robotIndex(end),:);
 robotDataLeft = robotDataLeft(robotIndex(1):robotIndex(end),:);
@@ -97,29 +91,23 @@ for i = 1:6
     vec = robotDataRight(:,i);
     robotCutDataRight(:,i) = interp1(robotTime,vec,syncTime,'linear');
 end
-
 for i = 1:6
     vec = robotDataLeft(:,i);
     robotCutDataLeft(:,i) = interp1(robotTime,vec,syncTime,'linear');
 end
-
 syncIndex = syncIndex(2:end-1); % first and last sample of the interpolation are not reliable
-
 syncTime = syncTime(syncIndex);
 robotCutDataRight = robotCutDataRight(syncIndex,:);
 robotCutDataLeft = robotCutDataLeft(syncIndex,:);
 
 %% Create data struct for cut data corresponding to the suit
 data = [];
-
 % PROPERTIES
 data.properties.frameRate = 240;
 nrOfFrames = size(robotCutDataRight,1);
 data.properties.nrOfFrame = nrOfFrames;
-
 % TIME
 data.time.unixTime = syncTime';
-
 % DATA
 data.links.rightarm.forces = robotCutDataRight(:,1:3)';
 data.links.rightarm.moments = robotCutDataRight(:,4:6)';
@@ -130,14 +118,12 @@ data.links.leftarm.contactLink = contactLink{4};
 
 %% Create data struct
 robot = [];
-
 if (options.ALLDATA == 1)
     robot.data = data;
     robot.allData = allData;
 else 
     robot.data = data;
 end
-
 
 %% Save data in a file.mat
 if not(isempty(options.OUTPUTDIR))
@@ -150,53 +136,3 @@ if not(isempty(options.OUTPUTDIR))
 end
 
 end
-
-function [slaveIndex, masterIndex] = timeCmp(masterTime, slaveTime, threshold)
-% TIMECMP: Function to synchronize two system with different sampling
-
-% Input:
-% - masterTime : time data of the system that impose the sampling;
-% - slaveTime : time data of the system that have to be synchronized with the master system;
-% - threshold : maximum difference between two time values that make the
-%               synchronization acceptable;
-% Output:
-% - slaveIndex : index for the sample of the slave that have a corresponding master data, 
-%                zero if there is not a slave sample that corresponds to the master;
-% - masterIndex : index for the sample of the master that have a corresponding slave data.
-
-lenMaster = length(masterTime);
-lenSlave = length(slaveTime);
-slaveIndex = zeros(lenMaster, 1);
-match = zeros(lenMaster, 1);
-masterIndex = [];
-jumpFlag = 0;
-for i=1:lenMaster
-    for j=1:lenSlave
-        if (slaveIndex(i)==0)
-            if (isequal(round(masterTime(i)),round(slaveTime(j)))==1)
-                slaveIndex(i)=j;
-                masterIndex = [masterIndex; i];
-            else          
-                [value,index] = min(abs(round(masterTime(i))-round(slaveTime)));
-                if value <= threshold
-                    slaveIndex(i) = index;
-                    masterIndex = [masterIndex; i];
-                end     
-            end
-        end
-    end
-end
-
-    match = find(slaveIndex);
-    for i = 2:length(match)
-        if (match(i)-match(i-1))>1
-            jumpFlag = 1;
-        end
-    end
-
-end
-
-
-
-
-
