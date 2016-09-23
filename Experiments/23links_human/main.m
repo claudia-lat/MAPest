@@ -51,11 +51,28 @@ mvnxFilename = 'data/S_1bowingtask.mvnx';
 %% Obtain sensor position suit = computeSuitSensorPosition(suit);
 % suit = computeSuitSensorPosition(suit);
 
-%% cutting
-% FORCEPLATE  --> to be done!
-% ROBOT       --> to be done!
-% suit
-% cut index
+%% Load measurements from the forceplates
+
+AMTIfilename = 'AMTIdata002.txt';
+TSfilename = 'TSdata002.txt';
+suitTimeInit = suit.time;
+ROBOTfilenameRight = 'robotRight.txt';
+ROBOTfilenameLeft = 'robotLeft.txt';
+
+contactLink = cell(4,1);
+contactLink{1} = 'RightFoot'; %Link in contact with forceplate 1
+contactLink{2} = 'LeftFoot'; %Link in contact with forceplate 2
+contactLink{3} = 'LeftHand'; %Link in contact with right robot forearm
+contactLink{4} = 'RightHand'; %Link in contact with left robot forearm
+
+% Synchronization between suit and forceplates data
+[forceplate, suitIndex] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, 'outputdir', 'data', 'alldata', true );
+
+%% Load measurements from the robot and synchronization with suit and forceplates data
+timeSeries = suitTimeInit(suitIndex);
+[robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenameRight, timeSeries, contactLink, 'outputdir', 'data', 'alldata', true);
+[suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, syncIndex, suitTimeInit);
+
 
 %% Extract subject parameters from SUIT
 subjectID = 1;
