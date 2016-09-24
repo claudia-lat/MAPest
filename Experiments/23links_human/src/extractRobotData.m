@@ -1,4 +1,4 @@
-function [ robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenameRight, timeSeries, contactLink, varargin )
+function [ robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenameRight, timeSeries, contactLink, rightArmStateFilename, leftArmStateFilename,  rightLegStateFilename, leftLegStateFilename, torsoStateFilename, varargin )
 % EXTRACTROBOTDATA allows to create a .mat stucture contatining all robot data 
 % acquired during the human-robot interaction experiment.
 
@@ -8,7 +8,7 @@ function [ robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenam
 % -  contactLink : links in contact with the robot;
 % -  outputDir : (optional) the directory where saving the output;
 % -  allData : (optional) if true the function returns not only the cut data but all the data genereted by the robot.
-
+% -  linkFilename : txt file with joint state position for the link;
 % Outputs
 % -  robot : data of the acquisition in a .mat format;
 % -  syncIndex : index of the Xsens data that correspond to robot data.
@@ -116,6 +116,12 @@ data.links.leftarm.forces = robotCutDataLeft(:,1:3)';
 data.links.leftarm.moments = robotCutDataLeft(:,4:6)';
 data.links.leftarm.contactLink = contactLink{4};
 
+% ROBOT JOINT POSITION
+data.jointPos.rightArm.state = readStateExt(16,rightArmStateFilename);
+data.jointPos.leftArm.state = readStateExt(16,leftArmStateFilename);
+data.jointPos.rightLeg.state = readStateExt(6,rightLegStateFilename);
+data.jointPos.leftLeg.state = readStateExt(6,leftLegStateFilename);
+data.jointPos.torso.state = readStateExt(3,torsoStateFilename);
 %% Create data struct
 robot = [];
 if (options.ALLDATA == 1)
