@@ -48,10 +48,10 @@ if ~found
 end
 
 %% Load measurements from SUIT
-%<<<<<< Updated upstream
+<<<<<<< Updated upstream
 bucket.mvnxFilename = 'data/Meri-002.mvnx';
-% suit = extractSuitData(bucket.mvnxFilename,'data');
-% suit = computeSuitSensorPosition(suit); % obtain sensors position
+suit = extractSuitData(bucket.mvnxFilename,'data');
+suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename       = 'data/AMTIdata002.txt';
@@ -59,10 +59,10 @@ bucket.TSfilename         = 'data/TSdata002.txt';
 bucket.ROBOTfilenameRight = 'data/robotRight002.txt';
 bucket.ROBOTfilenameLeft  = 'data/robotLeft002.txt';
 bucket.rightArmStateFilename = 'data/rightArmState.txt';
-bucket.leftArmStateFilename = 'data/leftArmState.txt';
-bucket.rightLegStateFilename = 'data/rightLegState.txt';
-bucket.leftLegStateFilename = 'data/leftLegState.txt';
-bucket.torsoStateFilename  = 'data/torsoState.txt';
+bucket.leftArmStateFilename = 'leftArmState.txt';
+bucket.rightLegStateFilename = 'rightLegState.txt';
+bucket.leftLegStateFilename = 'leftLegState.txt';
+bucket.torsoStateFilename  = 'torsoState.txt';
 % -------------------------------------------------------------------------
 % Following configuration is customized for this particular experiment:%
 bucket.contactLink = cell(4,1);
@@ -77,7 +77,7 @@ bucket.suitTimeInit = suit.time;
 bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
 [robot , bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, bucket.ROBOTfilenameRight, bucket.timeSeries, bucket.contactLink, bucket.rightArmStateFilename, bucket.leftArmStateFilename, bucket.rightLegStateFilename, bucket.leftLegStateFilename, bucket.torsoStateFilename, 'outputdir', 'data');
 [suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, bucket.syncIndex, bucket.suitTimeInit);
-%=======
+=======
 % mvnxFilename = 'data/S_1bowingtask.mvnx';
 % % suit = extractSuitData(mvnxFilename,'data');
 % 
