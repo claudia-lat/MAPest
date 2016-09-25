@@ -48,21 +48,22 @@ if ~found
 end
 
 %% Load measurements from SUIT
-%<<<<<< Updated upstream
 bucket.mvnxFilename = 'data/Meri-002.mvnx';
 % suit = extractSuitData(bucket.mvnxFilename,'data');
 % suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
-bucket.AMTIfilename       = 'data/AMTIdata002.txt';
-bucket.TSfilename         = 'data/TSdata002.txt';
-bucket.ROBOTfilenameRight = 'data/robotRight002.txt';
-bucket.ROBOTfilenameLeft  = 'data/robotLeft002.txt';
+bucket.AMTIfilename          = 'data/AMTIdata002.txt';
+bucket.TSfilename            = 'data/TSdata002.txt';
+
+bucket.ROBOTfilenameRight    = 'data/robotRight002.txt';
+bucket.ROBOTfilenameLeft     = 'data/robotLeft002.txt';
+
 bucket.rightArmStateFilename = 'data/rightArmState.txt';
-bucket.leftArmStateFilename = 'data/leftArmState.txt';
+bucket.leftArmStateFilename  = 'data/leftArmState.txt';
 bucket.rightLegStateFilename = 'data/rightLegState.txt';
-bucket.leftLegStateFilename = 'data/leftLegState.txt';
-bucket.torsoStateFilename  = 'data/torsoState.txt';
+bucket.leftLegStateFilename  = 'data/leftLegState.txt';
+bucket.torsoStateFilename    = 'data/torsoState.txt';
 % -------------------------------------------------------------------------
 % Following configuration is customized for this particular experiment:%
 bucket.contactLink = cell(4,1);
@@ -73,62 +74,62 @@ bucket.contactLink{4} = 'RightHand'; %Link in contact with left robot forearm
 % -------------------------------------------------------------------------
 %% Extract and synchronised measurements
 bucket.suitTimeInit = suit.time;
-[forceplate, bucket.suitIndex] = extractForceplateData(bucket.AMTIfilename, bucket.TSfilename, bucket.suitTimeInit, bucket.contactLink, 'outputdir', 'data');
+[forceplate, bucket.suitIndex] = extractForceplateData(bucket.AMTIfilename, ...
+                                                       bucket.TSfilename, ...
+                                                       bucket.suitTimeInit, ...
+                                                       bucket.contactLink,...
+                                                       'outputdir', 'data');
+                             
 bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
-[robot , bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, bucket.ROBOTfilenameRight, bucket.timeSeries, bucket.contactLink, bucket.rightArmStateFilename, bucket.leftArmStateFilename, bucket.rightLegStateFilename, bucket.leftLegStateFilename, bucket.torsoStateFilename, 'outputdir', 'data');
-[suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, bucket.syncIndex, bucket.suitTimeInit);
-%=======
-% mvnxFilename = 'data/S_1bowingtask.mvnx';
-% % suit = extractSuitData(mvnxFilename,'data');
-% 
-% %% Obtain sensor position suit = computeSuitSensorPosition(suit);
-% % suit = computeSuitSensorPosition(suit);
-% 
-% %% Extract measurements from the forceplates
-% 
-% AMTIfilename = 'AMTIdata002.txt';
-% TSfilename = 'TSdata002.txt';
-% suitTimeInit = suit.time;
-% ROBOTfilenameRight = 'robotRight.txt';
-% ROBOTfilenameLeft = 'robotLeft.txt';
-% rightArmStateFilename = 'rightArmState.txt';
-% leftArmStateFilename = 'leftArmState.txt';
-% rightLegStateFilename = 'rightLegState.txt';
-% leftLegStateFilename = 'leftLegState.txt';
-% torsoStateFilename  = 'torsoState.txt';
-% 
-% contactLink = cell(4,1);
-% contactLink{1} = 'RightFoot'; %Link in contact with forceplate 1
-% contactLink{2} = 'LeftFoot'; %Link in contact with forceplate 2
-% contactLink{3} = 'LeftHand'; %Link in contact with right robot forearm
-% contactLink{4} = 'RightHand'; %Link in contact with left robot forearm
-% 
-% % Synchronization between suit and forceplates data
-% [forceplate, suitIndex] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, 'outputdir', 'data', 'alldata', true );
-% 
-% %% Extract measurements from the robot and synchronization with suit and forceplates data
-% timeSeries = suitTimeInit(suitIndex);
-% [robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ROBOTfilenameRight, timeSeries, contactLink, rightArmStateFilename, leftArmStateFilename,  rightLegStateFilename, leftLegStateFilename, torsoStateFilename, 'outputdir', 'data');
-% [suit, forceplate, suitSyncIndex] = dataSync(suit, forceplate, syncIndex, suitTimeInit);
-% >>>>>>> Stashed changes
+% [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
+%                                              bucket.ROBOTfilenameRight, ...
+%                                              bucket.timeSeries, ...
+%                                              bucket.contactLink, ...
+%                                              'outputdir', 'data');
+[robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
+                                             bucket.ROBOTfilenameRight, ...
+                                             bucket.timeSeries, ...
+                                             bucket.contactLink,...
+                                             bucket.rightArmStateFilename, ...
+                                             bucket.leftArmStateFilename, ...
+                                             bucket.rightLegStateFilename, ...
+                                             bucket.leftLegStateFilename, ...
+                                             bucket.torsoStateFilename,...
+                                             'outputdir', 'data');
+                         
+[suit, forceplate, suitSyncIndex] = dataSync(suit,...
+                                             forceplate, ...
+                                             bucket.syncIndex,...
+                                             bucket.suitTimeInit);
 
 %% Extract subject parameters from SUIT
 subjectID = 1;
 bucket.M = 60;
 subjectParamsFromData = subjectParamsComputation(suit, bucket.M);
 
+%% Process raw data from forceplates and robot
+processedForceplate = processForceplateWrenches(forceplate, subjectParamsFromData);
+
+
 %% Create URDF model
 bucket.filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
-bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, suit.sensors,'filename',bucket.filenameURDF,'GazeboModel',false);
+bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
+                                            suit.sensors,...
+                                            'filename',bucket.filenameURDF,...
+                                            'GazeboModel',false);
 
 %% Create OSIM model
 bucket.filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
-bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, bucket.filenameOSIM);
+bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+                                            bucket.filenameOSIM);
 
 %% Inverse Kinematic computation 
 bucket.setupFile = ('data/fileSetup.xml');
 bucket.trcFile = ('data/Meri-002.trc');
-[state, ddq, selectedJoints] = IK(bucket.filenameOSIM, bucket.trcFile, bucket.setupFile, suitSyncIndex);
+[state, human_ddq, selectedJoints] = IK(bucket.filenameOSIM, ...
+                                        bucket.trcFile, ...
+                                        bucket.setupFile,...
+                                        suitSyncIndex);
 
 %% Load URDF model
 model.filename = bucket.filenameURDF;
@@ -170,7 +171,12 @@ for i = 0 : traversal.getNrOfVisitedLinks() - 1
 end
 
 %% Measurements wrapping
-data = dataPackaging(model,sensors, suit, forceplate, ddq, robot);
+data = dataPackaging(model,... 
+                     sensors,...
+                     suit,...
+                     forceplate,...
+                     human_ddq,...
+                     robot);
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 
 %% MAP
