@@ -4,7 +4,7 @@ function [slaveIndex, masterIndex] = timeCmp(masterTime, slaveTime, threshold)
 % Input:
 % - masterTime : time data of the system that impose the sampling;
 % - slaveTime : time data of the system that have to be synchronized with the master system;
-% - threshold : maximum difference between two time values that make the
+% - threshold : [ms] maximum difference between two time values that make the
 %               synchronization acceptable;
 % Output:
 % - slaveIndex : index for the sample of the slave that have a corresponding master data, 
