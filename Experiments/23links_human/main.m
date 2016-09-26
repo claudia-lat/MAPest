@@ -49,8 +49,8 @@ end
 
 %% Load measurements from SUIT
 bucket.mvnxFilename = 'data/Meri-002.mvnx';
-% suit = extractSuitData(bucket.mvnxFilename,'data');
-% suit = computeSuitSensorPosition(suit); % obtain sensors position
+suit = extractSuitData(bucket.mvnxFilename,'data');
+suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = 'data/AMTIdata002.txt';
@@ -81,11 +81,7 @@ bucket.suitTimeInit = suit.time;
                                                        'outputdir', 'data');
                              
 bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
-% [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
-%                                              bucket.ROBOTfilenameRight, ...
-%                                              bucket.timeSeries, ...
-%                                              bucket.contactLink, ...
-%                                              'outputdir', 'data');
+
 [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
                                              bucket.ROBOTfilenameRight, ...
                                              bucket.timeSeries, ...
@@ -107,9 +103,8 @@ subjectID = 1;
 bucket.M = 60;
 subjectParamsFromData = subjectParamsComputation(suit, bucket.M);
 
-%% Process raw data from forceplates and robot
+%% Process raw data from forceplates
 processedForceplate = processForceplateWrenches(forceplate, subjectParamsFromData);
-
 
 %% Create URDF model
 bucket.filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
@@ -132,11 +127,15 @@ bucket.trcFile = ('data/Meri-002.trc');
                                         suitSyncIndex);
 
 %% Load URDF model
-model.filename = bucket.filenameURDF;
-modelLoader = iDynTree.ModelLoader();
-if ~modelLoader.loadReducedModelFromFile(model.filename, selectedJoints);
-    fprint('Something wrong with the model loading.')
+humanModel.filename = bucket.filenameURDF;
+humanModelLoader = iDynTree.ModelLoader();
+if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, selectedJoints);
+    fprintf('Something wrong with the model loading.')
 end
+humanModel = humanModelLoader.model();
+human_kinDynComp = iDynTree.KinDynComputations();
+human_kinDynComp.loadRobotModel(humanModel);
+
 %--------------------------------------------------------------------------
 % IMPORTANT NOTE:
 % ---------------
@@ -144,9 +143,33 @@ end
 % to change it with the 'LeftFoot' since it is really fixed during the
 % experiment.
 %--------------------------------------------------------------------------
-% initialize berdy
-model   = modelLoader.model();
-sensors = modelLoader.sensors();
+
+%% Load robot URDF model
+[robotJointPos, robotModel] = createRobotModel(robot);
+robot_kinDynComp = iDynTree.KinDynComputations();
+robot_kinDynComp.loadRobotModel(robotModel);
+
+%% Process raw data from robot
+
+robotLeftArmWrench(1:3,:) = robot.data.links.leftarm.forces;
+robotLeftArmWrench(4:6,:) = robot.data.links.leftarm.moments;
+robotRightArmWrench(1:3,:) = robot.data.links.rightarm.forces;
+robotRightArmWrench(4:6,:) = robot.data.links.rightarm.moments;
+% humanJointPos
+% 
+% for i= 1:robot.data.properties.nrOfFrame
+% processedRobotplate(:,i) = processRobotWrenches(robot_kinDynComp, ...
+%                                                 human_kinDynComp, ...
+%                                                 robotJointPos(:,i), ...
+%                                                 humanJointPos(:,i), ...
+%                                                 robotLeftArmWrench(:,i), ...
+%                                                 robotRightArmWrench(:,i), ...
+%                                                 subjectParamsFromData);
+% end
+
+%% initialize berdy
+model   = humanModelLoader.model();
+sensors = humanModelLoader.sensors();
 % specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
 berdyOptions.baseLink = 'LeftFoot'; % change of the base link
