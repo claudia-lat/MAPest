@@ -42,6 +42,39 @@
     <child link="root_link_ems_gyro_eb5"/>
     <dynamics damping="0.1"/>
   </joint>
+  <material name="green">
+     <color rgba="0 1 0 1"/>
+  </material>
+  <material name="black">
+     <color rgba="0 0 0 1"/>
+  </material>
+  <material name="cyan">
+      <color rgba="0 0 0 1"/>
+  </material>
+  <material name="blue">
+     <color rgba="0 0 0 1"/>
+  </material>
+  <material name="red">
+      <color rgba="0 0 0 1"/>
+</material>
+  <material name="yellow">
+     <color rgba="0 0 0 1"/>
+  </material>
+  <material name="pink">
+      <color rgba="0 0 0 1"/>
+  </material>
+  <material name="white">
+     <color rgba="0 0 0 1"/>
+  </material>
+  <material name="dblue">
+      <color rgba="0 0 0 1"/>
+</material>
+  <material name="dgreen">
+     <color rgba="0 0 0 1"/>
+  </material>
+  <material name="gray">
+      <color rgba="0 0 0 1"/>
+</material>
   <link name="r_hip_1">
     <inertial>
       <origin xyz="-0.040711 -5.9e-05 -0.0005234" rpy="0 0 0"/>

@@ -55,10 +55,8 @@ suit = computeSuitSensorPosition(suit); % obtain sensors position
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = 'data/AMTIdata002.txt';
 bucket.TSfilename            = 'data/TSdata002.txt';
-
 bucket.ROBOTfilenameRight    = 'data/robotRight002.txt';
 bucket.ROBOTfilenameLeft     = 'data/robotLeft002.txt';
-
 bucket.rightArmStateFilename = 'data/rightArmState.txt';
 bucket.leftArmStateFilename  = 'data/leftArmState.txt';
 bucket.rightLegStateFilename = 'data/rightLegState.txt';
@@ -79,7 +77,6 @@ bucket.suitTimeInit = suit.time;
                                                        bucket.suitTimeInit, ...
                                                        bucket.contactLink,...
                                                        'outputdir', 'data');
-                             
 bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
 
 [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
@@ -91,8 +88,7 @@ bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
                                              bucket.rightLegStateFilename, ...
                                              bucket.leftLegStateFilename, ...
                                              bucket.torsoStateFilename,...
-                                             'outputdir', 'data');
-                         
+                                             'outputdir', 'data');                         
 [suit, forceplate, suitSyncIndex] = dataSync(suit,...
                                              forceplate, ...
                                              bucket.syncIndex,...
@@ -104,7 +100,7 @@ bucket.M = 60;
 subjectParamsFromData = subjectParamsComputation(suit, bucket.M);
 
 %% Process raw data from forceplates
-processedForceplate = processForceplateWrenches(forceplate, subjectParamsFromData);
+forceplate = processForceplateWrenches(forceplate, subjectParamsFromData);
 
 %% Create URDF model
 bucket.filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
@@ -135,7 +131,6 @@ end
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
-
 %--------------------------------------------------------------------------
 % IMPORTANT NOTE:
 % ---------------
@@ -143,29 +138,20 @@ human_kinDynComp.loadRobotModel(humanModel);
 % to change it with the 'LeftFoot' since it is really fixed during the
 % experiment.
 %--------------------------------------------------------------------------
-
 %% Load robot URDF model
 [robotJointPos, robotModel] = createRobotModel(robot);
 robot_kinDynComp = iDynTree.KinDynComputations();
 robot_kinDynComp.loadRobotModel(robotModel);
 
 %% Process raw data from robot
-
-robotLeftArmWrench(1:3,:) = robot.data.links.leftarm.forces;
-robotLeftArmWrench(4:6,:) = robot.data.links.leftarm.moments;
-robotRightArmWrench(1:3,:) = robot.data.links.rightarm.forces;
-robotRightArmWrench(4:6,:) = robot.data.links.rightarm.moments;
-% humanJointPos
-% 
-% for i= 1:robot.data.properties.nrOfFrame
-% processedRobotplate(:,i) = processRobotWrenches(robot_kinDynComp, ...
-%                                                 human_kinDynComp, ...
-%                                                 robotJointPos(:,i), ...
-%                                                 humanJointPos(:,i), ...
-%                                                 robotLeftArmWrench(:,i), ...
-%                                                 robotRightArmWrench(:,i), ...
-%                                                 subjectParamsFromData);
-% end
+for i= 1:robot.data.properties.nrOfFrame
+robot = processRobotWrenches(robot_kinDynComp, ...
+                             human_kinDynComp, ...
+                             robotJointPos(:,i), ...
+                             state.q(:,i), ...
+                             robot, ...
+                             subjectParamsFromData);
+end
 
 %% initialize berdy
 model   = humanModelLoader.model();

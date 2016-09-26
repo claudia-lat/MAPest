@@ -34,11 +34,12 @@ selectedRobotJoints.push_back('r_knee');
 selectedRobotJoints.push_back('r_ankle_pitch');     
 selectedRobotJoints.push_back('r_ankle_roll');
 
-robotModel.filename = 'data/iCubGenova02.urdf';
+fileNameTest = 'data/iCubGenova02.urdf';
+robotModel.filename = fullfile(pwd, fileNameTest);
 robotModelLoader = iDynTree.ModelLoader();
 if ~robotModelLoader.loadReducedModelFromFile(robotModel.filename, selectedRobotJoints)
     fprintf('Something wrong with the robot model loading.')
 end
-robotModel = robotModelLoader.model();
+robotModel = robotModelLoader.model().copy();
 end
 

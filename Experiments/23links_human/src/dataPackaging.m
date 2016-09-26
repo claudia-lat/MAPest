@@ -92,10 +92,10 @@ data.ddq.var = 6.66e-6; %from datasheet
 %% FROM FORCEPLATE & ROBOT
 % ---------------------------------------------------------------
 % Both sensors are considered as external force acting as follow:
-% - on rightFoot --> force platform1;
-% - on leftFoot  --> force platform2;
-% - on rightHand --> robot(left arm);
-% - on leftHand  --> robot(right arm);
+% - on human rightFoot --> force platform1;
+% - on human leftFoot  --> force platform2;
+% - on human rightHand --> robot left arm;
+% - on human leftHand  --> robot right arm;
 % - null meas for all the others.
 % ---------------------------------------------------------------
 nOfSensor.fext = model.getNrOfLinks;
@@ -115,7 +115,7 @@ end
 % meas
 data.fext.meas = cell(size(linkNameFromModel));
 wrench = zeros(6,size(forceplate.data.plateforms.plateform1.forces,2));
-% get the contactLink for the forceplate
+% get the contactLink
 contactLink = cell(2,1);
 contactLink{1} = forceplate.data.plateforms.plateform1.contactLink;
 contactLink{2} = forceplate.data.plateforms.plateform2.contactLink;
@@ -131,27 +131,22 @@ for i = 1: size(contactLink,1)
 end
 for i =  1 : nOfSensor.fext
      data.fext.meas{i} = wrench;
-     wrench = zeros(6,size(forceplate.data.plateforms.plateform1.forces,2));
-     %wrench_fake = zeros(6,size(robot.data.right.forces,2));
+     wrench = zeros(6,size(forceplate.processedData.humanLeftFootWrench,2));
      % <FROM FORCEPLATE>
      if i == index{1}
-        wrench(1:3,:) = forceplate.data.plateforms.plateform1.forces;
-        wrench(4:6,:) = forceplate.data.plateforms.plateform1.moments;
+        wrench = forceplate.processedData.humanRightFootWrench;
         data.fext.meas{i} = wrench;
      elseif i == index{2}
-        wrench(1:3,:) = forceplate.data.plateforms.plateform2.forces;
-        wrench(4:6,:) = forceplate.data.plateforms.plateform2.moments;
+        wrench = forceplate.processedData.humanLeftFootWrench;
         data.fext.meas{i} = wrench;
      end
      % <FROM ROBOT>
      if i == index{3}
-        wrench_fake(1:3,:) = robot.data.links.rightarm.forces;
-        wrench_fake(4:6,:) = robot.data.links.rightarm.moments;
-        data.fext.meas{i} = wrench_fake;
+        wrench = robot.processedData.humanRightHandWrench;
+        data.fext.meas{i} = wrench;
       elseif i == index{4}
-        wrench_fake(1:3,:) = robot.data.links.leftarm.forces;
-        wrench_fake(4:6,:) = robot.data.links.leftarm.moments;
-        data.fext.meas{i} = wrench_fake;
+        wrench = robot.processedData.humanLeftHandWrench;
+        data.fext.meas{i} = wrench;
      end
 end
 % variance

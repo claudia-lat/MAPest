@@ -17,7 +17,7 @@ function [ suit ] = extractSuitData(mvnxFilename, outputDir)
 
 %% Load and read file .mvnx
 addpath(genpath('../../external'));
-mvnxData = xml_read(mvnxFilename);
+% mvnxData = xml_read(mvnxFilename);
 %% Create data struct
 suit =[];
 % PROPERTIES

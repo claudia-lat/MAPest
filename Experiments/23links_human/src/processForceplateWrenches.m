@@ -1,4 +1,4 @@
-function [processedForceplate] = processForceplateWrenches(forceplate, subjectParamsFromData)
+function [forceplate] = processForceplateWrenches(forceplate, subjectParamsFromData)
 % PROCESSFORCEPLATEWRENCHES processes raw external wrenches estimates coming 
 % from the forceplate. 
 %
@@ -10,9 +10,9 @@ function [processedForceplate] = processForceplateWrenches(forceplate, subjectPa
 %                           wrt their projection on the ground silhoutte 
 %                           (provided in fixture.pdf ).
 % Outputs:
-% - processedForceplate  : struct containing human right foot external 
-%                          wrench (humanRightFootWrench) and human left 
-%                          foot external wrench (humanLeftFootWrench). 
+% - forceplate  : updated struct containing new fields : human right foot 
+%                 external wrench (humanRightFootWrench) and human left 
+%                 foot external wrench (humanLeftFootWrench). 
 %
 % External wrenches are estimated by the forceplate in its frame (origin and
 % orientation) that is located at a known position. 
@@ -28,7 +28,6 @@ function [processedForceplate] = processForceplateWrenches(forceplate, subjectPa
 
 gravityZero = iDynTree.Vector3();
 gravityZero.zero();
-
 % Transformation matrix for forceplate 1 and 2 (this transform can be 
 % easily extracted from fixture.pdf ).
 calibrationForceplate1Pos = iDynTree.Position();
@@ -64,7 +63,6 @@ forceplate2Wrench(1:3,:) = forceplate.data.plateforms.plateform2.forces(1:3,:);
 forceplate2Wrench(4:6,:) = forceplate.data.plateforms.plateform2.moments(1:3,:);
 
 %% Transform the wrench in the appropriate frame and change the sign 
-processedForceplate.humanLeftFootWrench = -1*(leftFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate1Wrench);
-processedForceplate.humanRightFootWrench = -1*(rightFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate2Wrench);
-
+forceplate.processedData.humanLeftFootWrench = -1*(leftFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate1Wrench);
+forceplate.processedData.humanRightFootWrench = -1*(rightFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate2Wrench);
 end

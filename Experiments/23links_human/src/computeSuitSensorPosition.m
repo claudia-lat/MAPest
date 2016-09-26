@@ -30,7 +30,7 @@ for sIdx = 1: suit.properties.nrOfSensors
 
         G_acc_L = link.meas.acceleration(:,i);
 
-        b(3*i-2:3*i) = G_acc_S - G_acc_L;
+        b(3*i-2:3*i) = G_acc_S - G_acc_L + [0;0;-9.81];
 
         % compute S_R_L = S_R_G x G_R_L
         S_R_L = G_R_S' * G_R_L;

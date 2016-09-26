@@ -1,7 +1,7 @@
-function [processedRobot] = processRobotWrenches(robot_kinDyn, ...
-                                                human_kinDyn, robot_jntPos, human_jntPos, ...
-                                                robotLeftArmWrench, robotRightArmWrench, ...
-                                                subjectParamsFromData)
+function [robot] = processRobotWrenches(robot_kinDyn, ...
+                                        human_kinDyn, robot_jntPos, human_jntPos, ...
+                                        robot, ...
+                                        subjectParamsFromData)
 % PROCESSROBOTWRENCHES processes raw external wrenches estimates coming 
 % from the robot.
 %
@@ -10,16 +10,15 @@ function [processedRobot] = processRobotWrenches(robot_kinDyn, ...
 % - human_kinDyn         : iDynTree.KinDynComputations built from human model
 % - robot_jntPos         : Matlab vector of robot joint positions 
 % - human_jntPos         : Matlab vector of human joint positions 
-% - robotLeftArmWrench   : Robot left arm wrench (linear-angular), as obtained
-%                          from wholeBodyDynamics
-% - robotRightArmWrench  : Robot right arm wrench (linear-angular), as obtained
+% - robot                : robot struct from which extract left and right 
+%                          arm wrench (linear-angular), as obtained
 %                          from wholeBodyDynamics
 % - subjectParams        : Subject parameters (to get the ankle height)
 %
 % Outputs:
-% - processedRobot   : struct containing human left hand external wrench 
-%                      (humanLeftHandWrench) and human right hand external 
-%                      wrench (humanRightHandWrench).
+% - robot   : updated struct containing new fields: human left hand external 
+%             wrench (humanLeftHandWrench) and human right hand external 
+%             wrench (humanRightHandWrench).
 %
 % External wrenches are estimated by the robot in a frame (origin and
 % orientation) that is local to the contact link. Furthermore is tipically 
@@ -94,6 +93,11 @@ r_elbow_1_H_RightHand = r_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_RightHan
 RightHand_H_r_elbow_1 = r_elbow_1_H_RightHand.inverse();
 
 % Transform the wrench in the appropraite frame and change the sign 
-processedRobot.humanLeftHandWrench = -1*(LeftHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench);
-processedRobot.humanRightHandWrench = -1*(RightHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench);
+robotLeftArmWrench(1:3,:) = robot.data.links.leftarm.forces;
+robotLeftArmWrench(4:6,:) = robot.data.links.leftarm.moments;
+robotRightArmWrench(1:3,:) = robot.data.links.rightarm.forces;
+robotRightArmWrench(4:6,:) = robot.data.links.rightarm.moments;
+
+robot.processedData.humanLeftHandWrench = -1*(LeftHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench);
+robot.processedData.humanRightHandWrench = -1*(RightHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench);
 end
