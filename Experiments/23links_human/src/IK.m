@@ -1,7 +1,7 @@
 function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, suitSyncIndex)
 %IK function computes the Inverse Kinematics computation by using the
 % OpenSim API.  After computing q angles, it uses  Savitzi-Golay for
-% obtaining dq and ddq.
+% obtaining dq and ddq.  Outputs: state and ddq are in radians.
 
 %% Use OpenSim InverseKinematicTool
 import org.opensim.modeling.*  % import OpenSim APIs to be used in MATLAB
@@ -23,10 +23,10 @@ delete(outputMotionFilename);
 
 %% Create a joint name vector ordered as in OSIM
 selectedJoints = iDynTree.StringVector();
-jointNameTest = cell(66,1);
+% jointNameTest = cell(66,1);
 for i = 8 : size(motionData.colheaders,2)
      selectedJoints.push_back(motionData.colheaders{i});
-     jointNameTest{i} = motionData.colheaders{i};
+%      jointNameTest{i} = motionData.colheaders{i};
 end 
 % 8 is the column from which starting to select joints. Column 1 (time) and
 % columns from 2 to 7 (ground joints) will be discarded. We decide here
@@ -39,20 +39,20 @@ Sg.samplingTime = 1/240; % 240Hz is the frame rate of Xsens data.
 Sg.polinomialOrder = 3;
 Sg.window = 57;
 %[Sg.time, ~] = angleFromName(motionData, 'time');
-state.q  = zeros(size(motionData.data,2)-7, size(motionData.data,1));
+state.q  = zeros(size(motionData.data,2)-7, size(motionData.data,1)); 
 state.dq = zeros(size(state.q));
 ddq      = zeros(size(state.q));
 
-state.q = motionData.data(:, 8:end)';
+state.q = motionData.data(:, 8:end)';  % in deg
 for i = 1 : size((state.q),1)
-    [state.dq(i,:),ddq(i,:)] = SgolayDerivation(Sg.polinomialOrder,Sg.window,state.q(i,:),Sg.samplingTime);
+    [state.dq(i,:),ddq(i,:)] = SgolayDerivation(Sg.polinomialOrder,Sg.window,state.q(i,:),Sg.samplingTime); % in deg
 end
 
 %% Cut state and ddq
 % Before storing the state and ddq, an eventual cut has to be done.  Since
 % their are computed with IK that, in turn, uses the .trc file from the
 % Xsens acquisition ==> the cut index used is suitSyncIndex.
-ddq      = ddq(:,suitSyncIndex);
-state.q  = state.q(:,suitSyncIndex);
-state.dq = state.dq(:,suitSyncIndex);
+ddq      = ddq(:,suitSyncIndex) * pi/180;      % in rad
+state.q  = state.q(:,suitSyncIndex) * pi/180;  % in rad
+state.dq = state.dq(:,suitSyncIndex) * pi/180; % in rad
 end

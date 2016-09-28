@@ -15,7 +15,7 @@ function [robot , syncIndex] = extractRobotData(ROBOTfilenameLeft, ...
 % -  ROBOTfilename  : (both Left and Right) filenames containing the FT 
 %                     data from the robot;
 % -  timeSeries     : time data to which we interpolate;
-% -  contactLink    : links in contact with the robot;
+% -  contactLink    : human links in contact with the robot;
 % - ...stateFilename: (both Left and Right) files containing state data
 %                     from robot.
 % -  outputDir      : (optional) the directory where saving the output;
@@ -69,17 +69,23 @@ armDoF = 16;
 legDoF = 6;
 torsoDoF = 3; 
 
-[rightArmState, ~, ~, rightArmStateTime]  = readStateExt(armDoF,rightArmStateFilename);
-[leftArmState, ~, ~, leftArmStateTime] = readStateExt(armDoF,leftArmStateFilename);
-[rightLegState, ~, ~, rightLegStateTime] = readStateExt(legDoF,rightLegStateFilename);
-[leftLegState, ~, ~, leftLegStateTime]  = readStateExt(legDoF,leftLegStateFilename);
-[torsoState, ~, ~, torsoStateTime]    = readStateExt(torsoDoF,torsoStateFilename);
+[rightArmState, ~, ~, rightArmStateTime]  = readStateExt(armDoF,rightArmStateFilename); % state in deg
+[leftArmState, ~, ~, leftArmStateTime]    = readStateExt(armDoF,leftArmStateFilename);  % state in deg
+[rightLegState, ~, ~, rightLegStateTime]  = readStateExt(legDoF,rightLegStateFilename); % state in deg
+[leftLegState, ~, ~, leftLegStateTime]    = readStateExt(legDoF,leftLegStateFilename);  % state in deg
+[torsoState, ~, ~, torsoStateTime]        = readStateExt(torsoDoF,torsoStateFilename);  % state in deg
+
+rightArmState = pi/180 .* rightArmState; % in rad
+leftArmState  = pi/180 .* leftArmState;  % in rad
+rightLegState = pi/180 .* rightLegState; % in rad
+leftLegState  = pi/180 .* leftLegState;  % in rad
+torsoState    = pi/180 .* torsoState;    % in rad
 
 rightArmStateTime = double(int64(rightArmStateTime*1000));
 leftArmStateTime = double(int64(leftArmStateTime*1000));
 rightLegStateTime = double(int64(rightLegStateTime*1000));
-leftLegStateTime = double(int64(leftLegStateTime*1000));
-torsoStateTime = double(int64(torsoStateTime*1000));
+leftLegStateTime  = double(int64(leftLegStateTime*1000));
+torsoStateTime    = double(int64(torsoStateTime*1000));
 
 %% Cut Data
 

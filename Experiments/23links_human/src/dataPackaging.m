@@ -10,7 +10,7 @@ function [ dataPacked ] = dataPackaging(model, sensors, suit, forceplate, ddq, r
 
 data      = struct;
 data.acc  = struct;
-data.gyro = struct;
+% data.gyro = struct;
 data.ddq  = struct;       
 data.fext = struct;
 
@@ -43,31 +43,31 @@ end
 data.acc.var     = 0.001111 * ones(3,1); %from datasheet
 
 % SENSOR: <GYROSCOPE>
-% type
-data.gyro.type = iDynTree.GYROSCOPE_SENSOR;
-% id
-nOfSensor.gyro = sensors.getNrOfSensors(data.gyro.type);
-data.gyro.id = cell(nOfSensor.gyro,1);
-for i = 1 : nOfSensor.gyro 
-   data.gyro.id{i} = sensors.getSensor(data.gyro.type, i-1).getName;
-end
-% meas
-data.gyro.meas = cell(nOfSensor.gyro,1);
-tempData = cell(nOfSensor.gyro,2);
-sensorsLabelToCmp  = cell(nOfSensor.gyro,1);
-nOfSensorsFromSuit = size(suit.sensors,1);
-for i = 1 :  nOfSensor.gyro
-    tempData(i,:) = strsplit(data.gyro.id{i}, '_');
-    sensorsLabelToCmp{i}= tempData(i,1);
-    for j = 1 : nOfSensorsFromSuit 
-        if  strcmp(sensorsLabelToCmp{i},suit.sensors{j, 1}.label)
-            data.gyro.meas{i} = suit.sensors{i, 1}.meas.sensorAngularVelocity;
-            break;
-        end
-    end
-end
-% variance
-data.gyro.var = 0.001111 * ones(3,1); %from datasheet
+% % type
+% data.gyro.type = iDynTree.GYROSCOPE_SENSOR;
+% % id
+% nOfSensor.gyro = sensors.getNrOfSensors(data.gyro.type);
+% data.gyro.id = cell(nOfSensor.gyro,1);
+% for i = 1 : nOfSensor.gyro 
+%    data.gyro.id{i} = sensors.getSensor(data.gyro.type, i-1).getName;
+% end
+% % meas
+% data.gyro.meas = cell(nOfSensor.gyro,1);
+% tempData = cell(nOfSensor.gyro,2);
+% sensorsLabelToCmp  = cell(nOfSensor.gyro,1);
+% nOfSensorsFromSuit = size(suit.sensors,1);
+% for i = 1 :  nOfSensor.gyro
+%     tempData(i,:) = strsplit(data.gyro.id{i}, '_');
+%     sensorsLabelToCmp{i}= tempData(i,1);
+%     for j = 1 : nOfSensorsFromSuit 
+%         if  strcmp(sensorsLabelToCmp{i},suit.sensors{j, 1}.label)
+%             data.gyro.meas{i} = suit.sensors{i, 1}.meas.sensorAngularVelocity;
+%             break;
+%         end
+%     end
+% end
+% % variance
+% data.gyro.var = 0.001111 * ones(3,1); %from datasheet
 
 %% FROM ddq
 nOfSensor.DOFacc = size(ddq,1);
@@ -114,7 +114,6 @@ for i = 1 : nOfSensor.fext
 end
 % meas
 data.fext.meas = cell(size(linkNameFromModel));
-wrench = zeros(6,size(forceplate.data.plateforms.plateform1.forces,2));
 % get the contactLink
 contactLink = cell(2,1);
 contactLink{1} = forceplate.data.plateforms.plateform1.contactLink;
@@ -129,29 +128,25 @@ for i = 1: size(contactLink,1)
         end
     end
 end
+% fill the all meas with null fext
+wrench = zeros(6,size(forceplate.processedData.humanLeftFootWrench,2));
 for i =  1 : nOfSensor.fext
-     data.fext.meas{i} = wrench;
-     wrench = zeros(6,size(forceplate.processedData.humanLeftFootWrench,2));
-     % <FROM FORCEPLATE>
-     if i == index{1}
-        wrench = forceplate.processedData.humanRightFootWrench;
-        data.fext.meas{i} = wrench;
-     elseif i == index{2}
-        wrench = forceplate.processedData.humanLeftFootWrench;
-        data.fext.meas{i} = wrench;
-     end
-     % <FROM ROBOT>
-     if i == index{3}
-        wrench = robot.processedData.humanRightHandWrench;
-        data.fext.meas{i} = wrench;
-      elseif i == index{4}
-        wrench = robot.processedData.humanLeftHandWrench;
-        data.fext.meas{i} = wrench;
-     end
+    data.fext.meas{i} = wrench;
+    % fill with the 4 fext that are not null
+    % <FOR FORCEPLATE>
+    if i == index{1}
+        data.fext.meas{i} = forceplate.processedData.humanRightFootWrench;
+    elseif i == index{2}
+        data.fext.meas{i} = forceplate.processedData.humanLeftFootWrench;
+    % <FOR ROBOT>
+    elseif i == index{3}
+        data.fext.meas{i} = robot.processedData.humanLeftHandWrench;
+    elseif i == index{4}
+        data.fext.meas{i} = robot.processedData.humanRightHandWrench;
+    end
 end
 % variance
-data.fext.var = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
-
+ data.fext.var = 1e-4 * ones(6,1); % variance for f ext 
 %% Final Packaging
 dataPacked = struct;
 for i = 1 : nOfSensor.acc
@@ -159,12 +154,13 @@ for i = 1 : nOfSensor.acc
     dataPacked(i).id                    = data.acc.id{i};
     dataPacked(i).meas                  = data.acc.meas{i};
     dataPacked(i).var                   = data.acc.var;
-    dataPacked(i + nOfSensor.acc).type  = data.gyro.type;
-    dataPacked(i + nOfSensor.acc).id    = data.gyro.id{i};
-    dataPacked(i + nOfSensor.acc).meas  = data.gyro.meas{i};
-    dataPacked(i + nOfSensor.acc).var   = data.gyro.var;
+%     dataPacked(i + nOfSensor.acc).type  = data.gyro.type;
+%     dataPacked(i + nOfSensor.acc).id    = data.gyro.id{i};
+%     dataPacked(i + nOfSensor.acc).meas  = data.gyro.meas{i};
+%     dataPacked(i + nOfSensor.acc).var   = data.gyro.var;
 end
-indx = i + nOfSensor.acc;
+% indx = i + nOfSensor.acc;
+indx = i;
 %--
 for i = 1 : nOfSensor.DOFacc
     dataPacked(i + (indx)).type         = data.ddq.type;
@@ -178,6 +174,16 @@ for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).type         = data.fext.type;
     dataPacked(i + (indx)).id           = data.fext.id{i};
     dataPacked(i + (indx)).meas         = data.fext.meas{i};
-    dataPacked(i + (indx)).var          = data.fext.var;    
+    dataPacked(i + (indx)).var          = data.fext.var;
+    if i == index{1}
+         dataPacked(i + (indx)).var     = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+    elseif i == index{2}
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+    % <FOR ROBOT>
+    elseif i == index{3}
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+    elseif i == index{4}
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+    end
 end
 end

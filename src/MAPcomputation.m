@@ -1,4 +1,5 @@
 function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors)
+% function [mu_dgiveny, Sigma_dgiveny, modelError, measError] = MAPcomputation(berdy, state, y, priors)
 % MAPCOMPUTATION solves the inverse dynamics problem with a 
 % maximum-a-posteriori estimation by using the Newton-Euler algorithm and 
 % redundant sensor measurements as originally described in the paper 
@@ -56,16 +57,20 @@ SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs
+% samples =  600;
 samples = size(y, 2); 
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 Sigma_dgiveny =  cell(samples,1);
-% Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 
 % MAP Computation
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
+
+% modelError = zeros(berdy.getNrOfDynamicEquations, samples);
+% measError  = zeros(size(y,1), samples);
+
 for i = 1 : samples
     
     q.fromMatlab(state.q(:,i));
@@ -89,6 +94,9 @@ for i = 1 : samples
     Sigma_dgiveny{i} = inv(SigmaBarD_inv + Y' * Sigmay_inv * Y);
     mu_dgiveny(:,i)      = Sigma_dgiveny{i} * (Y' * Sigmay_inv * (y(:,i) - b_Y) ...
                           + SigmaBarD_inv * muBarD);
+    
+%     %test for checking errors
+%     modelError(:,i) = (D * mu_dgiveny(:,i)) + b_D;
+%     measError(:,i)  = (Y * mu_dgiveny(:,i)) + b_Y - y(:,i);
 end
-
 end

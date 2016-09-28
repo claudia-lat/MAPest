@@ -5,8 +5,8 @@ function [y, Sigmay] = berdyMeasurementsWrapping(berdy, data)
 
 sensorOrder = berdy.getSensorsOrdering();
 
-y = [];
-Sigmay = [];
+y = zeros(berdy.getNrOfSensorsMeasurements(),size(data(1).meas,2));
+Sigmay = zeros(berdy.getNrOfSensorsMeasurements,berdy.getNrOfSensorsMeasurements);
 for i = 1:size(sensorOrder,2)
     currentInfo = sensorOrder{i};
     found = false;
@@ -15,8 +15,9 @@ for i = 1:size(sensorOrder,2)
         if (data_j.type == currentInfo.type && ...
             strcmp(data_j.id, currentInfo.id))
             found = true;
-            y = [y; data_j.meas];
-            Sigmay = blkdiag(Sigmay, diag(data_j.var));
+            matRange = range2matlab(currentInfo.range);
+            y(matRange,:) = data_j.meas;
+            Sigmay(matRange,matRange) = diag(data_j.var);
             break;
         end
     end

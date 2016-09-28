@@ -1,17 +1,17 @@
 function [ forceplate, suitIndex ] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, varargin )
 % EXTRACTFORCEPLATEDATA allows to create a .mat stucture contatining all 
 % forceplate data acquired during the Xsens experiment.
-
+%
 % Inputs 
-% -  AMTIfilename : the name of  file that contain the forceplate data;
-% -  TSfilename   : the name of  file that contain the forceplate time data;
+% -  AMTIfilename : the name of  file containing the forceplate data;
+% -  TSfilename   : the name of  file containing the forceplate time data;
 % -  suitTimeInit : time data from the xsens suit;
-% -  contactLink  : links in contact with the forceplates;
+% -  contactLink  : human links in contact with the forceplates;
 % -  outputDir    : (optional) the directory where saving the output;
 % -  allData      : (optional) if TRUE the function returns not only the 
 %                    cut data but all the data genereted by the forceplates.
 %                    FALSE by default.
-
+%
 % Outputs
 % -  forceplate : data of the acquisition in a .mat format; 
 % -  XsensIndex : index of the xsens data that have a corresponding 
@@ -67,14 +67,14 @@ allData.properties.nrOfFrame = nrOfFrames;
 allData.time.unixTime = TSData(:,2)';
 allData.time.standardTime = TSData(:,3)';
 % PLATEFORMS
-allData.plateforms.plateform1.frames = AMTIData(:,1)';
+allData.plateforms.plateform1.frames      = AMTIData(:,1)';
 allData.plateforms.plateform1.contactLink = contactLink{1};
-allData.plateforms.plateform1.forces = AMTIData(:,2:4)';
-allData.plateforms.plateform1.moments = AMTIData(:,5:7)';
-allData.plateforms.plateform2.frames = AMTIData(:,9)';
+allData.plateforms.plateform1.forces      = AMTIData(:,2:4)';
+allData.plateforms.plateform1.moments     = AMTIData(:,5:7)';
+allData.plateforms.plateform2.frames      = AMTIData(:,9)';
 allData.plateforms.plateform2.contactLink = contactLink{2};
-allData.plateforms.plateform2.forces = AMTIData(:,10:12)';
-allData.plateforms.plateform2.moments = AMTIData(:,13:15)';
+allData.plateforms.plateform2.forces      = AMTIData(:,10:12)';
+allData.plateforms.plateform2.moments     = AMTIData(:,13:15)';
 
 %% Function to determine the forceplate data corresponding to the suit data
 forceplateTime = allData.time.unixTime;
@@ -94,14 +94,14 @@ data.properties.nrOfFrame = nrOfFrames;
 data.time.unixTime = cutTSData(:,2)';
 data.time.standardTime = cutTSData(:,3)';
 % PLATEFORMS
-data.plateforms.plateform1.frames = cutData(:,1)';
+data.plateforms.plateform1.frames      = cutData(:,1)';
 data.plateforms.plateform1.contactLink = contactLink{1};
-data.plateforms.plateform1.forces = cutData(:,2:4)';
-data.plateforms.plateform1.moments = cutData(:,5:7)';
-data.plateforms.plateform2.frames = cutData(:,9)';
+data.plateforms.plateform1.forces      = cutData(:,2:4)';
+data.plateforms.plateform1.moments     = cutData(:,5:7)';
+data.plateforms.plateform2.frames      = cutData(:,9)';
 data.plateforms.plateform2.contactLink = contactLink{2};
-data.plateforms.plateform2.forces = cutData(:,10:12)';
-data.plateforms.plateform2.moments = cutData(:,13:15)';
+data.plateforms.plateform2.forces      = cutData(:,10:12)';
+data.plateforms.plateform2.moments     = cutData(:,13:15)';
 
 %% Create data struct
 forceplate = [];

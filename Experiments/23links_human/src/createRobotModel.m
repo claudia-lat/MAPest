@@ -1,4 +1,6 @@
 function [robotJointPos, robotModel] = createRobotModel(robot) 
+% description goes here
+%
 
 % Extract the joint position of interest from the robot struct 
 robotJointPos(1,:) = robot.data.q.torso(3,:);
