@@ -1,4 +1,4 @@
-function [ dataPacked ] = dataPackaging(model, sensors, suit, forceplate, ddq, robot)
+function [ dataPacked ] = dataPackaging(model, sensors, suit, forceplate, ddq)
 %DATAPACKAGING creates a data struct organised in the following way:
 % - data.time (a unified time for all type of sensors)
 % - substructures identified by the type.
@@ -118,8 +118,6 @@ data.fext.meas = cell(size(linkNameFromModel));
 contactLink = cell(2,1);
 contactLink{1} = forceplate.data.plateforms.plateform1.contactLink;
 contactLink{2} = forceplate.data.plateforms.plateform2.contactLink;
-contactLink{3} = robot.data.links.rightarm.contactLink;
-contactLink{4} = robot.data.links.leftarm.contactLink;
 index = cell(size(contactLink));
 for i = 1: size(contactLink,1)
     for indx = 1 : nOfSensor.fext
@@ -138,11 +136,6 @@ for i =  1 : nOfSensor.fext
         data.fext.meas{i} = forceplate.processedData.humanRightFootWrench;
     elseif i == index{2}
         data.fext.meas{i} = forceplate.processedData.humanLeftFootWrench;
-    % <FOR ROBOT>
-    elseif i == index{3}
-        data.fext.meas{i} = robot.processedData.humanLeftHandWrench;
-    elseif i == index{4}
-        data.fext.meas{i} = robot.processedData.humanRightHandWrench;
     end
 end
 % variance
@@ -178,11 +171,6 @@ for i = 1 : nOfSensor.fext
     if i == index{1}
          dataPacked(i + (indx)).var     = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{2}
-        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
-    % <FOR ROBOT>
-    elseif i == index{3}
-        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
-    elseif i == index{4}
         dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     end
 end
