@@ -1,6 +1,7 @@
 function [ forceplate, suitIndex ] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, varargin )
 % EXTRACTFORCEPLATEDATA allows to create a .mat stucture contatining all 
-% forceplate data acquired during the Xsens experiment.
+% forceplate data acquired during the Xsens experiment synchronized with
+% the suit data
 %
 % Inputs 
 % -  AMTIfilename : the name of  file containing the forceplate data;
