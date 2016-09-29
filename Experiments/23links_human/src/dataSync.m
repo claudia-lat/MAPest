@@ -1,4 +1,4 @@
-function [suitStruct, forceplateStruct,  suitSyncIndex] = dataSync(suitStruct, forceplateStruct, syncIndex, suitTimeInit)
+function [suitStruct] = dataSync(suitStruct, syncIndex)
 % DATASYNC: function to  synchronized all the dataset of the experiment 
 % (suit, forceplate and robot).  
 
@@ -44,23 +44,5 @@ for i = 1 : suitStruct.properties.nrOfSensors
     suitStruct.sensors{i}.meas.sensorMagneticField = suitStruct.sensors{i}.meas.sensorMagneticField(:,syncIndex); 
     suitStruct.sensors{i}.meas.sensorOrientation = suitStruct.sensors{i}.meas.sensorOrientation(:,syncIndex); 
 end
-
-%% Create data struct for the forceplate
-% PROPERTIES
-forceplateStruct.data.properties.nrOfFrame = nrOfFrames;
-% TIME
-forceplateStruct.data.time.unixTime = forceplateStruct.data.time.unixTime(1,syncIndex);
-forceplateStruct.data.time.standardTime = forceplateStruct.data.time.standardTime(1,syncIndex);
-% PLATEFORMS
-forceplateStruct.data.plateforms.plateform1.frames = forceplateStruct.data.plateforms.plateform1.frames(1,syncIndex);
-forceplateStruct.data.plateforms.plateform1.forces = forceplateStruct.data.plateforms.plateform1.forces(:,syncIndex);
-forceplateStruct.data.plateforms.plateform1.moments = forceplateStruct.data.plateforms.plateform1.moments(:,syncIndex) ;
-forceplateStruct.data.plateforms.plateform2.frames = forceplateStruct.data.plateforms.plateform2.frames(1,syncIndex);
-forceplateStruct.data.plateforms.plateform2.forces = forceplateStruct.data.plateforms.plateform2.forces(:,syncIndex);
-forceplateStruct.data.plateforms.plateform2.moments = forceplateStruct.data.plateforms.plateform2.moments(:,syncIndex);
-
-%% Determine the final synchronization index for xsens data
-[~, suitSyncIndex]=timeCmp(suitTimeInit, suitStruct.time, 1); % index for synchronizing 
-                                                              % the original data of the suit (mvnx file)
 
 end
