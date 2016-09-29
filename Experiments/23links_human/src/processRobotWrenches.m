@@ -80,24 +80,24 @@ LeftSole_H_LeftFoot =  iDynTree.Transform(LeftSole_H_LeftFootRot,LeftSole_H_Left
 % Convinient computation
 l_sole_H_LeftFoot = l_sole_H_LeftSole*LeftSole_H_LeftFoot;
 
-% Compute robot left arm ---> human left hand trasforms 
+% Compute robot left arm ---> human right hand trasforms 
 l_elbow_1_H_l_sole = robot_kinDyn.getRelativeTransform('l_elbow_1','l_sole');
-LeftFoot_H_LeftHand = human_kinDyn.getRelativeTransform('LeftFoot','LeftHand');
-l_elbow_1_H_LeftHand = l_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_LeftHand;
-LeftHand_H_l_elbow_1 = l_elbow_1_H_LeftHand.inverse();
-
-% Compute robot right arm ---> human right hand trasforms 
-r_elbow_1_H_l_sole = robot_kinDyn.getRelativeTransform('r_elbow_1','l_sole');
 LeftFoot_H_RightHand = human_kinDyn.getRelativeTransform('LeftFoot','RightHand');
-r_elbow_1_H_RightHand = r_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_RightHand;
-RightHand_H_r_elbow_1 = r_elbow_1_H_RightHand.inverse();
+l_elbow_1_H_RightHand = l_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_RightHand;
+RightHand_H_l_elbow_1 = l_elbow_1_H_RightHand.inverse();
 
-% Transform the wrench in the appropraite frame and change the sign 
+% Compute robot right arm ---> human left hand trasforms 
+r_elbow_1_H_l_sole = robot_kinDyn.getRelativeTransform('r_elbow_1','l_sole');
+LeftFoot_H_LeftHand = human_kinDyn.getRelativeTransform('LeftFoot','LeftHand');
+r_elbow_1_H_LeftHand = r_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_LeftHand;
+LeftHand_H_r_elbow_1 = r_elbow_1_H_LeftHand.inverse();
+
+% Transform the wrench in the appropriate frame and change the sign 
 robotLeftArmWrench(1:3,:) = robot.data.links.leftarm.forces;
 robotLeftArmWrench(4:6,:) = robot.data.links.leftarm.moments;
 robotRightArmWrench(1:3,:) = robot.data.links.rightarm.forces;
 robotRightArmWrench(4:6,:) = robot.data.links.rightarm.moments;
 
-robot.processedData.humanLeftHandWrench = -1*(LeftHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench);
-robot.processedData.humanRightHandWrench = -1*(RightHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench);
+robot.processedData.humanLeftHandWrench = -1*(LeftHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench);
+robot.processedData.humanRightHandWrench = -1*(RightHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench);
 end

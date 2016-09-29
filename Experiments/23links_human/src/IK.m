@@ -22,11 +22,9 @@ motionData = importdata(outputMotionFilename);
 delete(outputMotionFilename);
 
 %% Create a joint name vector ordered as in OSIM
-selectedJoints = iDynTree.StringVector();
-% jointNameTest = cell(66,1);
+selectedJoints = cell(size(motionData.colheaders,2)-7,1);
 for i = 8 : size(motionData.colheaders,2)
-     selectedJoints.push_back(motionData.colheaders{i});
-%      jointNameTest{i} = motionData.colheaders{i};
+      selectedJoints{i-7} = motionData.colheaders{i};
 end 
 % 8 is the column from which starting to select joints. Column 1 (time) and
 % columns from 2 to 7 (ground joints) will be discarded. We decide here

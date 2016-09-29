@@ -118,14 +118,15 @@ bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
 bucket.setupFile = ('data/fileSetup.xml');
 bucket.trcFile = ('data/Meri-002.trc');
 [human_state, human_ddq, selectedJoints] = IK(bucket.filenameOSIM, ...
-                                        bucket.trcFile, ...
-                                        bucket.setupFile,...
-                                        suitSyncIndex);
-
+                                            bucket.trcFile, ...
+                                            bucket.setupFile,...
+                                            suitSyncIndex);
+% here selectedJoints is the order of the Osim computation.
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
-if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, selectedJoints);
+if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, cell2iDynTreeStringVector(selectedJoints));
+    % here the model loads the same order.
     fprintf('Something wrong with the model loading.')
 end
 humanModel = humanModelLoader.model();
@@ -133,6 +134,11 @@ human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
+% remove left foot sensor since it will be the fixed base
+humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, 'LeftFoot_accelerometer');
+humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, 'LeftFoot_gyro');
+% we decided to remove gyroscopes from the analysis
+humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 
 %% Load robot URDF model
 [robotJointPos, robotModel] = createRobotModel(robot);
@@ -168,8 +174,6 @@ berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
 berdyOptions.includeFixedBaseExternalWrench                  = true;
 
-humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE);
-
 % load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(humanModel, humanSensors, berdyOptions);
@@ -179,6 +183,7 @@ currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('Current base is < ', currentBase,'>.'));
 disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
 % get the tree is visited IS the ordere of variables in vector d
+
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
 for i = 0 : traversal.getNrOfVisitedLinks() - 1
@@ -189,6 +194,8 @@ for i = 0 : traversal.getNrOfVisitedLinks() - 1
     link = traversal.getLink(i);
     dVectorOrder{i + 1} = berdy.model().getLinkName(link.getIndex());
 end
+
+printBerdyDynVariables(berdy)
 
 %% Measurements wrapping
 data = dataPackaging(humanModel,... 
@@ -211,5 +218,4 @@ tic;
 % [mu_dgiveny, Sigma_dgiveny, modelError, measError] = MAPcomputation(berdy, human_state, y, priors);
 toc;
 
-save('mu_dgiveny.mat'); 
-% plotScript
+ plotScript

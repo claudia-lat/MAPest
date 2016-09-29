@@ -146,7 +146,7 @@ for i =  1 : nOfSensor.fext
     end
 end
 % variance
- data.fext.var = 1e-4 * ones(6,1); % variance for f ext 
+ data.fext.var = 1e-6 * ones(6,1); % variance for f ext 
 %% Final Packaging
 dataPacked = struct;
 for i = 1 : nOfSensor.acc
