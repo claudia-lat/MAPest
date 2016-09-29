@@ -84,8 +84,8 @@ SENS.fext3.var          = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
 
 % (for the experiment with Xsens, this will be a file .mat with
 % data extracted from the file .mvnx)
-data.packedSens = [SENS.ddq1; SENS.fext1; SENS.acc_struct; SENS.ddq2; ...
-                   SENS.gyro_struct; SENS.fext2; SENS.fext3];
+data.packedSens = [SENS.ddq1; SENS.fext2; SENS.acc_struct; SENS.ddq2; ...
+                   SENS.gyro_struct; SENS.fext3; SENS.fext1];
     
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data.packedSens);
 
