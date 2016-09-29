@@ -151,28 +151,28 @@ end
 P.tau = zeros(nrOfLink,size(mu_dgiveny,2));
 for i = 1 : nrOfLink
     P.tau(i,:) = mu_dgiveny(26*(i-1)+19, :);
-   P.tau(i,:) = mu_dgiveny(26*i-7, :);
+   %P.tau(i,:) = mu_dgiveny(26*i-7, :);
 end
-
-for j = 1 : nrOfLink
-    axes1 = axes('Parent',figure,'FontSize',16);
-            box(axes1,'on');
-            hold(axes1,'on');
-            grid on;
-
-    plot (P.tau(j,:));
-    xlabel('Frames','HorizontalAlignment','center',...
-                       'FontWeight','bold',...
-                       'FontSize',15,...
-                       'Interpreter','latex');
-    ylabel('joint torque','HorizontalAlignment','center',...
-                       'FontWeight','bold',...
-                       'FontSize',15,...
-                       'Interpreter','latex');
-    axis tight;
-    grid on;  
-    title (sprintf(' %s', dJointOrder{j}));
-end
+% 
+% for j = 1 : nrOfLink
+%     axes1 = axes('Parent',figure,'FontSize',16);
+%             box(axes1,'on');
+%             hold(axes1,'on');
+%             grid on;
+% 
+%     plot (P.tau(j,:));
+%     xlabel('Frames','HorizontalAlignment','center',...
+%                        'FontWeight','bold',...
+%                        'FontSize',15,...
+%                        'Interpreter','latex');
+%     ylabel('joint torque','HorizontalAlignment','center',...
+%                        'FontWeight','bold',...
+%                        'FontSize',15,...
+%                        'Interpreter','latex');
+%     axis tight;
+%     grid on;  
+%     title (sprintf(' %s', dJointOrder{j}));
+% end
 % -------------------------------------------------------------------------
 % f_ext
 P.f_ext.force  = zeros(3*nrOfLink,size(mu_dgiveny,2));

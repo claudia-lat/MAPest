@@ -135,8 +135,11 @@ human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
 % remove left foot sensor since it will be the fixed base
-humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, 'LeftFoot_accelerometer');
-humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, 'LeftFoot_gyro');
+fixedBase = 'LeftFoot';
+humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
+humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
+% humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, 'LeftFoot_accelerometer');
+% humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, 'LeftFoot_gyro');
 % we decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 
@@ -160,7 +163,8 @@ end
 % sensors = humanModelLoader.sensors();
 % specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
-berdyOptions.baseLink = 'LeftFoot'; % change of the base link
+berdyOptions.baseLink = fixedBase; % change of the base link
+% berdyOptions.baseLink = 'LeftFoot'; % change of the base link
 %--------------------------------------------------------------------------
 % IMPORTANT NOTE:
 % ---------------

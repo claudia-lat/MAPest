@@ -57,7 +57,6 @@ SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs
-% samples =  600;
 samples = size(y, 2); 
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);

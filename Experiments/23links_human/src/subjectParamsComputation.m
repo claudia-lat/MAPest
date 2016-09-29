@@ -425,7 +425,7 @@ subjectParams.leftUpperLegIzz        = (subjectParams.leftUpperLegMass/2) * ((su
 % box size
 [pLeftKneeLatLL, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftKneeLatEpicondyle');
 [pLeftKneeMedLL, ~] = pointsFromName(leftLowerLeg_struct.points, 'pLeftKneeMedEpicondyle');
-subjectParams.leftLowerLeg_x = pLeftKneeMedLL(2) - pLeftKneeLatLL(2);
+subjectParams.leftLowerLeg_x = abs(pLeftKneeMedLL(2) - pLeftKneeLatLL(2));
 subjectParams.leftLowerLeg_z = abs(subjectParams.jLeftAnkle(3));
 % box origin
 subjectParams.leftLowerLegBoxOrigin = 0.5 * [0, 0, -subjectParams.leftLowerLeg_z];%wrt jLeftKnee
