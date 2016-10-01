@@ -1,6 +1,6 @@
 function [ index, len ] = rangeOfDynamicVariable( berdy, varType, varID)
-%RANGEOFDYNAMICVARIABLE Summary of this function goes here
-%   Detailed explanation goes here
+% RANGEOFDYNAMICVARIABLE given a type of variable and its label, returns its
+% index in the vector d and its range.
 
 dynVariable = berdy.getDynamicVariablesOrdering();
 index = -1;
