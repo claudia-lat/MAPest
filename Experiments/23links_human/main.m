@@ -7,13 +7,13 @@ addpath(genpath('src'));
 addpath(genpath('templates')); 
 addpath(genpath('../../src'));
 
-% create a structure 'bucket' where storing different stuff generating by
+% Create a structure 'bucket' where storing different stuff generating by
 % running the code
 bucket = struct;
 %% Java path needed by OSIM
 bucket.JAVA_OSIM_PATH = '/usr/local/Cellar/opensim-core/4.0/share/doc/OpenSim/Java';
 bucket.JAVA_OSIM_LIB_FOLDER = '/usr/local/Cellar/opensim-core/4.0/lib';
-%get current class path
+% get current class path
 bucket.javacpath = javaclasspath('-dynamic');
 found = false;
 for i = 1:size(bucket.javacpath)
@@ -125,22 +125,21 @@ bucket.trcFile = ('data/Meri-002.trc');
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
-if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, cell2iDynTreeStringVector(selectedJoints));
-    % here the model loads the same order.
-    fprintf('Something wrong with the model loading.')
+if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
+        cell2iDynTreeStringVector(selectedJoints));
+% here the model loads the same order of selectedJoints.
+fprintf('Something wrong with the model loading.')
 end
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
-% remove left foot sensor since it will be the fixed base
+% Remove sensor on the fixed base
 fixedBase = 'LeftFoot';
 humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
 humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
-% humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, 'LeftFoot_accelerometer');
-% humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, 'LeftFoot_gyro');
-% we decided to remove gyroscopes from the analysis
+% We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 
 %% Load robot URDF model
@@ -158,13 +157,10 @@ robot = processRobotWrenches(robot_kinDynComp, ...
                              subjectParamsFromData);
 end
 
-%% initialize berdy
-% model   = humanModelLoader.model();
-% sensors = humanModelLoader.sensors();
-% specify berdy options
+%% Initialize berdy
+% Specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
 berdyOptions.baseLink = fixedBase; % change of the base link
-% berdyOptions.baseLink = 'LeftFoot'; % change of the base link
 %--------------------------------------------------------------------------
 % IMPORTANT NOTE:
 % ---------------
@@ -178,16 +174,16 @@ berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
 berdyOptions.includeFixedBaseExternalWrench                  = true;
 
-% load berdy
+% Load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(humanModel, humanSensors, berdyOptions);
-% get the current traversal
+% Get the current traversal
 traversal = berdy.dynamicTraversal;
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('Current base is < ', currentBase,'>.'));
 disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
-% get the tree is visited IS the ordere of variables in vector d
 
+% Get the tree is visited IS the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
 for i = 0 : traversal.getNrOfVisitedLinks() - 1
@@ -199,8 +195,10 @@ for i = 0 : traversal.getNrOfVisitedLinks() - 1
     dVectorOrder{i + 1} = berdy.model().getLinkName(link.getIndex());
 end
 
+% -------------------------------------------------------------------------
+% CHECK: print the order of variables in d vector
 printBerdyDynVariables(berdy)
-
+% -------------------------------------------------------------------------
 %% Measurements wrapping
 data = dataPackaging(humanModel,... 
                      humanSensors,...
@@ -209,17 +207,34 @@ data = dataPackaging(humanModel,...
                      human_ddq,...
                      robot);
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
-
+% -------------------------------------------------------------------------
+% CHECK: print the order of measurement in y 
+printBerdySensorOrder(berdy);
+% -------------------------------------------------------------------------
 %% MAP
-% set priors
+% Set priors
 priors        = struct;
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
 priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables());
 priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 priors.Sigmay = Sigmay;
+
+% Added the possibility to remove a sensor from the analysis
+% (excluding accelerometers and gyroscope for wich already exist the 
+% iDynTree opton).
+sensorsToBeRemoved = [];
+temp = struct;
+temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+temp.id = 'LeftHand';
+sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+        % temp = struct;
+        % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+        % temp.id = 'RightHand';
+        % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+
 tic;
-[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
+[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors );
 % [mu_dgiveny, Sigma_dgiveny, modelError, measError] = MAPcomputation(berdy, human_state, y, priors);
 toc;
 
- plotScript
+%  plotScript

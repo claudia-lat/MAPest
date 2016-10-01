@@ -1,5 +1,4 @@
-function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors)
-% function [mu_dgiveny, Sigma_dgiveny, modelError, measError] = MAPcomputation(berdy, state, y, priors)
+function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors, varargin)
 % MAPCOMPUTATION solves the inverse dynamics problem with a 
 % maximum-a-posteriori estimation by using the Newton-Euler algorithm and 
 % redundant sensor measurements as originally described in the paper 
@@ -32,8 +31,55 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors)
 % again represented as a sparse matrix. 
 % MEASUREMENTS EQUATIONS (1) and CONSTRAINTS EQUATIONS (2) stacked
 % together represent the system that MAP solves.
+%
+% -------------------------------------------------------------------------
+% Important note: 
+% the function provides an option for removing from the
+% analysis a sensor.  By default, if it is not specified anything, MAP is
+% computed by using all the sensors (i.e. the full vector of y
+% measurements). If it is specified in the option the sensor to remove, MAP
+% loads the full y and then remove automatically values related to that
+% sensor and the related block variance from the Sigmay.
+% -------------------------------------------------------------------------
 
+options = struct(   ...
+    'SENSORS_TO_REMOVE', []...
+    );
 
+% read the acceptable names
+optionNames = fieldnames(options);
+
+% count arguments
+nArgs = length(varargin);
+if round(nArgs/2)~=nArgs/2
+    error('createXsensLikeURDFmodel needs propertyName/propertyValue pairs')
+end
+
+for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
+    inpName = upper(pair{1}); % make case insensitive
+
+    if any(strcmp(inpName,optionNames))
+        % overwrite options. If you want you can test for the right class here
+        % Also, if you find out that there is an option you keep getting wrong,
+        % you can use "if strcmp(inpName,'problemOption'),testMore,end"-statements
+        options.(inpName) = pair{2};
+    else
+        error('%s is not a recognized parameter name',inpName)
+    end
+end
+
+%%
+rangeOfRemovedSensors = [];
+for i = 1 : size(options.SENSORS_TO_REMOVE)
+    ithSensor = options.SENSORS_TO_REMOVE(i);
+    [index, len] = rangeOfSensorMeasurement( berdy, ithSensor.type, ithSensor.id);
+    rangeOfRemovedSensors = [rangeOfRemovedSensors, index : index + len - 1];
+end
+
+y(rangeOfRemovedSensors,:) = [];
+priors.Sigmay(rangeOfRemovedSensors, :) = [];  % TO BE CHECKED!
+priors.Sigmay(:, rangeOfRemovedSensors) = [];  % TO BE CHECKED!
+%% 
 % Set gravity 
 gravity = [0 0 -9.81];
 grav  = iDynTree.Vector3();
@@ -56,7 +102,7 @@ Sigmad_inv = sparse(inv(priors.Sigmad));
 SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(inv(priors.Sigmay));
 
-% Allocate outputs
+% Allocate outputs 
 samples = size(y, 2); 
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
@@ -80,12 +126,16 @@ for i = 1 : samples
     berdy.getBerdyMatrices(berdyMatrices.D,...
                            berdyMatrices.b_D,...
                            berdyMatrices.Y,...
-                           berdyMatrices.b_Y);
-
-    D = sparse(berdyMatrices.D.toMatlab());
+                           berdyMatrices.b_Y);        
+                                        
+    D   = sparse(berdyMatrices.D.toMatlab());
     b_D = berdyMatrices.b_D.toMatlab();
-    Y   = sparse(berdyMatrices.Y.toMatlab());
+    Y_nonsparse = berdyMatrices.Y.toMatlab();
+    Y_nonsparse(rangeOfRemovedSensors, :) = [];
+    Y   = sparse(Y_nonsparse);
     b_Y = berdyMatrices.b_Y.toMatlab();
+    
+    b_Y(rangeOfRemovedSensors) = [];
 
     SigmaBarD_inv = D' * SigmaD_inv * D + Sigmad_inv;
     muBarD        = SigmaBarD_inv \ (Sigmad_inv * mud - D' * SigmaD_inv * b_D);
