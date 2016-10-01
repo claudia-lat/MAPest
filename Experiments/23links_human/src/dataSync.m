@@ -1,14 +1,14 @@
 function [suitStruct, forceplateStruct,  suitSyncIndex] = dataSync(suitStruct, forceplateStruct, syncIndex, suitTimeInit)
-% DATASYNC: function to  synchronized all the dataset of the experiment 
+% DATASYNC synchronizes all the dataset of the experiment 
 % (suit, forceplate and robot).  
-
+%
 % Inputs 
 % -  suitStruct       : suit data;
 % -  forceplateStruct : forceplate data;
 % -  syncIndex        : index of the suit data that correspond to the robot
 %                       data;
 % -  suitTimeInit     : initial unix time for the suit data.
-
+%
 % Outputs
 % -  suitStruct       : suit data synchronized with robot data;
 % -  forceplateStruct : forceplate data synchronized with robot data;
@@ -62,5 +62,4 @@ forceplateStruct.data.plateforms.plateform2.moments = forceplateStruct.data.plat
 %% Determine the final synchronization index for xsens data
 [~, suitSyncIndex]=timeCmp(suitTimeInit, suitStruct.time, 1); % index for synchronizing 
                                                               % the original data of the suit (mvnx file)
-
 end

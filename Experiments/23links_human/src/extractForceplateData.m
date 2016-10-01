@@ -124,8 +124,8 @@ end
 end
 
 function [matrixData] =  getForceplateDataInMatrixForm (filename)
-%GETFORCEPLATEDATAINMATRIXFORM generates a matrix data from a file txt that
-% it is opened by using 'fopen' as a column vector.  
+% GETFORCEPLATEDATAINMATRIXFORM generates a matrix data from a file .txt
+% that it is opened by using 'fopen' as a column vector.
 % Note: this fuction is used since Matlab function 'dlmread' does jnot work
 % with some Matlab version!
 
@@ -140,6 +140,6 @@ columns = vectorData(2,1);
 matrixData = zeros(rows, columns);
 vectorData = vectorData(3:end,1); % cutted the first two elements
 for i = 1 : rows  
-matrixData(i,:) = vectorData(columns*(i-1)+1 : columns*i ,1);
+    matrixData(i,:) = vectorData(columns*(i-1)+1 : columns*i ,1);
 end
 end

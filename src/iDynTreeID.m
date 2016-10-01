@@ -1,6 +1,6 @@
 function [torquesM, baseReactionForceM ] = iDynTreeID(dyntree, qM, dqM, ddqM)
-%IDYNTREEID computes the inverse dynamics using the iDynTree DynamicsComputations
-% class.
+%IDYNTREEID computes the inverse dynamics using the iDynTree 
+% DynamicsComputations class.
 
 % set gravity
 grav = iDynTree.SpatialAcc();
@@ -32,4 +32,3 @@ for i = 1: size(qM,2)
     baseReactionForceM(:,i) = baseReactionForce.toMatlab();
 end
 end
-

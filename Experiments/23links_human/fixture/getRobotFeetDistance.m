@@ -15,7 +15,6 @@ consideredJoints.push_back('r_knee');
 consideredJoints.push_back('r_ankle_pitch');
 consideredJoints.push_back('r_ankle_roll');
 
-
 mdlLoader.loadReducedModelFromFile('../data/iCubGenova02.urdf',consideredJoints);
 
 kinDynMdl = iDynTree.KinDynComputations();
@@ -53,5 +52,3 @@ kinDynMdl.setRobotState(q,dq,gravity);
 % Compute l_sole_H_r_sole 
 fprintf('l_sole_H_r_sole:\n');
 kinDynMdl.getRelativeTransform('l_sole','r_sole').asHomogeneousTransform().toMatlab()
-
-

@@ -306,5 +306,4 @@ if ~isempty(options.FILENAME)
     fprintf(fileID,'%s', urdfModelTemplate);
     fclose(fileID);
 end
-
 end

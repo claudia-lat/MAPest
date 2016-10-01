@@ -1,6 +1,6 @@
 function [robotJointPos, robotModel] = createRobotModel(robot) 
-% description goes here
-%
+% CREATEROBOTMODEL generates a .urdf model for the robot and returns also
+% its joint positions.
 
 % Extract the joint position of interest from the robot struct 
 robotJointPos(1,:) = robot.data.q.torso(3,:);
@@ -44,4 +44,3 @@ if ~robotModelLoader.loadReducedModelFromFile(robotModel.filename, selectedRobot
 end
 robotModel = robotModelLoader.model().copy();
 end
-

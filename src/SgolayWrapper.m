@@ -1,5 +1,5 @@
 function [B,G] = SgolayWrapper(k,F,varargin)
-%SGOLAY Savitzky-Golay Filter Design.
+% SGOLAY Savitzky-Golay Filter Design.
 %   B = SGOLAY(K,F) designs a Savitzky-Golay (polynomial) FIR smoothing
 %   filter B.  The polynomial order, K, must be less than the frame size,
 %   F, and F must be odd.  
@@ -21,11 +21,11 @@ function [B,G] = SgolayWrapper(k,F,varargin)
 %                     X((F+1)/2) = P!*G(:,P+1)'*X
 %
 %   See also SGOLAYFILT, FIR1, FIRLS, FILTER
-
+%
 %   References:
 %     [1] Sophocles J. Orfanidis, INTRODUCTION TO SIGNAL PROCESSING,
 %              Prentice-Hall, 1995, Chapter 8
-
+%
 %   Author(s): R. Losada
 %   Copyright 1988-2011 The MathWorks, Inc.
 %     
