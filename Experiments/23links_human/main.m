@@ -11,46 +11,12 @@ addpath(genpath('../../src'));
 % running the code
 bucket = struct;
 %% Java path needed by OSIM
-bucket.JAVA_OSIM_PATH = '/usr/local/Cellar/opensim-core/4.0/share/doc/OpenSim/Java';
-bucket.JAVA_OSIM_LIB_FOLDER = '/usr/local/Cellar/opensim-core/4.0/lib';
-% get current class path
-bucket.javacpath = javaclasspath('-dynamic');
-found = false;
-for i = 1:size(bucket.javacpath)
-    if (strcmp(bucket.javacpath{i}, bucket.JAVA_OSIM_PATH))
-        found = true;
-        break;
-    end
-end
-if ~found
-    javaaddpath(bucket.JAVA_OSIM_PATH);
-end
-bucket.javapathFile = fullfile(prefdir, 'javalibrarypath.txt');
-found = false;
-if exist(bucket.javapathFile, 'file')
-    %open and check file
-    bucket.fid = fopen(bucket.javapathFile,'r');
-    %for each line, trim and compare with JAVA_OSIM_LIB_FOLDER
-    bucket.tline = fgetl(bucket.fid);
-    while ischar(bucket.tline)
-        if strcmp(strtrim(bucket.tline), bucket.JAVA_OSIM_LIB_FOLDER)
-            found = true;
-            break;
-        end
-        bucket.tline = fgetl(bucket.fid);
-    end
-    fclose(bucket.fid);
-end
-if ~found
-    bucket.fid = fopen(bucket.javapathFile,'a');
-    fprintf(bucket.fid, strcat(bucket.JAVA_OSIM_LIB_FOLDER, '\n'));
-    fclose(bucket.fid);
-end
+setupJAVAPath();
 
 %% Load measurements from SUIT
 bucket.mvnxFilename = 'data/Meri-002.mvnx';
 % suit = extractSuitData(bucket.mvnxFilename,'data');
-% suit = computeSuitSensorPosition(suit); % obtain sensors position
+suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = 'data/AMTIdata002.txt';
@@ -141,7 +107,7 @@ humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_acce
 humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
 % We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
-
+% humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
 %% Load robot URDF model
 [robotJointPos, robotModel] = createRobotModel(robot);
 robot_kinDynComp = iDynTree.KinDynComputations();
@@ -197,7 +163,7 @@ end
 
 % -------------------------------------------------------------------------
 % CHECK: print the order of variables in d vector
-printBerdyDynVariables(berdy)
+%printBerdyDynVariables(berdy)
 % -------------------------------------------------------------------------
 %% Measurements wrapping
 data = dataPackaging(humanModel,... 
@@ -209,7 +175,7 @@ data = dataPackaging(humanModel,...
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
-printBerdySensorOrder(berdy);
+% printBerdySensorOrder(berdy);
 % -------------------------------------------------------------------------
 %% MAP
 % Set priors
@@ -227,14 +193,15 @@ temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'LeftHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
-        % temp = struct;
-        % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-        % temp.id = 'RightHand';
-        % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+%         temp = struct;
+%         temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+%         temp.id = 'RightHand';
+%         sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
-tic;
-[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors );
-% [mu_dgiveny, Sigma_dgiveny, modelError, measError] = MAPcomputation(berdy, human_state, y, priors);
-toc;
+profile on
+[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+% [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
+profile viewer
+profile off
 
-%  plotScript
+finalPlot
