@@ -34,7 +34,7 @@ if exist(javapathFile, 'file')
 end
 if ~found
     fid = fopen(javapathFile,'a');
-    fprintf(fid, strcat(JAVA_OSIM_LIB_FOLDER, '\n'));
+    fprintf(fid, strcat(strrep(JAVA_OSIM_LIB_FOLDER, '\', '\\'), '\n'));
     fclose(fid);
 end
 
