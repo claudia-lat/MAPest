@@ -103,11 +103,12 @@ SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs 
-samples = size(y, 2); 
+samples = 1:size(y, 2);
+numOfsamples = length(samples);
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
-mu_dgiveny    = zeros(nrOfDynVariables, samples);
+mu_dgiveny    = zeros(nrOfDynVariables, numOfsamples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
-Sigma_dgiveny =  cell(samples,1);
+Sigma_dgiveny =  cell(numOfsamples,1);
 
 % MAP Computation
 q  = iDynTree.JointPosDoubleArray(berdy.model());
@@ -116,7 +117,7 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 % modelError = zeros(berdy.getNrOfDynamicEquations, samples);
 % measError  = zeros(size(y,1), samples);
 
-for i = 1 : samples
+for i = samples
     
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
