@@ -145,7 +145,8 @@ for i =  1 : nOfSensor.fext
     end
 end
 % variance
- data.fext.var = 1e-6 * ones(6,1); % variance for f ext 
+data.fext.var = 1e-6 * ones(6,1); % variance for f ext
+
 %% Final Packaging
 dataPacked = struct;
 for i = 1 : nOfSensor.acc
@@ -158,8 +159,8 @@ for i = 1 : nOfSensor.acc
 %     dataPacked(i + nOfSensor.acc).meas  = data.gyro.meas{i};
 %     dataPacked(i + nOfSensor.acc).var   = data.gyro.var;
 end
-% indx = i + nOfSensor.acc;
-indx = i;
+%indx = i + nOfSensor.acc;
+indx = nOfSensor.acc;
 %--
 for i = 1 : nOfSensor.DOFacc
     dataPacked(i + (indx)).type         = data.ddq.type;
@@ -175,14 +176,14 @@ for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).meas         = data.fext.meas{i};
     dataPacked(i + (indx)).var          = data.fext.var;
     if i == index{1}
-         dataPacked(i + (indx)).var     = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+         dataPacked(i + (indx)).var     =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{2}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     % <FOR ROBOT>
     elseif i == index{3}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{4}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     end
 end
 end

@@ -55,18 +55,18 @@ end
 
 %% Load and read file .txt
 robotDatasetRight = importdata(fullfile(pwd,ROBOTfilenameRight));
-robotTimeRight = double(int64(robotDatasetRight(:,2)*1000));
-robotDataRight = robotDatasetRight(:,3:end);
+robotTimeRight    = double(int64(robotDatasetRight(:,2)*1000));
+robotDataRight    = robotDatasetRight(:,3:end);
 
 robotDatasetLeft = importdata(fullfile(pwd,ROBOTfilenameLeft));
-robotTimeLeft = double(int64(robotDatasetLeft(:,2)*1000));
-robotDataLeft = robotDatasetLeft(:,3:end);
+robotTimeLeft    = double(int64(robotDatasetLeft(:,2)*1000));
+robotDataLeft    = robotDatasetLeft(:,3:end);
 
 nrOfCol = size(robotDataLeft,2);
 
 % Set the degrees of freedom of the part of the robot
-armDoF = 16;
-legDoF = 6;
+armDoF   = 16;
+legDoF   = 6;
 torsoDoF = 3; 
 
 [rightArmState, ~, ~, rightArmStateTime]  = readStateExt(armDoF,rightArmStateFilename); % state in deg
@@ -82,7 +82,7 @@ leftLegState  = pi/180 .* leftLegState;  % in rad
 torsoState    = pi/180 .* torsoState;    % in rad
 
 rightArmStateTime = double(int64(rightArmStateTime*1000));
-leftArmStateTime = double(int64(leftArmStateTime*1000));
+leftArmStateTime  = double(int64(leftArmStateTime*1000));
 rightLegStateTime = double(int64(rightLegStateTime*1000));
 leftLegStateTime  = double(int64(leftLegStateTime*1000));
 torsoStateTime    = double(int64(torsoStateTime*1000));
@@ -102,23 +102,23 @@ torsoStateTime    = double(int64(torsoStateTime*1000));
     % robotDataLeft = robotDataLeft(tIndexLeft(1):tIndexLeft(end),:);
 
 % Synchronize robot state and robot data
-timeInit = max([rightArmStateTime(1),leftArmStateTime(1),rightLegStateTime(1),leftLegStateTime(1),torsoStateTime(1),robotTimeRight(1),robotTimeLeft(1)]); 
+timeInit  = max([rightArmStateTime(1),leftArmStateTime(1),rightLegStateTime(1),leftLegStateTime(1),torsoStateTime(1),robotTimeRight(1),robotTimeLeft(1)]); 
 timeFinal = min([rightArmStateTime(end),leftArmStateTime(end),rightLegStateTime(end),leftLegStateTime(end),torsoStateTime(end),robotTimeRight(end),robotTimeLeft(end)]);
 threshold = 5; % [ms] maximum difference between two time values that make the synchronization acceptable;
 
-rightArmState = rightArmState(:,(find(rightArmStateTime>=(timeInit-threshold),1)):(find(rightArmStateTime>=(timeFinal-threshold),1)));
+rightArmState     = rightArmState(:,(find(rightArmStateTime>=(timeInit-threshold),1)):(find(rightArmStateTime>=(timeFinal-threshold),1)));
 rightArmStateTime = rightArmStateTime((find(rightArmStateTime>=(timeInit-threshold),1)):(find(rightArmStateTime>=(timeFinal-threshold),1)));
 
-leftArmState = leftArmState(:,(find(leftArmStateTime>=(timeInit-threshold),1)):(find(leftArmStateTime>=(timeFinal-threshold),1)));
+leftArmState     = leftArmState(:,(find(leftArmStateTime>=(timeInit-threshold),1)):(find(leftArmStateTime>=(timeFinal-threshold),1)));
 leftArmStateTime = leftArmStateTime((find(leftArmStateTime>=(timeInit-threshold),1)):(find(leftArmStateTime>=(timeFinal-threshold),1)));
 
-rightLegState = rightLegState(:,(find(rightLegStateTime>=(timeInit-threshold),1)):(find(rightLegStateTime>=(timeFinal-threshold),1)));
+rightLegState     = rightLegState(:,(find(rightLegStateTime>=(timeInit-threshold),1)):(find(rightLegStateTime>=(timeFinal-threshold),1)));
 rightLegStateTime = rightLegStateTime((find(rightLegStateTime>=(timeInit-threshold),1)):(find(rightLegStateTime>=(timeFinal-threshold),1)));
 
-leftLegState = leftLegState(:,(find(leftLegStateTime>=(timeInit-threshold),1)):(find(leftLegStateTime>=(timeFinal-threshold),1)));
+leftLegState     = leftLegState(:,(find(leftLegStateTime>=(timeInit-threshold),1)):(find(leftLegStateTime>=(timeFinal-threshold),1)));
 leftLegStateTime = leftLegStateTime((find(leftLegStateTime>=(timeInit-threshold),1)):(find(leftLegStateTime>=(timeFinal-threshold),1)));
 
-torsoState = torsoState(:,(find(torsoStateTime>=(timeInit-threshold),1)):(find(torsoStateTime>=(timeFinal-threshold),1)));
+torsoState     = torsoState(:,(find(torsoStateTime>=(timeInit-threshold),1)):(find(torsoStateTime>=(timeFinal-threshold),1)));
 torsoStateTime = torsoStateTime((find(torsoStateTime>=(timeInit-threshold),1)):(find(torsoStateTime>=(timeFinal-threshold),1)));
 
 robotDataRight = robotDataRight((find(robotTimeRight>=(timeInit-threshold),1)):(find(robotTimeRight>=(timeFinal-threshold),1)),:);
@@ -163,12 +163,12 @@ allData.properties.nrOfFrame = nrOfFrames;
 % TIME
 allData.time.unixTime = robotTime';
 % ROBOT DATA
-allData.links.rightarm.forces = robotDataRight(:,1:3)';
-allData.links.rightarm.moments = robotDataRight(:,4:6)';
+allData.links.rightarm.forces      = robotDataRight(:,1:3)';
+allData.links.rightarm.moments     = robotDataRight(:,4:6)';
 allData.links.rightarm.contactLink = contactLink{3};
-allData.links.leftarm.forces = robotDataLeftINT(:,1:3)';
-allData.links.leftarm.moments = robotDataLeftINT(:,4:6)';
-allData.links.leftarm.contactLink = contactLink{4};
+allData.links.leftarm.forces       = robotDataLeftINT(:,1:3)';
+allData.links.leftarm.moments      = robotDataLeftINT(:,4:6)';
+allData.links.leftarm.contactLink  = contactLink{4};
 % ROBOT JOINT POSITION
 allData.q.rightArm = rightArmStateINT;
 allData.q.leftArm  = leftArmStateINT;
@@ -179,14 +179,14 @@ allData.q.torso    = torsoStateINT;
 %% Sychronization with the suit data
 [robotIndex, syncIndex] = timeCmp(timeSeries, robotTime, 6);
 syncTime = timeSeries(syncIndex)';
-robotDataRight = robotDataRight(robotIndex(1):robotIndex(end),:);
+robotDataRight   = robotDataRight(robotIndex(1):robotIndex(end),:);
 robotDataLeftINT = robotDataLeftINT(robotIndex(1):robotIndex(end),:);
 rightArmStateINT = rightArmStateINT(:,robotIndex(1):robotIndex(end));
-leftArmStateINT = leftArmStateINT(:,robotIndex(1):robotIndex(end));
+leftArmStateINT  = leftArmStateINT(:,robotIndex(1):robotIndex(end));
 rightLegStateINT = rightLegStateINT(:,robotIndex(1):robotIndex(end));
-leftLegStateINT = leftLegStateINT(:,robotIndex(1):robotIndex(end));
-torsoStateINT = torsoStateINT(:,robotIndex(1):robotIndex(end));
-robotTime = robotTime(robotIndex(1):robotIndex(end),:);
+leftLegStateINT  = leftLegStateINT(:,robotIndex(1):robotIndex(end));
+torsoStateINT    = torsoStateINT(:,robotIndex(1):robotIndex(end));
+robotTime        = robotTime(robotIndex(1):robotIndex(end),:);
     
 %% Interpolation
 for i = 1:nrOfCol
@@ -240,7 +240,7 @@ data.links.rightarm.forces      = robotCutDataRight(:,1:3)';
 data.links.rightarm.moments     = robotCutDataRight(:,4:6)';
 data.links.rightarm.contactLink = contactLink{3};
 data.links.leftarm.forces       = robotCutDataLeft(:,1:3)';
-data.links.leftarm.moments       = robotCutDataLeft(:,4:6)';
+data.links.leftarm.moments      = robotCutDataLeft(:,4:6)';
 data.links.leftarm.contactLink  = contactLink{4};
 % ROBOT JOINT POSITION
 data.q.rightArm = rightArmStateCut;
@@ -248,6 +248,7 @@ data.q.leftArm  = leftArmStateCut;
 data.q.rightLeg = rightLegStateCut;
 data.q.leftLeg  = leftLegStateCut;
 data.q.torso    = torsoStateCut;
+
 %% Create data struct
 robot = [];
 if (options.ALLDATA == 1)

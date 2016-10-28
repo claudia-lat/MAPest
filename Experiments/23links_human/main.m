@@ -10,6 +10,7 @@ addpath(genpath('../../src'));
 % Create a structure 'bucket' where storing different stuff generating by
 % running the code
 bucket = struct;
+
 %% Java path needed by OSIM
 setupJAVAPath();
 
@@ -36,6 +37,7 @@ bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 2
 bucket.contactLink{3} = 'LeftHand';  % human link in contact with right robot forearm
 bucket.contactLink{4} = 'RightHand'; % human link in contact with left robot forearm
 % -------------------------------------------------------------------------
+
 %% Extract and synchronised measurements
 bucket.suitTimeInit = suit.time;
 [forceplate, bucket.suitIndex] = extractForceplateData(bucket.AMTIfilename, ...
@@ -88,6 +90,7 @@ bucket.trcFile = ('data/Meri-002.trc');
                                             bucket.setupFile,...
                                             suitSyncIndex);
 % here selectedJoints is the order of the Osim computation.
+
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
@@ -108,6 +111,7 @@ humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
 % We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
+
 %% Load robot URDF model
 [robotJointPos, robotModel] = createRobotModel(robot);
 robot_kinDynComp = iDynTree.KinDynComputations();
@@ -163,8 +167,9 @@ end
 
 % -------------------------------------------------------------------------
 % CHECK: print the order of variables in d vector
-%printBerdyDynVariables(berdy)
+printBerdyDynVariables(berdy)
 % -------------------------------------------------------------------------
+
 %% Measurements wrapping
 data = dataPackaging(humanModel,... 
                      humanSensors,...
@@ -175,8 +180,9 @@ data = dataPackaging(humanModel,...
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
-% printBerdySensorOrder(berdy);
+printBerdySensorOrder(berdy);
 % -------------------------------------------------------------------------
+
 %% MAP
 % Set priors
 priors        = struct;
@@ -193,15 +199,8 @@ temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'LeftHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
-%         temp = struct;
-%         temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-%         temp.id = 'RightHand';
-%         sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
-profile on
 [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-% [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
-profile viewer
-profile off
 
+% plot results
 finalPlot

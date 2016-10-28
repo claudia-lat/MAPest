@@ -68,7 +68,7 @@ l_sole_H_LeftSoleRot.fromMatlab([-1.0, 0.0, 0.0; ...
                                   0.0,-1.0, 0.0; ...
                                   0.0, 0.0, 1.0]);
 l_sole_H_LeftSolePos = iDynTree.Position();
-l_sole_H_LeftSolePos.fromMatlab([0.59; -0.2549; 0.0]);
+l_sole_H_LeftSolePos.fromMatlab([0.59; -0.25849; 0.0]);
 l_sole_H_LeftSole = iDynTree.Transform(l_sole_H_LeftSoleRot,l_sole_H_LeftSolePos);
 
 % This transform could also be added in the URDF file, TODO
@@ -77,7 +77,7 @@ LeftSole_H_LeftFootPos = iDynTree.Position();
 LeftSole_H_LeftFootPos.fromMatlab([0.0; 0.0; subjectParamsFromData.leftFoot_z]);
 LeftSole_H_LeftFoot =  iDynTree.Transform(LeftSole_H_LeftFootRot,LeftSole_H_LeftFootPos);
 
-% Convinient computation
+% Convenient computation
 l_sole_H_LeftFoot = l_sole_H_LeftSole*LeftSole_H_LeftFoot;
 
 % Compute robot left arm ---> human right hand trasforms 
