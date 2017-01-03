@@ -39,7 +39,7 @@ for i = 1 :  nOfSensor.acc
     end
 end
 % variance
-data.acc.var     = 0.001111 * ones(3,1); %from datasheet
+data.acc.var     = 1e3 * 0.001111 * ones(3,1); %from datasheet
 
 % % % SENSOR: <GYROSCOPE>
 % % % type
@@ -176,14 +176,14 @@ for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).meas         = data.fext.meas{i};
     dataPacked(i + (indx)).var          = data.fext.var;
     if i == index{1}
-         dataPacked(i + (indx)).var     =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+         dataPacked(i + (indx)).var     =   1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{2}
-        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =   1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     % <FOR ROBOT>
     elseif i == index{3}
-        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =   1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{4}
-        dataPacked(i + (indx)).var      =  [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      =   1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     end
 end
 end

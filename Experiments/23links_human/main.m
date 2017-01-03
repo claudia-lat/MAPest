@@ -17,7 +17,7 @@ setupJAVAPath();
 %% Load measurements from SUIT
 bucket.mvnxFilename = 'data/Meri-002.mvnx';
 % suit = extractSuitData(bucket.mvnxFilename,'data');
-suit = computeSuitSensorPosition(suit); % obtain sensors position
+% suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = 'data/AMTIdata002.txt';
@@ -95,7 +95,7 @@ bucket.trcFile = ('data/Meri-002.trc');
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
 if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
-        cell2iDynTreeStringVector(selectedJoints));
+        cell2iDynTreeStringVector(selectedJoints))
 % here the model loads the same order of selectedJoints.
 fprintf('Something wrong with the model loading.')
 end
@@ -192,15 +192,20 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 priors.Sigmay = Sigmay;
 
 % Added the possibility to remove a sensor from the analysis
-% (excluding accelerometers and gyroscope for wich already exist the 
-% iDynTree opton).
+% (excluding accelerometers and gyroscope for which removal
+% already exist the
+% iDynTree option).
 sensorsToBeRemoved = [];
 temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'LeftHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
+%profile on
+%[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
 [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+%profile viewer
+%profile off
 
 % plot results
 finalPlot
