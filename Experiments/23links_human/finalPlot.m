@@ -26,7 +26,8 @@ ylabel('$\tau$ [Nm]','HorizontalAlignment','center',...
        'FontWeight','bold',...
        'FontSize',13,...
        'Interpreter','latex');
-axis tight;
+ylim([-15 31])
+xlim([0 1058])
 grid on;  
 
 subplot(223)
@@ -45,7 +46,8 @@ ylabel('$q$ [deg]','HorizontalAlignment','center',...
        'FontWeight','bold',...
        'FontSize',13,...
        'Interpreter','latex');
-axis tight;
+ylim([-25 14])
+xlim([0 1058])
 grid on;  
 
 %%%%%%%%%%%%%
@@ -60,7 +62,8 @@ ylabel('$\tau$ [Nm]','HorizontalAlignment','center',...
        'FontWeight','bold',...
        'FontSize',13,...
        'Interpreter','latex');
-axis tight;
+ylim([-15 31])
+xlim([0 1058])
 grid on; 
     
 subplot(224)
@@ -79,7 +82,8 @@ ylabel('$q$ [deg]','HorizontalAlignment','center',...
        'FontWeight','bold',...
        'FontSize',13,...
        'Interpreter','latex');
-axis tight;
+ylim([-25 14])
+xlim([0 1058])
 grid on;  
 
 save2pdf(fullfile(figFolder, ('tau_LeftAndRight_fullSENS')),fig,600);
