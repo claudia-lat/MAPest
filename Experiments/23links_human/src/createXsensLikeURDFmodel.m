@@ -53,8 +53,8 @@ if exist('sensors', 'var')
         fprintf(fileID,sprintf('<origin xyz="%s" rpy="%s"/>\n</sensor>\n',num2str(sensors{i, 1}.position'),num2str(sensors{i, 1}.RPY)));
     end
     sensorFile = fileread('XSensModelStyle_URDFtemplate.urdf');
-    delete(fullfile(pwd,fileUrdfName));
     fclose(fileID);
+    delete(fullfile(pwd,fileUrdfName));
     sensorsInsertingPoint = '<!--Insert sensors here, if any.-->';
     urdfModelTemplate = strrep(urdfModelTemplate,sensorsInsertingPoint,sensorFile);
 end
