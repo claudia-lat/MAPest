@@ -391,7 +391,7 @@
                </objects>
                <groups />
         </IKTaskSet>       
-        <time_range>-Inf  Inf</time_range>
+        <time_range>0  60</time_range>
         <!--Name of the motion file (.mot) to which the results should be written.-->
         <constraint_weight>20.0</constraint_weight>
         <!--The accuracy of the solution in absolute terms. I.e. the number of significant
