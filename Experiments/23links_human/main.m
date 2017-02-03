@@ -10,25 +10,28 @@ addpath(genpath('../../src'));
 % Create a structure 'bucket' where storing different stuff generating by
 % running the code
 bucket = struct;
+% Set trial number
+trialID0 = [];
+trialID = 20;
 
 %% Java path needed by OSIM
 setupJAVAPath();
 
 %% Load measurements from SUIT
-bucket.mvnxFilename = 'data/Meri-002.mvnx';
-% suit = extractSuitData(bucket.mvnxFilename,'data');
-% suit = computeSuitSensorPosition(suit); % obtain sensors position
+bucket.mvnxFilename = sprintf('data/Meri-0%d%d.mvnx',trialID0, trialID);
+suit = extractSuitData(bucket.mvnxFilename,'data002');
+suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
-bucket.AMTIfilename          = 'data/AMTIdata002.txt';
-bucket.TSfilename            = 'data/TSdata002.txt';
-bucket.ROBOTfilenameRight    = 'data/robotRight002.txt';
-bucket.ROBOTfilenameLeft     = 'data/robotLeft002.txt';
-bucket.rightArmStateFilename = 'data/rightArmState.txt';
-bucket.leftArmStateFilename  = 'data/leftArmState.txt';
-bucket.rightLegStateFilename = 'data/rightLegState.txt';
-bucket.leftLegStateFilename  = 'data/leftLegState.txt';
-bucket.torsoStateFilename    = 'data/torsoState.txt';
+bucket.AMTIfilename          = sprintf('data/AMTIdata0%d%d.txt',trialID0, trialID);
+bucket.TSfilename            = sprintf('data/TSdata0%d%d.txt',trialID0, trialID);
+bucket.ROBOTfilenameRight    = sprintf('data/robotRight0%d%d.txt',trialID0, trialID);
+bucket.ROBOTfilenameLeft     = sprintf('data/robotLeft0%d%d.txt',trialID0, trialID);
+bucket.rightArmStateFilename = sprintf('data/rightArmState0%d%d.txt',trialID0, trialID);
+bucket.leftArmStateFilename  = sprintf('data/leftArmState0%d%d.txt',trialID0, trialID);
+bucket.rightLegStateFilename = sprintf('data/rightLegState0%d%d.txt',trialID0, trialID);
+bucket.leftLegStateFilename  = sprintf('data/leftLegState0%d%d.txt',trialID0, trialID);
+bucket.torsoStateFilename    = sprintf('data/torsoState0%d%d.txt',trialID0, trialID);
 % -------------------------------------------------------------------------
 % Following configuration is customized for this particular experiment:%
 bucket.contactLink = cell(4,1);
@@ -37,19 +40,15 @@ bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 2
 bucket.contactLink{3} = 'LeftHand';  % human link in contact with right robot forearm
 bucket.contactLink{4} = 'RightHand'; % human link in contact with left robot forearm
 % -------------------------------------------------------------------------
-
 %% Extract and synchronised measurements
-bucket.suitTimeInit = suit.time;
 [forceplate, bucket.suitIndex] = extractForceplateData(bucket.AMTIfilename, ...
                                                        bucket.TSfilename, ...
-                                                       bucket.suitTimeInit, ...
                                                        bucket.contactLink,...
                                                        'outputdir', 'data');
-bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
 
 [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
                                              bucket.ROBOTfilenameRight, ...
-                                             bucket.timeSeries, ...
+                                             forceplate.data.time.unixTime , ...
                                              bucket.contactLink,...
                                              bucket.rightArmStateFilename, ...
                                              bucket.leftArmStateFilename, ...
@@ -60,11 +59,13 @@ bucket.timeSeries = bucket.suitTimeInit(bucket.suitIndex);
 [suit, forceplate, suitSyncIndex] = dataSync(suit,...
                                              forceplate, ...
                                              bucket.syncIndex,...
-                                             bucket.suitTimeInit);
+                                             bucket.suitIndex);
 
 %% Extract subject parameters from SUIT
 subjectID = 1;
-bucket.M = 60;
+weight = (forceplate.data.plateforms.plateform1.forces(3,1) ...
+          + forceplate.data.plateforms.plateform2.forces(3,1))/9.81;
+bucket.M = weight;
 subjectParamsFromData = subjectParamsComputation(suit, bucket.M);
 
 %% Process raw data from forceplates
@@ -75,7 +76,7 @@ bucket.filenameURDF = sprintf('models/XSensURDF_subj%d.urdf',subjectID);
 bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
                                             suit.sensors,...
                                             'filename',bucket.filenameURDF,...
-                                            'GazeboModel',true);
+                                            'GazeboModel',false);
 
 %% Create OSIM model
 bucket.filenameOSIM = sprintf('models/XSensOSIM_subj%d.osim',subjectID);
@@ -84,13 +85,12 @@ bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
 
 %% Inverse Kinematic computation 
 bucket.setupFile = ('data/fileSetup.xml');
-bucket.trcFile = ('data/Meri-002.trc');
+bucket.trcFile = sprintf('data/Meri-0%d%d.trc',trialID0, trialID);
 [human_state, human_ddq, selectedJoints] = IK(bucket.filenameOSIM, ...
                                             bucket.trcFile, ...
                                             bucket.setupFile,...
                                             suitSyncIndex);
 % here selectedJoints is the order of the Osim computation.
-
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
@@ -111,7 +111,6 @@ humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
 % We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
-
 %% Load robot URDF model
 [robotJointPos, robotModel] = createRobotModel(robot);
 robot_kinDynComp = iDynTree.KinDynComputations();
@@ -167,9 +166,8 @@ end
 
 % -------------------------------------------------------------------------
 % CHECK: print the order of variables in d vector
-printBerdyDynVariables(berdy)
+%printBerdyDynVariables(berdy)
 % -------------------------------------------------------------------------
-
 %% Measurements wrapping
 data = dataPackaging(humanModel,... 
                      humanSensors,...
@@ -180,9 +178,8 @@ data = dataPackaging(humanModel,...
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
-printBerdySensorOrder(berdy);
+% printBerdySensorOrder(berdy);
 % -------------------------------------------------------------------------
-
 %% MAP
 % Set priors
 priors        = struct;
@@ -192,20 +189,21 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 priors.Sigmay = Sigmay;
 
 % Added the possibility to remove a sensor from the analysis
-% (excluding accelerometers and gyroscope for which removal
-% already exist the
-% iDynTree option).
+% (excluding accelerometers and gyroscope for wich already exist the 
+% iDynTree opton).
 sensorsToBeRemoved = [];
 temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'LeftHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+temp = struct;
+temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+temp.id = 'RightHand';
+sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
-%profile on
-%[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
-[mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-%profile viewer
-%profile off
+% [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+[mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
 
-% plot results
-finalPlot
+% bowingPlot
+% squatPlot
+% addingSensorsPlot
