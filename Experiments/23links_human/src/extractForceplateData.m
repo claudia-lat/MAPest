@@ -1,4 +1,4 @@
-function [ forceplate, suitIndex ] = extractForceplateData(AMTIfilename, TSfilename, suitTimeInit, contactLink, varargin )
+function [ forceplate, suitIndex ] = extractForceplateData(AMTIfilename, TSfilename, contactLink, varargin )
 % EXTRACTFORCEPLATEDATA allows to create a .mat stucture contatining all 
 % forceplate data acquired during the Xsens experiment.
 %
@@ -18,9 +18,7 @@ function [ forceplate, suitIndex ] = extractForceplateData(AMTIfilename, TSfilen
 %                 forceplate data. 
 
 options = struct(   ...
-    'OUTPUTDIR', '',...
-    'ALLDATA',  false... 
-    );
+    'OUTPUTDIR', '');
 % read the acceptable names
 optionNames = fieldnames(options);
 % count arguments
@@ -57,60 +55,30 @@ if diffSum > 0
 end
 
 %% Create data struct for all data coming from the forceplates
-allData =[];
+data =[];
 % PROPERTIES
-allData.properties.frameRate = 1000; 
-allData.properties.nrOfPlateform = 2;
-nrOfFrames = size(AMTIData,1);
-allData.properties.nrOfFrame = nrOfFrames;
-% TIME
-allData.time.unixTime = TSData(:,2)';
-allData.time.standardTime = TSData(:,3)';
-% PLATEFORMS
-allData.plateforms.plateform1.frames      = AMTIData(:,1)';
-allData.plateforms.plateform1.contactLink = contactLink{1};
-allData.plateforms.plateform1.forces      = AMTIData(:,2:4)';
-allData.plateforms.plateform1.moments     = AMTIData(:,5:7)';
-allData.plateforms.plateform2.frames      = AMTIData(:,9)';
-allData.plateforms.plateform2.contactLink = contactLink{2};
-allData.plateforms.plateform2.forces      = AMTIData(:,10:12)';
-allData.plateforms.plateform2.moments     = AMTIData(:,13:15)';
-
-%% Function to determine the forceplate data corresponding to the suit data
-forceplateTime = allData.time.unixTime;
-[AMTIindex, suitIndex] = timeCmp(suitTimeInit,forceplateTime, 1);
-AMTIindex = AMTIindex(AMTIindex(:,1) ~= 0, :);
-cutData = AMTIData(AMTIindex,:);
-cutTSData = TSData(AMTIindex,:);
-
-%% Create data struct for cut data corresponding to the suit
-data = [];
-% PROPERTIES
-data.properties.frameRate = 1000;
+data.properties.frameRate = 1000; 
 data.properties.nrOfPlateform = 2;
-nrOfFrames = size(AMTIindex,1);
+nrOfFrames = size(AMTIData,1);
 data.properties.nrOfFrame = nrOfFrames;
 % TIME
-data.time.unixTime = cutTSData(:,2)';
-data.time.standardTime = cutTSData(:,3)';
+data.time.unixTime = TSData(:,2)';
+data.time.standardTime = TSData(:,3)';
 % PLATEFORMS
-data.plateforms.plateform1.frames      = cutData(:,1)';
+data.plateforms.plateform1.frames      = AMTIData(:,1)';
 data.plateforms.plateform1.contactLink = contactLink{1};
-data.plateforms.plateform1.forces      = cutData(:,2:4)';
-data.plateforms.plateform1.moments     = cutData(:,5:7)';
-data.plateforms.plateform2.frames      = cutData(:,9)';
+data.plateforms.plateform1.forces      = AMTIData(:,2:4)';
+data.plateforms.plateform1.moments     = AMTIData(:,5:7)';
+data.plateforms.plateform2.frames      = AMTIData(:,9)';
 data.plateforms.plateform2.contactLink = contactLink{2};
-data.plateforms.plateform2.forces      = cutData(:,10:12)';
-data.plateforms.plateform2.moments     = cutData(:,13:15)';
+data.plateforms.plateform2.forces      = AMTIData(:,10:12)';
+data.plateforms.plateform2.moments     = AMTIData(:,13:15)';
 
 %% Create data struct
-forceplate = [];
-if (options.ALLDATA == 1)
-    forceplate.data = data;
-    forceplate.allData = allData;
-else 
-    forceplate.data = data;
-end
+forceplate.data = data;
+
+%% Create suit Index
+suitIndex = 2:1:(nrOfFrames+1);
 
 %% Save data in a file.mat
 if not(isempty(options.OUTPUTDIR))
