@@ -141,13 +141,13 @@ for i = 1 : samples
     muBarD        = SigmaBarD_inv \ (Sigmad_inv * mud - D' * SigmaD_inv * b_D);
     
     Sigma_dgiveny_inv  = SigmaBarD_inv + Y' * Sigmay_inv * Y; 
-    g = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
+    rhs = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
     
     if nargout > 1   % Sigma_dgiveny requested as output
         Sigma_dgiveny{i}   = inv(Sigma_dgiveny_inv);
-        mu_dgiveny(:,i)    = Sigma_dgiveny{i} * g;
+        mu_dgiveny(:,i)    = Sigma_dgiveny{i} * rhs;
     else
-        mu_dgiveny(:,i)    = Sigma_dgiveny_inv \ g;
+        mu_dgiveny(:,i)    = Sigma_dgiveny_inv \ rhs;
     end                      
 % test for checking errors
 %     modelError(:,i) = (D * mu_dgiveny(:,i)) + b_D;
