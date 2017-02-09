@@ -238,7 +238,7 @@
 				</Body>	
 						
 				<!--Chain from (2) to (7)-->
-				<!--IN L5 BODY: jL5S1 JOINT as combination of three rotational CustomJoints-->
+				<!--IN L5 BODY: jL5S1 JOINT as combination of two rotational CustomJoints-->
 				<Body name="L5_f1">
 					<mass>0</mass>
 					<Joint>
@@ -264,7 +264,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -335,8 +335,17 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="L5_f2">
-					<mass>0</mass>
+				<Body name="L5">
+					<mass>L5MASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>L5_COM_ORIGIN</mass_center>
+					<inertia_xx>L5INERTIAIXX</inertia_xx>
+					<inertia_yy>L5INERTIAIYY</inertia_yy>
+					<inertia_zz>L5INERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
+					<!--Joint that connects this body with the parent body.-->
 					<Joint>
 						<CustomJoint name="jL5S1_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -360,7 +369,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 1.309</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -383,111 +392,6 @@
 									<coordinates>jL5S1_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="L5">
-					<mass>L5MASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>L5_COM_ORIGIN</mass_center>
-					<inertia_xx>L5INERTIAIXX</inertia_xx>
-					<inertia_yy>L5INERTIAIYY</inertia_yy>
-					<inertia_zz>L5INERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<!--Joint that connects this body with the parent body.-->
-					<Joint>
-						<CustomJoint name="jL5S1_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>L5_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jL5S1_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jL5S1_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1 </axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -534,9 +438,9 @@
 					<WrapObjectSet>
 						<objects />
 						<groups />
-					</WrapObjectSet>}}}
+					</WrapObjectSet>
 				</Body>
-				<!--IN L3 BODY: jL4L3 JOINT as combination of three rotational CustomJoints-->
+				<!--IN L3 BODY: jL4L3 JOINT as combination of two rotational CustomJoints-->
 				<Body name="L3_f1">
 					<mass>0</mass>
 					<Joint>
@@ -562,7 +466,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -633,8 +537,17 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="L3_f2">
-					<mass>0</mass>
+				<Body name="L3">
+					<mass>L3MASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>L3_COM_ORIGIN</mass_center>
+					<inertia_xx>L3INERTIAIXX</inertia_xx>
+					<inertia_yy>L3INERTIAIYY</inertia_yy>
+					<inertia_zz>L3INERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
+					<!--Joint that connects this body with the parent body.-->
 					<Joint>
 						<CustomJoint name="jL4L3_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -658,7 +571,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 1.309</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -681,111 +594,6 @@
 									<coordinates>jL4L3_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="L3">
-					<mass>L3MASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>L3_COM_ORIGIN</mass_center>
-					<inertia_xx>L3INERTIAIXX</inertia_xx>
-					<inertia_yy>L3INERTIAIYY</inertia_yy>
-					<inertia_zz>L3INERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<!--Joint that connects this body with the parent body.-->
-					<Joint>
-						<CustomJoint name="jL4L3_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>L3_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jL4L3_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jL4L3_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -834,7 +642,7 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN T12 BODY: jL1T12 JOINT as combination of three rotational CustomJoints-->
+				<!--IN T12 BODY: jL1T12 JOINT as combination of two rotational CustomJoints-->
 				<Body name="T12_f1">
 					<mass>0</mass>
 					<Joint>
@@ -860,7 +668,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -932,8 +740,17 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="T12_f2">
-					<mass>0</mass>
+				<Body name="T12">
+					<mass>T12MASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>T12_COM_ORIGIN</mass_center>
+					<inertia_xx>T12INERTIAIXX</inertia_xx>
+					<inertia_yy>T12INERTIAIYY</inertia_yy>
+					<inertia_zz>T12INERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
+					<!--Joint that connects this body with the parent body.-->
 					<Joint>
 						<CustomJoint name="jL1T12_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -957,7 +774,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 1.309</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -981,112 +798,6 @@
 									<coordinates>jL1T12_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color>1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform>0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="T12">
-					<mass>T12MASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>T12_COM_ORIGIN</mass_center>
-					<inertia_xx>T12INERTIAIXX</inertia_xx>
-					<inertia_yy>T12INERTIAIYY</inertia_yy>
-					<inertia_zz>T12INERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<!--Joint that connects this body with the parent body.-->
-					<Joint>
-						<CustomJoint name="jL1T12_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>T12_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jL1T12_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jL1T12_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -1161,7 +872,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.349066 0.349066</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1258,7 +969,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.261799 0.698132</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1364,7 +1075,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1462,7 +1173,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1559,7 +1270,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.959931 1.57079633</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1665,7 +1376,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-1.22173 1.22173</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1737,7 +1448,7 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN HEAD BODY: jC1Head JOINT as combination of three rotational CustomJoints-->
+				<!--IN HEAD BODY: jC1Head JOINT as combination of two rotational CustomJoints-->
 				<Body name="Head_f1">
 					<mass>0</mass>
 					<Joint>
@@ -1763,7 +1474,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1835,8 +1546,17 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="Head_f2">
-					<mass>0</mass>
+				<Body name="Head">
+					<mass>HEADMASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>HEAD_COM_ORIGIN</mass_center>
+					<inertia_xx>HEADINERTIAIXX</inertia_xx>
+					<inertia_yy>HEADINERTIAIYY</inertia_yy>
+					<inertia_zz>HEADINERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
+					<!--Joint that connects this body with the parent body.-->
 					<Joint>
 						<CustomJoint name="jC1Head_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -1860,7 +1580,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.436332 0.174533</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -1884,112 +1604,6 @@
 									<coordinates>jC1Head_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>sphere.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="Head">
-					<mass>HEADMASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>HEAD_COM_ORIGIN</mass_center>
-					<inertia_xx>HEADINERTIAIXX</inertia_xx>
-					<inertia_yy>HEADINERTIAIYY</inertia_yy>
-					<inertia_zz>HEADINERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<!--Joint that connects this body with the parent body.-->
-					<Joint>
-						<CustomJoint name="jC1Head_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>Head_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jC1Head_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jC1Head_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -2040,9 +1654,17 @@
 				</Body>
 					
 				<!--Chain from (8) to (11)-->
-				<!--IN RIGHT SHOULDER BODY: jRightC7Shoulder JOINT as combination of three rotational CustomJoints-->
-				<Body name="RightShoulder_f1">
-					<mass>0</mass>
+				<!--IN RIGHT SHOULDER BODY: jRightC7Shoulder JOINT as a unique rotational CustomJoints-->
+				<Body name="RightShoulder">
+					<mass>RIGHTSHOULDERMASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>RIGHTSHOULDER_COM_ORIGIN</mass_center>
+					<inertia_xx>RIGHTSHOULDERINERTIAIXX</inertia_xx>
+					<inertia_yy>RIGHTSHOULDERINERTIAIYY</inertia_yy>
+					<inertia_zz>RIGHTSHOULDERINERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
 					<Joint>
 						<CustomJoint name="jRightC7Shoulder_rotx">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -2066,7 +1688,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 0.0872665</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -2090,208 +1712,6 @@
 									<coordinates>jRightC7Shoulder_rotx</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="RightShoulder_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jRightC7Shoulder_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightShoulder_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightC7Shoulder_roty">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation2">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightC7Shoulder_roty</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="RightShoulder">
-					<mass>RIGHTSHOULDERMASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>RIGHTSHOULDER_COM_ORIGIN</mass_center>
-					<inertia_xx>RIGHTSHOULDERINERTIAIXX</inertia_xx>
-					<inertia_yy>RIGHTSHOULDERINERTIAIYY</inertia_yy>
-					<inertia_zz>RIGHTSHOULDERINERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<Joint>
-						<CustomJoint name="jRightC7Shoulder_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightShoulder_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightC7Shoulder_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightC7Shoulder_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -2366,7 +1786,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-2.5619 1.57079633</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -2567,7 +1987,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 3.14159</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -2638,112 +2058,15 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN RIGHT FORE ARM BODY: jRightElbow JOINT as combination of three rotational CustomJoints-->
+				<!--IN RIGHT FORE ARM BODY: jRightElbow JOINT as combination of two rotational CustomJoints-->
 				<Body name="RightForeArm_f1">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jRightElbow_rotx">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightUpperArm</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>jRightElbow_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightElbow_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightElbow_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0 </transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="RightForeArm_f2">
 					<mass>0</mass>
 					<Joint>
 						<CustomJoint name="jRightElbow_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightForeArm_f1</parent_body>
+							<parent_body>RightUpperArm</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
+							<location_in_parent>jRightElbow_ORIGIN</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -2761,7 +2084,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-1.57079633 1.48353</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -2846,7 +2169,7 @@
 					<Joint>
 						<CustomJoint name="jRightElbow_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightForeArm_f2</parent_body>
+							<parent_body>RightForeArm_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -2866,7 +2189,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>0 2.53073</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -2888,7 +2211,7 @@
 									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
 									<coordinates>jRightElbow_rotz</coordinates>
 									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1 </axis>
+									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -2937,7 +2260,7 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN RIGHT HAND BODY: jRightWrist JOINT as combination of three rotational CustomJoints-->
+				<!--IN RIGHT HAND BODY: jRightWrist JOINT as combination of two rotational CustomJoints-->
 				<Body name="RightHand_f1">
 					<mass>0</mass>
 					<Joint>
@@ -2963,7 +2286,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.872665 1.0472</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -3035,103 +2358,6 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="RightHand_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jRightWrist_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightHand_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0 </location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightWrist_roty">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation2">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightWrist_roty</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>box.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
 				<Body name="RightHand">
 					<mass>RIGHTHANDMASS</mass>
 					<!--COM wrt the origin of the link frame.-->
@@ -3146,7 +2372,7 @@
 					<Joint>
 						<CustomJoint name="jRightWrist_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightHand_f2</parent_body>
+							<parent_body>RightHand_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0 </location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -3166,7 +2392,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 0.349066</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -3240,9 +2466,17 @@
 				</Body>
 					
 				<!--Chain from (12) to (15)-->
-				<!--IN LEFT SHOULDER BODY: jLeftC7Shoulder JOINT as combination of three rotational CustomJoints-->
-				<Body name="LeftShoulder_f1">
-					<mass>0</mass>
+				<!--IN LEFT SHOULDER BODY: jLeftC7Shoulder JOINT as a unique rotational CustomJoints-->
+				<Body name="LeftShoulder">
+					<mass>LEFTSHOULDERMASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>LEFTSHOULDER_COM_ORIGIN</mass_center>
+					<inertia_xx>RIGHTSHOULDERINERTIAIXX</inertia_xx>
+					<inertia_yy>LEFTSHOULDERINERTIAIYY</inertia_yy>
+					<inertia_zz>LEFTSHOULDERINERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
 					<Joint>
 						<CustomJoint name="jLeftC7Shoulder_rotx">
 							<!--Name of the parent body to which this joint connects its owner body.-->
@@ -3266,7 +2500,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.0872665 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -3290,208 +2524,6 @@
 									<coordinates>jLeftC7Shoulder_rotx</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="LeftShoulder_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jLeftC7Shoulder_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftShoulder_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftC7Shoulder_roty">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation2">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftC7Shoulder_roty</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="LeftShoulder">
-					<mass>LEFTSHOULDERMASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>LEFTSHOULDER_COM_ORIGIN</mass_center>
-					<inertia_xx>RIGHTSHOULDERINERTIAIXX</inertia_xx>
-					<inertia_yy>LEFTSHOULDERINERTIAIYY</inertia_yy>
-					<inertia_zz>LEFTSHOULDERINERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<Joint>
-						<CustomJoint name="jLeftC7Shoulder_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftShoulder_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftC7Shoulder_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftC7Shoulder_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -3566,7 +2598,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-1.57079633 2.5619</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -3767,7 +2799,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-3.14159 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -3838,112 +2870,15 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN LEFT FORE ARM BODY: jLeftElbow JOINT as combination of three rotational CustomJoints-->
+				<!--IN LEFT FORE ARM BODY: jLeftElbow JOINT as combination of two rotational CustomJoints-->
 				<Body name="LeftForeArm_f1">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jLeftElbow_rotx">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftUpperArm</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>jLeftElbow_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftElbow_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftElbow_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0 </transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="LeftForeArm_f2">
 					<mass>0</mass>
 					<Joint>
 						<CustomJoint name="jLeftElbow_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftForeArm_f1</parent_body>
+							<parent_body>LeftUpperArm</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
+							<location_in_parent>jLeftElbow_ORIGIN</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -3961,7 +2896,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-1.48353 1.57079633</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4046,7 +2981,7 @@
 					<Joint>
 						<CustomJoint name="jLeftElbow_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftForeArm_f2</parent_body>
+							<parent_body>LeftForeArm_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -4066,7 +3001,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-2.53073 0</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4137,7 +3072,7 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN LEFT HAND BODY: jLefttWrist JOINT as combination of three rotational CustomJoints-->
+				<!--IN LEFT HAND BODY: jLefttWrist JOINT as combination of two rotational CustomJoints-->
 				<Body name="LeftHand_f1">
 					<mass>0</mass>
 					<Joint>
@@ -4163,7 +3098,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-1.0472 0.872665</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4235,103 +3170,6 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<Body name="LeftHand_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jLeftWrist_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftHand_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0 </location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftWrist_roty">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-								
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation2">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftWrist_roty</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>box.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0</scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
 				<Body name="LeftHand">
 					<mass>LEFTHANDMASS</mass>
 					<!--COM wrt the origin of the link frame.-->
@@ -4346,7 +3184,7 @@
 					<Joint>
 						<CustomJoint name="jLeftWrist_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftHand_f2</parent_body>
+							<parent_body>LeftHand_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0 </location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -4366,7 +3204,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.349066 0.523599</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4466,7 +3304,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 0.523599</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4562,7 +3400,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-2.0944 0.261799</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4666,7 +3504,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4737,111 +3575,15 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN RIGHT LOWER LEG BODY: jRightKnee as combination of three rotational CustomJoints-->
+				<!--IN RIGHT LOWER LEG BODY: jRightKnee as combination of two rotational CustomJoints-->
 				<Body name="RightLowerLeg_f1">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jRightKnee_rotx">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightUpperLeg</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>jRightKnee_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightKnee_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightKnee_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="RightLowerLeg_f2">
 					<mass>0</mass>
 					<Joint>
 						<CustomJoint name="jRightKnee_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightLowerLeg_f1</parent_body>
+							<parent_body>RightUpperLeg</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
+							<location_in_parent>jRightKnee_ORIGIN</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -4859,7 +3601,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>0 2.5619</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -4929,7 +3671,7 @@
 						<objects />
 						<groups />
 					</WrapObjectSet>
-				</Body>	
+				</Body>
 				<Body name="RightLowerLeg">
 					<mass>RIGHTLOWERLEGMASS</mass>
 					<!--COM wrt the origin of the link frame.-->
@@ -4943,7 +3685,7 @@
 					<Joint>
 						<CustomJoint name="jRightKnee_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightLowerLeg_f2</parent_body>
+							<parent_body>RightLowerLeg_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -4963,7 +3705,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.698132 0.523599</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5060,7 +3802,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.610865 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5156,7 +3898,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.872665 0.523599</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5261,7 +4003,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.872665 0.436332</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5332,111 +4074,23 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN RIGHT TOE BODY: jRightBallFoot as combination of three rotational CustomJoints-->
-				<Body name="RightToe_f1">
-					<mass>0</mass>
+				<!--IN RIGHT TOE BODY: jRightBallFoot as a unique rotational CustomJoints-->
+				<Body name="RightToe">
+					<mass>RIGHTTOEMASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>RIGHTTOE_COM_ORIGIN</mass_center>
+					<inertia_xx>RIGHTTOEINERTIAIXX</inertia_xx>
+					<inertia_yy>RIGHTTOEINERTIAIYY</inertia_yy>
+					<inertia_zz>RIGHTTOEINERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
 					<Joint>
-						<CustomJoint name="jRightBallFoot_rotx">
+						<CustomJoint name="jRightBallFoot_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
 							<parent_body>RightFoot</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>jRightBallFoot_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightBallFoot_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightBallFoot_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="RightToe_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jRightBallFoot_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightToe_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -5454,7 +4108,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.174533 1.57079633</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5477,110 +4131,6 @@
 									<coordinates>jRightBallFoot_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>	
-				<Body name="RightToe">
-					<mass>RIGHTTOEMASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>RIGHTTOE_COM_ORIGIN</mass_center>
-					<inertia_xx>RIGHTTOEINERTIAIXX</inertia_xx>
-					<inertia_yy>RIGHTTOEINERTIAIYY</inertia_yy>
-					<inertia_zz>RIGHTTOEINERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<Joint>
-						<CustomJoint name="jRightBallFoot_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>RightToe_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jRightBallFoot_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jRightBallFoot_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
@@ -5657,7 +4207,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5753,7 +4303,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-2.0944 0.261799</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5857,7 +4407,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 0.785398</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -5928,111 +4478,15 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN LEFT LOWER LEG BODY: jLeftKnee as combination of three rotational CustomJoints-->
+				<!--IN LEFT LOWER LEG BODY: jLeftKnee as combination of two rotational CustomJoints-->
 				<Body name="LeftLowerLeg_f1">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jLeftKnee_rotx">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftUpperLeg</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>jLeftKnee_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftKnee_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftKnee_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="LeftLowerLeg_f2">
 					<mass>0</mass>
 					<Joint>
 						<CustomJoint name="jLeftKnee_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftLowerLeg_f1</parent_body>
+							<parent_body>LeftUpperLeg</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
+							<location_in_parent>jLeftKnee_ORIGIN</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -6050,7 +4504,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>0 2.5619</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6134,7 +4588,7 @@
 					<Joint>
 						<CustomJoint name="jLeftKnee_rotz">
 							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftLowerLeg_f2</parent_body>
+							<parent_body>LeftLowerLeg_f1</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
@@ -6154,7 +4608,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.523599 0.698132</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6251,7 +4705,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.785398 0.610865</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6347,7 +4801,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.872665 0.523599</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6452,7 +4906,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.436332 0.872665</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6523,111 +4977,23 @@
 						<groups />
 					</WrapObjectSet>
 				</Body>
-				<!--IN LEFT TOE BODY: jLeftBallFoot as combination of three rotational CustomJoints-->
-				<Body name="LeftToe_f1">
-					<mass>0</mass>
+				<!--IN LEFT TOE BODY: jLeftBallFoot as a unique rotational CustomJoints-->
+				<Body name="LeftToe">
+					<mass>LEFTTOEMASS</mass>
+					<!--COM wrt the origin of the link frame.-->
+					<mass_center>LEFTTOE_COM_ORIGIN</mass_center>
+					<inertia_xx>LEFTTOEINERTIAIXX</inertia_xx>
+					<inertia_yy>LEFTTOEINERTIAIYY</inertia_yy>
+					<inertia_zz>LEFTTOEINERTIAIZZ</inertia_zz>
+					<inertia_xy>0</inertia_xy>
+					<inertia_xz>0</inertia_xz>
+					<inertia_yz>0</inertia_yz>
 					<Joint>
-						<CustomJoint name="jLeftBallFoot_rotx">
+						<CustomJoint name="jLeftBallFoot_roty">
 							<!--Name of the parent body to which this joint connects its owner body.-->
 							<parent_body>LeftFoot</parent_body>
 							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
 							<location_in_parent>jLeftBallFoot_ORIGIN</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftBallFoot_rotx">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation1">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftBallFoot_rotx</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>1 0 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>
-				<Body name="LeftToe_f2">
-					<mass>0</mass>
-					<Joint>
-						<CustomJoint name="jLeftBallFoot_roty">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftToe_f1</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
 							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
 							<orientation_in_parent>0 0 0</orientation_in_parent>
 							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
@@ -6645,7 +5011,7 @@
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
+										<range>-0.174533 1.57079633</range>
 										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
 										<clamped>false</clamped>
 										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
@@ -6668,110 +5034,6 @@
 									<coordinates>jLeftBallFoot_roty</coordinates>
 									<!--Rotation or translation axis for the transform.-->
 									<axis>0 1 0</axis>
-									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
-									<function>
-										<LinearFunction name="">
-											<coefficients>1 0</coefficients>
-										</LinearFunction>
-									</function>
-								</TransformAxis>
-								<!--3 Axes for translations are listed next.-->
-							</SpatialTransform>
-						</CustomJoint>
-					</Joint>
-					<VisibleObject>
-						<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
-						<GeometrySet>
-							<objects>
-								<DisplayGeometry>
-									<!--Name of geometry file .vtp, .stl, .obj-->
-									<geometry_file>cylinder.vtp</geometry_file>
-									<!--Color used to display the geometry when visible-->
-									<color> 1 1 1</color>
-									<!--Name of texture file .jpg, .bmp-->
-									<texture_file />
-									<!--in body transform specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-									<transform> 0 0 0 0 0 0</transform>
-									<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-									<scale_factors>0 0 0 </scale_factors>
-									<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded-->
-									<display_preference>4</display_preference>
-									<!--Display opacity between 0.0 and 1.0-->
-									<opacity>1</opacity>
-								</DisplayGeometry>
-							</objects>
-							<groups />
-						</GeometrySet>
-						<!--Three scale factors for display purposes: scaleX scaleY scaleZ-->
-						<scale_factors>1 1 1</scale_factors>
-						<!--transform relative to owner specified as 3 rotations (rad) followed by 3 translations rX rY rZ tx ty tz-->
-						<transform> 0 0 0 0 0 0</transform>
-						<!--Whether to show a coordinate frame-->
-						<show_axes>true</show_axes>
-						<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
-						<display_preference>4</display_preference>
-					</VisibleObject>
-					<WrapObjectSet>
-						<objects />
-						<groups />
-					</WrapObjectSet>
-				</Body>	
-				<Body name="LeftToe">
-					<mass>LEFTTOEMASS</mass>
-					<!--COM wrt the origin of the link frame.-->
-					<mass_center>LEFTTOE_COM_ORIGIN</mass_center>
-					<inertia_xx>LEFTTOEINERTIAIXX</inertia_xx>
-					<inertia_yy>LEFTTOEINERTIAIYY</inertia_yy>
-					<inertia_zz>LEFTTOEINERTIAIZZ</inertia_zz>
-					<inertia_xy>0</inertia_xy>
-					<inertia_xz>0</inertia_xz>
-					<inertia_yz>0</inertia_yz>
-					<Joint>
-						<CustomJoint name="jLeftBallFoot_rotz">
-							<!--Name of the parent body to which this joint connects its owner body.-->
-							<parent_body>LeftToe_f2</parent_body>
-							<!--Location of the joint in the parent body specified in the parent reference frame. Default is (0,0,0).-->
-							<location_in_parent>0 0 0</location_in_parent>
-							<!--Orientation of the joint in the parent body specified in the parent reference frame. Euler XYZ body-fixed rotation angles are used to express the orientation. Default is (0,0,0).-->
-							<orientation_in_parent>0 0 0</orientation_in_parent>
-							<!--Location of the joint in the child body specified in the child reference frame. For SIMM models, this vector is always the zero vector (i.e., the body reference frame coincides with the joint). -->
-							<location>0 0 0</location>
-							<!--Orientation of the joint in the owing body specified in the owning body reference frame.  Euler XYZ body-fixed rotation angles are used to express the orientation. -->
-							<orientation>0 0 0</orientation>
-							<!--Set holding the generalized coordinates (q's) that parmeterize this joint.-->
-							<CoordinateSet>
-								<objects>
-									<Coordinate name="jLeftBallFoot_rotz">
-										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
-										<motion_type>rotational</motion_type>
-										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
-										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
-										<default_speed_value>0</default_speed_value>
-										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
-										<range>-1.57079633 1.57079633</range>
-										<!--Flag indicating whether or not the values of the coordinates should be limited to the range, above.-->
-										<clamped>false</clamped>
-										<!--Flag indicating whether or not the values of the coordinates should be constrained to the current (e.g. default) value, above.-->
-										<locked>false</locked>
-										<!--If specified, the coordinate can be prescribed by a function of time. It can be any OpenSim Function with valid second order derivatives.-->
-										<prescribed_function />
-										<!--Flag indicating whether or not the values of the coordinates should be prescribed according to the function above. It is ignored if the no prescribed function is specified.-->
-										<prescribed>false</prescribed>
-									</Coordinate>
-								</objects>
-								<groups />
-							</CoordinateSet>
-							<!--Whether the joint transform defines parent->child or child->parent.-->
-							<reverse>false</reverse>
-							<!--Defines how the child body moves with respect to the parent as a function of the generalized coordinates.-->
-							<SpatialTransform>
-								<!--3 Axes for rotations are listed first.-->
-								<TransformAxis name="rotation3">
-									<!--Names of the coordinates that serve as the independent variables         of the transform function.-->
-									<coordinates>jLeftBallFoot_rotz</coordinates>
-									<!--Rotation or translation axis for the transform.-->
-									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<LinearFunction name="">
