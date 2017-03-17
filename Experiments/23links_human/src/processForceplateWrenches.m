@@ -40,8 +40,8 @@ rigthSole_T_fpPos = iDynTree.Position();
 rigthSole_T_fpPos.fromMatlab([0.108; -0.107; 0]);
 rightFoot_T_rightSolePos = iDynTree.Position();
 rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.rightFootBoxOrigin(3)] );
-rightFoot_T_fp = iDynTree.Transform(rightSole_H_fpRot,...
-                rightFoot_H_rightSolePos + rigthSole_H_fpPos + calibrationForceplate1Pos);
+rightFoot_T_fp = iDynTree.Transform(rightSole_T_fpRot,...
+                rightFoot_T_rightSolePos + rigthSole_T_fpPos + calibrationForceplate1Pos);
 
             
             
@@ -55,8 +55,8 @@ leftSole_T_fpPos = iDynTree.Position();
 leftSole_T_fpPos.fromMatlab([0.108; 0.107; 0]);
 leftFoot_T_leftSolePos = iDynTree.Position();
 leftFoot_T_leftSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.leftFoot_z]);
-leftFoot_T_fp = iDynTree.Transform(leftSole_H_fpRot,...
-                 leftFoot_H_leftSolePos+leftSole_H_fpPos+calibrationForceplate2Pos);
+leftFoot_T_fp = iDynTree.Transform(leftSole_T_fpRot,...
+                 leftFoot_T_leftSolePos+leftSole_T_fpPos+calibrationForceplate2Pos);
 
 % Extract wrenches from forceplate data 
 forceplate1Wrench(1:3,:) = forceplate.data.plateforms.plateform1.forces;
