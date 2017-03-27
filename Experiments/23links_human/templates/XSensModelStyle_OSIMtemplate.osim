@@ -1,3 +1,5 @@
+<!---------------------OSIM MODEL 48 DoFs----------------------->
+<!-------------------------------------------------------------->
 <?Xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
 	<Model name="XSensStyleModel">

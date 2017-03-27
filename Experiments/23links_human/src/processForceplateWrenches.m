@@ -28,35 +28,35 @@ function [forceplate] = processForceplateWrenches(forceplate, subjectParamsFromD
 
 gravityZero = iDynTree.Vector3();
 gravityZero.zero();
-% Transformation matrix for forceplate 1 and 2 (this transform can be 
+% Transformation matrix T for forceplate 1 and 2 (this transform can be 
 % easily extracted from fixture.pdf ).
 calibrationForceplate1Pos = iDynTree.Position();
 calibrationForceplate1Pos.fromMatlab([0.0002; 0.0006; 0.0398]);
-rightSole_H_fpRot = iDynTree.Rotation();
-rightSole_H_fpRot.fromMatlab([ -1.0,  0.0,  0.0; ...
+rightSole_T_fpRot = iDynTree.Rotation();
+rightSole_T_fpRot.fromMatlab([ -1.0,  0.0,  0.0; ...
                                 0.0,  1.0,  0.0; ...
                                 0.0,  0.0, -1.0]);
-rigthSole_H_fpPos = iDynTree.Position();
-rigthSole_H_fpPos.fromMatlab([0.108; -0.107; 0]);
-rightFoot_H_rightSolePos = iDynTree.Position();
-rightFoot_H_rightSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.rightFootBoxOrigin(3)] );
-rightFoot_H_fp = iDynTree.Transform(rightSole_H_fpRot,...
-                rightFoot_H_rightSolePos + rigthSole_H_fpPos + calibrationForceplate1Pos);
+rigthSole_T_fpPos = iDynTree.Position();
+rigthSole_T_fpPos.fromMatlab([0.108; -0.107; 0]);
+rightFoot_T_rightSolePos = iDynTree.Position();
+rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.rightFootBoxOrigin(3)] );
+rightFoot_T_fp = iDynTree.Transform(rightSole_T_fpRot,...
+                rightFoot_T_rightSolePos + rigthSole_T_fpPos + calibrationForceplate1Pos);
 
             
             
 calibrationForceplate2Pos = iDynTree.Position();
 calibrationForceplate2Pos.fromMatlab([0.0005; -0.0005; 0.0401]);
-leftSole_H_fpRot = iDynTree.Rotation();
-leftSole_H_fpRot.fromMatlab([  1.0,  0.0,  0.0; ...
+leftSole_T_fpRot = iDynTree.Rotation();
+leftSole_T_fpRot.fromMatlab([  1.0,  0.0,  0.0; ...
                                0.0, -1.0,  0.0; ...
                                0.0,  0.0, -1.0]);
-leftSole_H_fpPos = iDynTree.Position();
-leftSole_H_fpPos.fromMatlab([0.108; 0.107; 0]);
-leftFoot_H_leftSolePos = iDynTree.Position();
-leftFoot_H_leftSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.leftFoot_z]);
-leftFoot_H_fp = iDynTree.Transform(leftSole_H_fpRot,...
-                 leftFoot_H_leftSolePos+leftSole_H_fpPos+calibrationForceplate2Pos);
+leftSole_T_fpPos = iDynTree.Position();
+leftSole_T_fpPos.fromMatlab([0.108; 0.107; 0]);
+leftFoot_T_leftSolePos = iDynTree.Position();
+leftFoot_T_leftSolePos.fromMatlab([0.0; 0.0; -subjectParamsFromData.leftFoot_z]);
+leftFoot_T_fp = iDynTree.Transform(leftSole_T_fpRot,...
+                 leftFoot_T_leftSolePos+leftSole_T_fpPos+calibrationForceplate2Pos);
 
 % Extract wrenches from forceplate data 
 forceplate1Wrench(1:3,:) = forceplate.data.plateforms.plateform1.forces;
@@ -65,6 +65,6 @@ forceplate2Wrench(1:3,:) = forceplate.data.plateforms.plateform2.forces;
 forceplate2Wrench(4:6,:) = forceplate.data.plateforms.plateform2.moments;
 
 %% Transform the wrench in the appropriate frame and change the sign 
-forceplate.processedData.humanLeftFootWrench = -1*(leftFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate2Wrench);
-forceplate.processedData.humanRightFootWrench = -1*(rightFoot_H_fp.asAdjointTransformWrench().toMatlab()*forceplate1Wrench);
+forceplate.processedData.humanLeftFootWrench = -1*(leftFoot_T_fp.asAdjointTransformWrench().toMatlab()*forceplate2Wrench);
+forceplate.processedData.humanRightFootWrench = -1*(rightFoot_T_fp.asAdjointTransformWrench().toMatlab()*forceplate1Wrench);
 end

@@ -31,6 +31,8 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors, v
 % again represented as a sparse matrix. 
 % MEASUREMENTS EQUATIONS (1) and CONSTRAINTS EQUATIONS (2) stacked
 % together represent the system that MAP solves.
+% 
+% For d it computes only the mean and not the variance.
 %
 % -------------------------------------------------------------------------
 % Important note: 
@@ -113,9 +115,6 @@ Sigma_dgiveny =  cell(samples,1);
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 
-% modelError = zeros(berdy.getNrOfDynamicEquations, samples);
-% measError  = zeros(size(y,1), samples);
-
 for i = 1 : samples
     
     q.fromMatlab(state.q(:,i));
@@ -137,23 +136,47 @@ for i = 1 : samples
     
     b_Y(rangeOfRemovedSensors) = [];
 
-    SigmaBarD_inv = D' * SigmaD_inv * D + Sigmad_inv;
-    muBarD        = SigmaBarD_inv \ (Sigmad_inv * mud - D' * SigmaD_inv * b_D);
+    SigmaBarD_inv   = D' * SigmaD_inv * D + Sigmad_inv;
     
-    Sigma_dgiveny_inv  = SigmaBarD_inv + Y' * Sigmay_inv * Y; 
-    rhs = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
+    % the permutation matrix for SigmaBarD_inv is computed only for the first
+    % sample, beacuse this matrix does not change in the experiment     
+    if (i==1)  
+        [~,~,PBarD]= chol(SigmaBarD_inv);
+    end
+    
+    rhsBarD         = Sigmad_inv * mud - D' * (SigmaD_inv * b_D);
+    muBarD          = CholSolve(SigmaBarD_inv , rhsBarD, PBarD);
+    
+    Sigma_dgiveny_inv = SigmaBarD_inv + Y' * Sigmay_inv * Y;
+    
+    % the permutation matrix for Sigma_dgiveny_inv is computed only for the first
+    % sample, beacuse this matrix does not change in the experiment     
+    if (i==1)
+        [~,~,P]= chol(Sigma_dgiveny_inv);
+    end
+    
+    rhs             = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
     
     if nargout > 1   % Sigma_dgiveny requested as output
         Sigma_dgiveny{i}   = inv(Sigma_dgiveny_inv);
         mu_dgiveny(:,i)    = Sigma_dgiveny{i} * rhs;
-    else
-        mu_dgiveny(:,i)    = Sigma_dgiveny_inv \ rhs;
-    end                      
-% test for checking errors
-%     modelError(:,i) = (D * mu_dgiveny(:,i)) + b_D;
-%     measError(:,i)  = (Y * mu_dgiveny(:,i)) + b_Y - y(:,i);
-
+    else             % Sigma_dgiveny does not requested as output
+        mu_dgiveny(:,i)    = CholSolve(Sigma_dgiveny_inv, rhs, P);
+    end
 end
 end
 
-
+function [x] = CholSolve(A, b, P)
+% control if A is symmetric
+if (issymmetric(round(A,5)) == 1)
+    C              = P'*A*P;  % P is given as input 
+    [R]            = chol(C); % R is such that R'*R = P'*C*P
+    
+    w_forward      = P\b;
+    z_forward      = R'\w_forward;
+    y_forward      = R\z_forward;
+    x              = P'\y_forward;
+else
+    error('matrix A is not symmetric')        
+end    
+end

@@ -8,12 +8,12 @@ The experimental set-up encompasses the following different sensor modules:
 
 The model of the human is more complex with respect to the previous model with 3 links. See in **templates** the detailed description of the model for the human.
 
-###Dependencies
+### Dependencies
 - [iDynTree (with MATLAB bindings support)](https://github.com/robotology/idyntree)
 - [OpenSim (APIs for MATLAB)](http://simtk-confluence.stanford.edu:8080/display/OpenSim/Scripting+with+Matlab)
 - xml_io_tools (in **external**)
 
-###What you need
+### What you need
 
 1. Since this code works only for off-line computations, you need to have a folder **data** containing:
   - force plate data (a AMTI file .txt with force and moments + a file .txt with the acquisition timestamps);
@@ -28,7 +28,7 @@ The model of the human is more complex with respect to the previous model with 3
 3. Folder **templates** containig human templates for both the URDF and the osim models.  The osim model is mandatory for the OpenSim computation.
 
 
-###How to use
+### How to use
 
 You are able now to test your estimation only by running the `main.m`. It will call the following functions for you:
 - `extractSuitData.m`: extracts data from the Xsens and creates a struct suit.mat
