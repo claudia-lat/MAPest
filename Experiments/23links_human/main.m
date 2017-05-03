@@ -18,7 +18,7 @@ trialID = 20;
 setupJAVAPath();
 
 %% Load measurements from SUIT
-bucket.mvnxFilename = sprintf('data/Meri-0%d%d.mvnx',trialID0, trialID);
+bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
 suit = extractSuitData(bucket.mvnxFilename,'data002');
 suit = computeSuitSensorPosition(suit); % obtain sensors position
 
@@ -85,7 +85,7 @@ bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
 
 %% Inverse Kinematic computation 
 bucket.setupFile = ('data/fileSetup.xml');
-bucket.trcFile = sprintf('data/Meri-0%d%d.trc',trialID0, trialID);
+bucket.trcFile = sprintf('data/Subj-0%d%d.trc',trialID0, trialID);
 [human_state, human_ddq, selectedJoints] = IK(bucket.filenameOSIM, ...
                                             bucket.trcFile, ...
                                             bucket.setupFile,...
@@ -189,8 +189,8 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 priors.Sigmay = Sigmay;
 
 % Added the possibility to remove a sensor from the analysis
-% (excluding accelerometers and gyroscope for wich already exist the 
-% iDynTree opton).
+% (excluding accelerometers and gyroscope for which already exists the
+% iDynTree option).
 sensorsToBeRemoved = [];
 temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
@@ -204,6 +204,3 @@ sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
 [mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
 
-% bowingPlot
-% squatPlot
-% addingSensorsPlot
