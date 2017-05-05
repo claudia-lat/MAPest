@@ -18,9 +18,9 @@ trialID = 20;
 setupJAVAPath();
 
 %% Load measurements from SUIT
-bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
-suit = extractSuitData(bucket.mvnxFilename,'data002');
-suit = computeSuitSensorPosition(suit); % obtain sensors position
+% bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
+% suit = extractSuitData(bucket.mvnxFilename,'data002');
+% suit = computeSuitSensorPosition(suit); % obtain sensors position
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = sprintf('data/AMTIdata0%d%d.txt',trialID0, trialID);
@@ -118,7 +118,8 @@ robot_kinDynComp.loadRobotModel(robotModel);
 
 %% Process raw data from robot
 for i= 1:robot.data.properties.nrOfFrame
-robot = processRobotWrenches(robot_kinDynComp, ...
+robot = processRobotWrenches(i, ...
+                             robot_kinDynComp, ...
                              human_kinDynComp, ...
                              robotJointPos(:,i), ...
                              human_state.q(:,i), ...

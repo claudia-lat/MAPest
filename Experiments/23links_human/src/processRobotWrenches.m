@@ -1,4 +1,4 @@
-function [robot] = processRobotWrenches(robot_kinDyn, ...
+function [robot] = processRobotWrenches(indx, robot_kinDyn, ...
                                         human_kinDyn, robot_jntPos, human_jntPos, ...
                                         robot, ...
                                         subjectParamsFromData)
@@ -93,11 +93,11 @@ r_elbow_1_H_LeftHand = r_elbow_1_H_l_sole*l_sole_H_LeftFoot*LeftFoot_H_LeftHand;
 LeftHand_H_r_elbow_1 = r_elbow_1_H_LeftHand.inverse();
 
 % Transform the wrench in the appropriate frame and change the sign 
-robotLeftArmWrench(1:3,:) = robot.data.links.leftarm.forces;
-robotLeftArmWrench(4:6,:) = robot.data.links.leftarm.moments;
-robotRightArmWrench(1:3,:) = robot.data.links.rightarm.forces;
-robotRightArmWrench(4:6,:) = robot.data.links.rightarm.moments;
+robotLeftArmWrench(1:3)  = robot.data.links.leftarm.forces(:,indx);
+robotLeftArmWrench(4:6)  = robot.data.links.leftarm.moments(:,indx);
+robotRightArmWrench(1:3) = robot.data.links.rightarm.forces(:,indx);
+robotRightArmWrench(4:6) = robot.data.links.rightarm.moments(:,indx);
 
-robot.processedData.humanLeftHandWrench = -1*(LeftHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench);
-robot.processedData.humanRightHandWrench = -1*(RightHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench);
+robot.processedData.humanLeftHandWrench(:,indx) = -1*(LeftHand_H_r_elbow_1.asAdjointTransformWrench().toMatlab()*robotRightArmWrench');
+robot.processedData.humanRightHandWrench(:,indx) = -1*(RightHand_H_l_elbow_1.asAdjointTransformWrench().toMatlab()*robotLeftArmWrench');
 end
