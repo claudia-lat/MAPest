@@ -42,9 +42,7 @@ state.dq = zeros(size(state.q));
 ddq      = zeros(size(state.q));
 
 state.q = motionData.data(:, 8:end)';  % in deg
-for i = 1 : size((state.q),1)
-    [state.dq(i,:),ddq(i,:)] = SgolayDerivation(Sg.polinomialOrder,Sg.window,state.q(i,:),Sg.samplingTime); % in deg
-end
+[~,state.dq,ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder,Sg.window,state.q,Sg.samplingTime); % in deg
 
 %% Cut state and ddq
 % Before storing the state and ddq, an eventual cut has to be done.  Since

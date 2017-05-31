@@ -38,7 +38,7 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
 end
 
 
-fileUrdfName = 'XSensModelStyle_URDFtemplate.urdf';
+fileUrdfName = 'XSensModelStyle_URDFtemplateAllJoint.urdf';
 urdfModelTemplate = fileread(fileUrdfName);
 %% Check sensor existence
 if exist('sensors', 'var')
@@ -52,7 +52,7 @@ if exist('sensors', 'var')
         fprintf(fileID,sprintf('<parent link="%s"/>\n',sensors{i, 1}.attachedLink));
         fprintf(fileID,sprintf('<origin xyz="%s" rpy="%s"/>\n</sensor>\n',num2str(sensors{i, 1}.position'),num2str(sensors{i, 1}.RPY)));
     end
-    sensorFile = fileread('XSensModelStyle_URDFtemplate.urdf');
+    sensorFile = fileread('XSensModelStyle_URDFtemplateAllJoint.urdf');
     fclose(fileID);
     delete(fullfile(pwd,fileUrdfName));
     sensorsInsertingPoint = '<!--Insert sensors here, if any.-->';

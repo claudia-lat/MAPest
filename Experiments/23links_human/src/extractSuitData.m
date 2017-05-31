@@ -171,13 +171,21 @@ for frameIdx = 1 : nrOfFrames
     end
     % SENSORS
     for i = 1 : suit.properties.nrOfSensors
-        suit.sensors{i}.meas.sensorAcceleration(:,j)    = currentFrame.sensorAcceleration(1, b*(i-1)+1 : b*i); 
+        suit.sensors{i}.meas.sensorAcceleration_raw(:,j)    = currentFrame.sensorAcceleration(1, b*(i-1)+1 : b*i); 
         suit.sensors{i}.meas.sensorAngularVelocity(:,j) = currentFrame.sensorAngularVelocity(1, b*(i-1)+1 : b*i); 
         suit.sensors{i}.meas.sensorMagneticField(:,j)   = currentFrame.sensorMagneticField(1, b*(i-1)+1 : b*i); 
         suit.sensors{i}.meas.sensorOrientation(:,j)     = currentFrame.sensorOrientation(1, a*(i-1)+1 : a*i); 
     end 
     j = j + 1;
 end
+
+%% Filtering raw sensor acceleration
+polynomialOrder = 3;
+window = 57;
+for filterIndx = 1:length(suit.sensors)
+       suit.sensors{filterIndx}.meas.sensorAcceleration = SgolayFilterAndDifferentiation(polynomialOrder,window,suit.sensors{filterIndx}.meas.sensorAcceleration_raw);  
+end
+
 %% Save data in a file.mat
 if nargin == 2
     filename = sprintf('%s_suit.mat',strrep(strtrim(suit.properties.experimentLabel),' ','_'));

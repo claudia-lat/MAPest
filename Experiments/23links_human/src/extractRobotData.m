@@ -152,7 +152,7 @@ for i = 1:torsoDoF
     vec = torsoState(i,:);
     torsoStateINT(i,:) = interp1(torsoStateTime,vec,robotTimeRight,'linear');
 end
-robotTime = robotTimeRight;
+robotTime = robotTimeRight + 3000;
 
 %% Create data struct for all data coming from the robot
 allData = [];

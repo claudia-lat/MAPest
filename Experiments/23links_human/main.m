@@ -12,15 +12,22 @@ addpath(genpath('../../src'));
 bucket = struct;
 % Set trial number
 trialID0 = [];
-trialID = 20;
+trialID = 22;
 
 %% Java path needed by OSIM
 setupJAVAPath();
 
 %% Load measurements from SUIT
-% bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
-% suit = extractSuitData(bucket.mvnxFilename,'data002');
-% suit = computeSuitSensorPosition(suit); % obtain sensors position
+
+% Save suit
+if ~exist(fullfile(pwd,'suit.mat'))
+    bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
+    suit = extractSuitData(bucket.mvnxFilename);
+    suit = computeSuitSensorPosition(suit); % obtain sensors position
+    save(fullfile(pwd,'suit.mat'),'suit');
+else
+    load(fullfile(pwd,'suit.mat'));
+end
 
 %% Load measurements from FORCEPLATES and ROBOT
 bucket.AMTIfilename          = sprintf('data/AMTIdata0%d%d.txt',trialID0, trialID);
@@ -45,6 +52,8 @@ bucket.contactLink{4} = 'RightHand'; % human link in contact with left robot for
                                                        bucket.TSfilename, ...
                                                        bucket.contactLink,...
                                                        'outputdir', 'data');
+                                                   
+% test1 = size(suit.sensors{1, 1}.meas.sensorAcceleration,2)                                                  
 
 [robot, bucket.syncIndex] = extractRobotData(bucket.ROBOTfilenameLeft, ...
                                              bucket.ROBOTfilenameRight, ...
@@ -55,12 +64,18 @@ bucket.contactLink{4} = 'RightHand'; % human link in contact with left robot for
                                              bucket.rightLegStateFilename, ...
                                              bucket.leftLegStateFilename, ...
                                              bucket.torsoStateFilename,...
-                                             'outputdir', 'data');                         
+                                             'outputdir', 'data');
+                                         
+% test2 = size(forceplate.data.plateforms.plateform2.frames,2)
+% test_robotPRE = size(robot.allData.q.rightArm,2) 
+
 [suit, forceplate, suitSyncIndex] = dataSync(suit,...
                                              forceplate, ...
                                              bucket.syncIndex,...
                                              bucket.suitIndex);
-
+                                         
+% test3 = size(suit.sensors{1, 1}.meas.sensorAcceleration,2) 
+                                         
 %% Extract subject parameters from SUIT
 subjectID = 1;
 weight = (forceplate.data.plateforms.plateform1.forces(3,1) ...
@@ -108,6 +123,8 @@ humanSensors = humanModelLoader.sensors();
 fixedBase = 'LeftFoot';
 humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
 humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
+% humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat('RightHand','_accelerometer'));
+% humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat('RightHand','_gyro'));
 % We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
@@ -126,6 +143,13 @@ robot = processRobotWrenches(i, ...
                              robot, ...
                              subjectParamsFromData);
 end
+
+% test_robotPOST = size(robot.processedData.humanLeftHandWrench,2) 
+%% test tappullo manuale
+angleLH_test = human_state.q(valueFromName(selectedJoints,'jLeftHip_roty'),:)*180/pi;
+plot(angleLH_test,'b');
+hold on
+plot(robot.processedData.humanRightHandWrench(3,:),'r');
 
 %% Initialize berdy
 % Specify berdy options
@@ -202,6 +226,31 @@ temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'RightHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
-% [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-[mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
+
+% Save mu_dgiveny
+if ~exist(fullfile(pwd,'mu_dgiveny.mat'))
+   [mu_dgiveny] = MAPcomputation(berdy, human_state, y, priors); 
+ % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+   save(fullfile(pwd,'mu_dgiveny.mat'),'mu_dgiveny');
+   if exist(fullfile(pwd,'Sigma_dgiveny.mat'))
+       save(fullfile(pwd,'Sigma_dgiveny.mat'),'Sigma_dgiveny');
+   end
+else
+    load(fullfile(pwd,'mu_dgiveny.mat'));
+    if exist(fullfile(pwd,'Sigma_dgiveny.mat'))
+       load(fullfile(pwd,'Sigma_dgiveny.mat'));
+    end
+end
+   
+   [y_simulated] = sim_y_test(berdy, human_state, mu_dgiveny);
+%    [y_simulated, Y_piece, b_Y_piece] = sim_piece_y_test(berdy, human_state, mu_dgiveny, 'LeftUpperLeg', 'LeftUpperLeg');
+   
+%    computeSigmaOfEstimatedVariables;
+   plotAURO;
+   
+
+% [mu_dgiveny_remove_LeftHand] = MAPcomputation(berdy, human_state, y, priors,'SENSORS_TO_REMOVE', sensorsToBeRemoved); 
+
+% [mu_dgiveny_remove_accRightHand] = MAPcomputation(berdy, human_state, y, priors);
+% [y_simulated_remove_accRightHand] = sim_y_test(berdy, human_state, mu_dgiveny_remove_accRightHand);
 

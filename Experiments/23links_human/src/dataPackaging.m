@@ -86,7 +86,7 @@ for i = 1 : nOfSensor.DOFacc
     data.ddq.meas{i} = ddq(i,:); 
 end
 % variance
-data.ddq.var = 6.66e-6; %from datasheet
+data.ddq.var = 6.66e-3; %from datasheet
 
 %% FROM FORCEPLATE & ROBOT
 % ---------------------------------------------------------------
@@ -175,14 +175,14 @@ for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).meas         = data.fext.meas{i};
     dataPacked(i + (indx)).var          = data.fext.var;
     if i == index{1}
-         dataPacked(i + (indx)).var     = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+         dataPacked(i + (indx)).var     = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{2}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     % <FOR ROBOT>
     elseif i == index{3}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     elseif i == index{4}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var      = [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     end
 end
 end
