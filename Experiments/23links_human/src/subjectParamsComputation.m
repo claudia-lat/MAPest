@@ -62,9 +62,9 @@ subjectParams.L5Box = [L5_x, L5_y, L5_z];
 subjectParams.L5BoxOrigin = 0.5 * [0, 0, L5_z] ;%wrt jL5S1
 % mass and inertia
 subjectParams.L5Mass       = 0.102 * M;
-subjectParams.L5Ixx        = (subjectParams.L5Mass/12) * (3 * L5_y^2 + L5_z^2);
-subjectParams.L5Iyy        = (subjectParams.L5Mass/12) * (3 * L5_x^2 + L5_z^2);
-subjectParams.L5Izz        = (subjectParams.L5Mass/2) * (L5_x * L5_y);
+subjectParams.L5Ixx        = (subjectParams.L5Mass/12) * (L5_y^2 + L5_z^2);
+subjectParams.L5Iyy        = (subjectParams.L5Mass/12) * (L5_z^2 + L5_x^2);
+subjectParams.L5Izz        = (subjectParams.L5Mass/12) * (L5_x^2 * L5_y^2);
 % markers 
 [subjectParams.pL5SpinalProcess, ~] = pointsFromName(L5_struct.points, 'pL5SpinalProcess');
 %% L3 
@@ -80,9 +80,9 @@ subjectParams.L3Box = [L3_x, L3_y, L3_z];
 subjectParams.L3BoxOrigin = 0.5 * [0, 0, L3_z] ;%wrt jL4L3
 % mass and inertia
 subjectParams.L3Mass       = 0.102 * M;
-subjectParams.L3Ixx        = (subjectParams.L3Mass/12) * (3 * L3_y^2 + L3_z^2);
-subjectParams.L3Iyy        = (subjectParams.L3Mass/12) * (3 * L3_x^2 + L3_z^2);
-subjectParams.L3Izz        = (subjectParams.L3Mass/2) * (L3_x * L3_y);
+subjectParams.L3Ixx        = (subjectParams.L3Mass/12) * (L3_y^2 + L3_z^2);
+subjectParams.L3Iyy        = (subjectParams.L3Mass/12) * (L3_z^2 + L3_x^2);
+subjectParams.L3Izz        = (subjectParams.L3Mass/12) * (L3_x^2 + L3_y^2);
 % markers 
 [subjectParams.pL3SpinalProcess, ~] = pointsFromName(L3_struct.points, 'pL3SpinalProcess');
 %% T12 
@@ -98,9 +98,9 @@ subjectParams.T12Box = [T12_x, T12_y, T12_z];
 subjectParams.T12BoxOrigin = 0.5 * [0, 0, T12_z] ;%wrt jL1T12
 % mass and inertia
 subjectParams.T12Mass       = 0.102 * M;
-subjectParams.T12Ixx        = (subjectParams.T12Mass/12) * (3 * T12_y^2 + T12_z^2);
-subjectParams.T12Iyy        = (subjectParams.T12Mass/12) * (3 * T12_x^2 + T12_z^2);
-subjectParams.T12Izz        = (subjectParams.T12Mass/2) * (T12_x * T12_y);
+subjectParams.T12Ixx        = (subjectParams.T12Mass/12) * (T12_y^2 + T12_z^2);
+subjectParams.T12Iyy        = (subjectParams.T12Mass/12) * (T12_z^2 + T12_x^2);
+subjectParams.T12Izz        = (subjectParams.T12Mass/12) * (T12_x^2 + T12_y^2);
 % markers 
 [subjectParams.pT12SpinalProcess, ~] = pointsFromName(T12_struct.points, 'pT12SpinalProcess');
 %% T8 
