@@ -193,8 +193,8 @@ subjectParams.rightUpperArmBoxOrigin = 0.5 * [0, -subjectParams.rightUpperArm_y,
 % mass and inertia
 subjectParams.rightUpperArmMass       = 0.030 * M;
 subjectParams.rightUpperArmIxx        = (subjectParams.rightUpperArmMass/12) * (3 * (subjectParams.rightUpperArm_z/2)^2 + subjectParams.rightUpperArm_y^2);
-subjectParams.rightUpperArmIyy        = (subjectParams.rightUpperArmMass/12) * (3 * (subjectParams.rightUpperArm_z/2)^2 + subjectParams.rightUpperArm_y^2);
-subjectParams.rightUpperArmIzz        = (subjectParams.rightUpperArmMass/2) * ((subjectParams.rightUpperArm_z/2)^2);
+subjectParams.rightUpperArmIyy        = (subjectParams.rightUpperArmMass/2) * ((subjectParams.rightUpperArm_z/2)^2);
+subjectParams.rightUpperArmIzz        = (subjectParams.rightUpperArmMass/12) * (3 * (subjectParams.rightUpperArm_z/2)^2 + subjectParams.rightUpperArm_y^2);
 % markers
 [subjectParams.pRightArmLatEpicondyle, ~] = pointsFromName(rightUpperArm_struct.points, 'pRightArmLatEpicondyle');
 [subjectParams.pRightArmMedEpicondyle, ~] = pointsFromName(rightUpperArm_struct.points, 'pRightArmMedEpicondyle');
@@ -210,8 +210,8 @@ subjectParams.rightForeArmBoxOrigin = 0.5 * [0, -subjectParams.rightForeArm_y, 0
 % mass and inertia
 subjectParams.rightForeArmMass       = 0.020 * M;
 subjectParams.rightForeArmIxx        = (subjectParams.rightForeArmMass/12) * (3 * (subjectParams.rightForeArm_z/2)^2 + subjectParams.rightForeArm_y^2);
-subjectParams.rightForeArmIyy        = (subjectParams.rightForeArmMass/12) * (3 * (subjectParams.rightForeArm_z/2)^2 + subjectParams.rightForeArm_y^2);
-subjectParams.rightForeArmIzz        = (subjectParams.rightForeArmMass/2) * ((subjectParams.rightForeArm_z/2)^2);
+subjectParams.rightForeArmIyy        = (subjectParams.rightForeArmMass/2) * ((subjectParams.rightForeArm_z/2)^2);
+subjectParams.rightForeArmIzz        = (subjectParams.rightForeArmMass/12) * (3 * (subjectParams.rightForeArm_z/2)^2 + subjectParams.rightForeArm_y^2);
 % markers
 [subjectParams.pRightUlnarStyloid, ~] = pointsFromName(rightForearm_struct.points, 'pRightUlnarStyloid');
 [subjectParams.pRightRadialStyloid, ~] = pointsFromName(rightForearm_struct.points, 'pRightRadialStyloid');
@@ -267,8 +267,8 @@ subjectParams.leftUpperArmBoxOrigin = 0.5 * [0, subjectParams.leftUpperArm_y, 0]
 % mass and inertia
 subjectParams.leftUpperArmMass       = 0.030 * M;
 subjectParams.leftUpperArmIxx        = (subjectParams.leftUpperArmMass/12) * (3 * (subjectParams.leftUpperArm_z/2)^2 + subjectParams.leftUpperArm_y^2);
-subjectParams.leftUpperArmIyy        = (subjectParams.leftUpperArmMass/12) * (3 * (subjectParams.leftUpperArm_z/2)^2 + subjectParams.leftUpperArm_y^2);
-subjectParams.leftUpperArmIzz        = (subjectParams.leftUpperArmMass/2) * ((subjectParams.leftUpperArm_z/2)^2);
+subjectParams.leftUpperArmIyy        = (subjectParams.leftUpperArmMass/2) * ((subjectParams.leftUpperArm_z/2)^2);
+subjectParams.leftUpperArmIzz        = (subjectParams.leftUpperArmMass/12) * (3 * (subjectParams.leftUpperArm_z/2)^2 + subjectParams.leftUpperArm_y^2);
 % markers
 [subjectParams.pLeftArmLatEpicondyle, ~] = pointsFromName(leftUpperArm_struct.points, 'pLeftArmLatEpicondyle');
 [subjectParams.pLeftArmMedEpicondyle, ~] = pointsFromName(leftUpperArm_struct.points, 'pLeftArmMedEpicondyle');
@@ -284,8 +284,8 @@ subjectParams.leftForeArmBoxOrigin = 0.5 * [0, subjectParams.leftForeArm_y, 0];%
 % mass and inertia
 subjectParams.leftForeArmMass       = 0.020 * M;
 subjectParams.leftForeArmIxx        = (subjectParams.leftForeArmMass/12) * (3 * (subjectParams.leftForeArm_z/2)^2 + subjectParams.leftForeArm_y^2);
-subjectParams.leftForeArmIyy        = (subjectParams.leftForeArmMass/12) * (3 * (subjectParams.leftForeArm_z/2)^2 + subjectParams.leftForeArm_y^2);
-subjectParams.leftForeArmIzz        = (subjectParams.leftForeArmMass/2) * ((subjectParams.leftForeArm_z/2)^2);
+subjectParams.leftForeArmIyy        = (subjectParams.leftForeArmMass/2) *  ((subjectParams.leftForeArm_z/2)^2) ;
+subjectParams.leftForeArmIzz        = (subjectParams.leftForeArmMass/12) *(3 * (subjectParams.leftForeArm_z/2)^2 + subjectParams.leftForeArm_y^2);
 % markers
 [subjectParams.pLeftUlnarStyloid, ~] = pointsFromName(leftForearm_struct.points, 'pLeftUlnarStyloid');
 [subjectParams.pLeftRadialStyloid, ~] = pointsFromName(leftForearm_struct.points, 'pLeftRadialStyloid');
