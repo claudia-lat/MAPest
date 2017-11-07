@@ -178,16 +178,27 @@ end
 %printBerdyDynVariables(berdy)
 % -------------------------------------------------------------------------
 %% Measurements wrapping
+if shoes_bool 
+  fext.rightHuman = shoes.Right.upsampled.totalForce.humanFootWrench;
+  fext.leftHuman  = shoes.Left.upsampled.totalForce.humanFootWrench;
+end
+
+if forceplates_bool 
+ %to be completed
+end
+
 data = dataPackaging(humanModel,... 
                      humanSensors,...
                      suit,...
-                     externalForces,...
-                     human_ddq);
+                     fext,...
+                     human_ddq,...
+                     bucket.contactLink);
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
 % printBerdySensorOrder(berdy);
 % -------------------------------------------------------------------------
+
 %% MAP
 % Set priors
 priors        = struct;
@@ -212,9 +223,11 @@ sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 if ~exist(fullfile(bucket.pathToTrial,'mu_dgiveny.mat'))
     % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     % [mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
-    [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors);
+    [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     save(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
     %  save(fullfile(bucket.pathToTrial,'/Sigma_dgiveny.mat'),'Sigma_dgiveny');
     else
     load(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
 end
+
+
