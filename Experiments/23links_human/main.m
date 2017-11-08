@@ -16,6 +16,7 @@ addpath(genpath('src'));
 addpath(genpath('templates')); 
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
+addpath(genpath('dataAnalysis_thesis'));
 
 %% Java path needed by OSIM
 setupJAVAPath();
@@ -44,12 +45,10 @@ shoes_bool       = true;     % if true --> shoes + Xsens
 forceplates_bool = false;      % if true --> forceplates + Xsens
 
 %% Choose and synchronize FORCE measurements combination
-%SHOES
 if shoes_bool 
      synchro_suit_and_shoes
 end
-
-%FORCE PLATES 
+ 
 if forceplates_bool 
     synchro_suit_and_forceplates
 end
@@ -62,32 +61,29 @@ subjectParamsFromData = subjectParamsComputation(suit, bucket.weight);
 % with the shoes or both feet with two force plates)
 bucket.contactLink = cell(2,1); 
 
-%SHOES
 if shoes_bool 
     % Define contacts configuration
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with ftShoe_Right
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with ftShoe_Left
     shoes = transformShoesWrenches(shoes, subjectParamsFromData);
 end
-
-
-%FORCE PLATES 
+ 
 if forceplates_bool
     % Define contacts configuration for UW setup
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with forceplate 2
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 1
     forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData);
-end 
+end                               
 
 %% Create URDF model
 bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
 if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID))
     bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-                                                suit.sensors,...
+                                                suit_downsampled.sensors,...
                                                 'filename',bucket.filenameURDF,...
                                                 'GazeboModel',false);
-end                                 
-                                        
+end   
+
 %% Create OSIM model
 bucket.filenameOSIM = sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID);
 if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID))
@@ -97,21 +93,81 @@ end
 
 %% Inverse Kinematic computation 
 
-if ~exist(fullfile(bucket.pathToTrial,'human_state.mat'))
+if ~exist(fullfile(bucket.pathToTrial,'human_state_tmp.mat'))
     bucket.setupFile = fullfile(pwd,'/dataUW/fileSetup.xml');
-    bucket.trcFile = sprintf('dataUW/Subj_%02d/opensim-0%02d.trc',subjectID, trialID);
-    [human_state, human_ddq, selectedJoints] = IK(bucket.filenameOSIM, ...
+    bucket.trcFile = sprintf('dataUW/Subj_%02d/trial_0%02d/opensim-0%02d.trc',subjectID, trialID, trialID);
+    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
                                                 bucket.trcFile, ...
                                                 bucket.setupFile,...
                                                rangeCut);
     % here selectedJoints is the order of the Osim computation.
-    save(fullfile(bucket.pathToTrial,'/human_state.mat'),'human_state');
-    save(fullfile(bucket.pathToTrial,'/human_ddq.mat'),'human_ddq');
+    save(fullfile(bucket.pathToTrial,'/human_state_tmp.mat'),'human_state_tmp');
+    save(fullfile(bucket.pathToTrial,'/human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToTrial,'/selectedJoints.mat'),'selectedJoints');
 else
-    load(fullfile(bucket.pathToTrial,'/human_state.mat'),'human_state');
-    load(fullfile(bucket.pathToTrial,'/human_ddq.mat'),'human_ddq');
+    load(fullfile(bucket.pathToTrial,'/human_state_tmp.mat'),'human_state_tmp');
+    load(fullfile(bucket.pathToTrial,'/human_ddq_tmp.mat'),'human_ddq_tmp');
     load(fullfile(bucket.pathToTrial,'/selectedJoints.mat'),'selectedJoints');
+end
+
+%% Downsampling of the data
+%--------------------------------------------------------------------------
+% IMPORTANT NOTE:
+% ---------------
+% This step is due here since the data needed by the MAP function are too
+% big for the Matlab computation! Each signal (that at this step is already
+% synchronized and properly cutted) will be here downsampled from 240Hz 
+% to 100Hz as follows:
+
+newSlaveTime  = suit.time.* 1.e-3; %to ms;
+newMasterTime = shoes.Left.interp_synch.time;
+
+% ----- Suit ----
+% WARNING: downsampled only the needed variables! 
+% In this case is useful only suit.sensors
+for i = 1 : suit.properties.nrOfSensors
+    suit_downsampled.sensors{i,1}.label = suit.sensors{i}.label;
+    for j = 1 : vectDim
+        suit_downsampled.sensors{i,1}.meas.sensorAcceleration(j,:) = interp1(newSlaveTime, ...
+            suit.sensors{i}.meas.sensorAcceleration(j,:), newMasterTime);
+        suit_downsampled.sensors{i,1}.meas.sensorAngularVelocity(j,:) = interp1(newSlaveTime, ...
+            suit.sensors{i}.meas.sensorAngularVelocity(j,:), newMasterTime);
+%     suit.sensors{i}.meas.sensorMagneticField = suit.sensors{i}.meas.sensorMagneticField; 
+%     suit.sensors{i}.meas.sensorOrientation = suit.sensors{i}.meas.sensorOrientation; 
+    end
+end
+
+% ----- Human_state and ddq ----
+% WARNING: downsampled only the needed variables!
+human_state.q  = zeros(size(human_ddq_tmp,1),size(newMasterTime,2));
+human_state.dq = zeros(size(human_ddq_tmp,1),size(newMasterTime,2));
+human_ddq      = zeros(size(human_ddq_tmp,1),size(newMasterTime,2));
+for i = 1 : size(human_ddq,1)
+    human_state.q(i,:)  = interp1(newSlaveTime, human_state_tmp.q(i,:), newMasterTime);
+    human_state.dq(i,:) = interp1(newSlaveTime, human_state_tmp.dq(i,:), newMasterTime);
+    human_ddq(i,:)      = interp1(newSlaveTime, human_ddq_tmp(i,:), newMasterTime);
+end
+clearvars human_state_tmp human_ddq_tmp;
+
+% ----- Shoes OR forceplates ----
+% WARNING: downsampled only the needed variables!
+if shoes_bool  
+    shoes.Left.downsampled.time  = newMasterTime;
+    shoes.Right.downsampled.time = newMasterTime;
+    % let's consider only the forces already transformed in human frames.
+    % If necessary, frontForce/rearForce/totalForce are exactly the interp_synch ones!
+    for i = 1 : size(shoes.Left.upsampled.totalForce.humanFootWrench,1)
+        % LEFT-------------------------------------------------------------
+        shoes.Left.downsampled.totalForce.humanFootWrench(i,:) = interp1(newSlaveTime,...
+            shoes.Left.upsampled.totalForce.humanFootWrench(i,:), newMasterTime); 
+        % RIGHT------------------------------------------------------------
+        shoes.Right.downsampled.totalForce.humanFootWrench(i,:) = interp1(newSlaveTime,...
+            shoes.Right.upsampled.totalForce.humanFootWrench(i,:), newMasterTime); 
+    end
+end
+
+if forceplates_bool 
+    % to be completed
 end
 
 %% Load URDF model with sensors
@@ -175,12 +231,12 @@ end
 
 % -------------------------------------------------------------------------
 % CHECK: print the order of variables in d vector
-%printBerdyDynVariables(berdy)
+% printBerdyDynVariables(berdy)
 % -------------------------------------------------------------------------
 %% Measurements wrapping
 if shoes_bool 
-  fext.rightHuman = shoes.Right.upsampled.totalForce.humanFootWrench;
-  fext.leftHuman  = shoes.Left.upsampled.totalForce.humanFootWrench;
+  fext.rightHuman = shoes.Right.downsampled.totalForce.humanFootWrench;
+  fext.leftHuman  = shoes.Left.downsampled.totalForce.humanFootWrench;
 end
 
 if forceplates_bool 
@@ -189,10 +245,12 @@ end
 
 data = dataPackaging(humanModel,... 
                      humanSensors,...
-                     suit,...
+                     suit_downsampled,...
                      fext,...
                      human_ddq,...
                      bucket.contactLink);
+                 
+                 
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
@@ -220,14 +278,24 @@ temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'RightHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
+% Vector d computation
 if ~exist(fullfile(bucket.pathToTrial,'mu_dgiveny.mat'))
     % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     % [mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
     [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     save(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
-    %  save(fullfile(bucket.pathToTrial,'/Sigma_dgiveny.mat'),'Sigma_dgiveny');
     else
     load(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
 end
 
+% Sigma_tau extraction from Sigma d --> since sigma d is very big, it
+% cannot be saved! therefore once computed it is necessary to extract data
+% related to tau and save that one!
+if ~exist(fullfile(bucket.pathToTrial,'Sigma_tau.mat'))
+    [~, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+    extractSigmaOfEstimatedVariables
+    save(fullfile(bucket.pathToTrial,'/Sigma_tau.mat'),'Sigma_tau');
+    else
+    load(fullfile(bucket.pathToTrial,'/Sigma_tau.mat'),'Sigma_tau');
+end
 

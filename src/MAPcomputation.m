@@ -115,6 +115,7 @@ Sigma_dgiveny =  cell(samples,1);
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 
+samples = 2000;
 for i = 1 : samples
     
     q.fromMatlab(state.q(:,i));
