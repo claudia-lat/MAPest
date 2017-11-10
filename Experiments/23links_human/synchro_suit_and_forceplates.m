@@ -11,6 +11,7 @@ bucket.forceplate_fileANC = sprintf(fullfile(bucket.pathToTrial,...
 bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
     '/forceplates/unloaded_fp1.anc');
 
+%% Parse forceplates measurements
 %----------------------------------------------------------------------
 % IMPORTANT NOTE:
 % ---------------
@@ -18,30 +19,36 @@ bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
 % (Cortex) system and provides raw data only in voltages!  The parser 
 % function convert voltages data in N and Nm!
 %----------------------------------------------------------------------
+% Important assumption: data coming from the parser are already
+% synchronized between them!
 
-%% Parse forceplates measurements
-[forceplates.FP1, forceplates.FP2] = parseForceplates(bucket.forceplate_fileANC, ...
-                                                      bucket.forceplate_Offset);
+[forceplates.time, forceplates.FP1, forceplates.FP2] =  ...
+                            parseForceplates(bucket.forceplate_fileANC, ...
+                                             bucket.forceplate_Offset);
  
-%% Synchronize data within between the two forcwplates
-
-% TODO: synchronize measurements between two forceplates
-
-%% Synchronize shoes and suit  
+%% Synchronize forceplates and suit  
 % At this stage:
 % - data from forceplate are acquired at 100Hz, data from Xsens at 240Hz
 % - suit acquisition started when triggered by the cortex system that 
 %   simoultaneously triggered the forceplates.  Ideally xsens and
 %   forceplates start and end at the same time!
 
+% modified tmp the suit time fro relative to absolute
 
+suit_time_rel = suit.time .* 1.e-3; %to ms.* 1.e-3; %to ms
+suit_time_abs = zeros(size(suit_time_rel));
+for i = 1 : size(suit_time_rel,2)
+    suit_time_abs(:,i) = suit_time_rel(:,i) - suit_time_rel(:,1);
+end
+
+
+test =1;
 %% Extract subject weight
 % The weight of the subject is the sum of forceplates forces minus the
 % weight of the shoes! 
 
-
-%  bucket.weight = (forceplate.data.plateforms.plateform1.forces(3,1) ...
-%                        + forceplate.data.plateforms.plateform2.forces(3,1))/9.81;
-% peso meno le scape
-
+% weight_from_FP = (abs(mean(forceplate.data.plateforms.plateform1.forces(3,1),'omitnan')) ...
+%                 + abs(meanforceplate.data.plateforms.plateform2.forces(3,1),'omitnan')))/9.81;
+% weight_shoes   = xxx;
+% bucket.weight = weight_from_FP - weight_shoes;
 

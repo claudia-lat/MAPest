@@ -25,8 +25,8 @@ setupJAVAPath();
 % Create a structure 'bucket' where storing different stuff generating by
 % running the code
 bucket = struct;
-subjectID = 2;
-trialID = 2;
+subjectID = 10;
+trialID = 4;
 bucket.pathToSubject = sprintf(fullfile(pwd,'/dataUW/Subj_%02d'),subjectID);
 bucket.pathToTrial   = sprintf(fullfile(bucket.pathToSubject,'/trial_0%02d'),trialID);
 
@@ -41,16 +41,21 @@ else
 end
 
 %% Define force data modality (shoes or forceplates)
-shoes_bool       = true;     % if true --> shoes + Xsens
-forceplates_bool = false;      % if true --> forceplates + Xsens
+shoes_bool              = false;     % if true --> shoes + Xsens
+forceplates_bool        = true;    % if true --> forceplates + Xsens
+shoesVSforceplates_bool = false;    % if true --> shoes + forceplates for the comparison
 
 %% Choose and synchronize FORCE measurements combination
 if shoes_bool 
-     synchro_suit_and_shoes
+   synchro_suit_and_shoes
 end
  
 if forceplates_bool 
-    synchro_suit_and_forceplates
+   synchro_suit_and_forceplates
+end
+
+if shoesVSforceplates_bool 
+   % TODO: synchro_shoes_and_forceplates
 end
 
 %% Extract subject parameters from SUIT
@@ -72,14 +77,14 @@ if forceplates_bool
     % Define contacts configuration for UW setup
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with forceplate 2
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 1
-    forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData);
+    % TODO:  forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData);
 end                               
 
 %% Create URDF model
 bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
 if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID))
     bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-                                                suit_downsampled.sensors,...
+                                                suit.sensors,...
                                                 'filename',bucket.filenameURDF,...
                                                 'GazeboModel',false);
 end   
@@ -240,7 +245,7 @@ if shoes_bool
 end
 
 if forceplates_bool 
- %to be completed
+ % TODO
 end
 
 data = dataPackaging(humanModel,... 
@@ -249,8 +254,7 @@ data = dataPackaging(humanModel,...
                      fext,...
                      human_ddq,...
                      bucket.contactLink);
-                 
-                 
+                                 
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
