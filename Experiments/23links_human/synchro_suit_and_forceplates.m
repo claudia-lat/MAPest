@@ -5,7 +5,6 @@
 
 %% Load forceplates measurements files 
 forceplates = struct;
-
 bucket.forceplate_fileANC = sprintf(fullfile(bucket.pathToTrial,...
     '/forceplates/exercise%d.anc'), trialID);
 bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
@@ -28,27 +27,52 @@ bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
  
 %% Synchronize forceplates and suit  
 % At this stage:
-% - data from forceplate are acquired at 100Hz, data from Xsens at 240Hz
+% - data from forceplates are acquired at 100Hz, data from Xsens at 240Hz
 % - suit acquisition started when triggered by the cortex system that 
-%   simoultaneously triggered the forceplates.  Ideally xsens and
+%   simoultaneously triggered the forceplates.  Ideally Xsens and
 %   forceplates start and end at the same time!
 
-% modified tmp the suit time fro relative to absolute
-
+% Modified tmp the suit time from relative to absolute
 suit_time_rel = suit.time .* 1.e-3; %to ms.* 1.e-3; %to ms
 suit_time_abs = zeros(size(suit_time_rel));
 for i = 1 : size(suit_time_rel,2)
     suit_time_abs(:,i) = suit_time_rel(:,i) - suit_time_rel(:,1);
 end
 
+% The two last samples of suit_time_abs and forceplates.time does not 
+% coincides perfectly, probably due to the network lag. Before
+% interpolating (upsampling) forceplates, it is needed to modify the
+% forceplates time --> newTime that ends with suit_time_abs(end).
+forceplates.tmp.timeToSuit = (0:0.01:suit_time_abs(end));
 
-test =1;
+% ------------ STEP 1 
+% Upsampling forceplates with the new time forceplates.tmp.timeToSuit
+for i = 1 : size(forceplates.FP1.wrenches,2)
+    forceplates.tmp.FP1.wrenches(:,i) = interp1(forceplates.time, ...
+                                         forceplates.FP1.wrenches(:,i), ...
+                                         forceplates.tmp.timeToSuit);
+    forceplates.tmp.FP2.wrenches(:,i) = interp1(forceplates.time, ...
+                                         forceplates.FP2.wrenches(:,i), ...
+                                         forceplates.tmp.timeToSuit);
+end 
+
+% ------------ STEP 1 
+% Upsampling (upsampled) forceplates with the suit
+for i = 1 : size(forceplates.FP1.wrenches,2)
+    forceplates.upsampled.FP1.wrenches(:,i) = interp1(forceplates.tmp.timeToSuit, ...
+                                         forceplates.tmp.FP1.wrenches(:,i), ...
+                                         suit_time_abs);
+    forceplates.upsampled.FP2.wrenches(:,i) = interp1(forceplates.tmp.timeToSuit, ...
+                                         forceplates.tmp.FP2.wrenches(:,i), ...
+                                         suit_time_abs);
+end
+clearvars suit_time_rel suit_time_abs;
+
 %% Extract subject weight
 % The weight of the subject is the sum of forceplates forces minus the
 % weight of the shoes! 
 
-% weight_from_FP = (abs(mean(forceplate.data.plateforms.plateform1.forces(3,1),'omitnan')) ...
-%                 + abs(meanforceplate.data.plateforms.plateform2.forces(3,1),'omitnan')))/9.81;
-% weight_shoes   = xxx;
-% bucket.weight = weight_from_FP - weight_shoes;
-
+bucket.weight_from_FP = (abs(mean(forceplates.upsampled.FP1.wrenches(:,3),'omitnan')) ...
+                + abs(mean(forceplates.upsampled.FP2.wrenches(:,3),'omitnan')))/9.81;
+bucket.weight_shoes   = 4; %kg
+bucket.weight = bucket.weight_from_FP - bucket.weight_shoes;
