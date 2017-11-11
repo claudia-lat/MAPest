@@ -321,14 +321,29 @@ end
 % -----------------------------------------------------------------------%
 %  LEGEND AS A FIGURE VALID FOR ALL THE PLOTS
 % -----------------------------------------------------------------------%
-% acc plot legend
-% leg = legend([plot1,shad2.mainLine,shad2.patch],{'estim','meas','2$\sigma_{meas}$'});
-% set(leg,'Interpreter','latex', ...
-%        'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-%        'Orientation','horizontal');
-% set(leg,'FontSize',13);
-% 
-% plot(leg);
+% fake plot for cropping (in post-processing the legend)
+fig = figure();
+axes1 = axes('Parent',fig,'FontSize',16);
+              box(axes1,'on');
+              hold(axes1,'on');
+              grid on;
+
+plot1 = plot(acc.simulated.leftHand(3,:),'b','lineWidth',1.5);
+hold on 
+specific_vector_sigma(1,:) = acc.measured.leftHand_sigma(3);
+shad2 = shadedErrorBar([],acc.measured.leftHand(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+xlim([0 len])
+grid on;
+% -------------
+leg = legend([plot1,shad2.mainLine,shad2.patch],{'estim','meas','2$\sigma_{meas}$'},'Location','northeast');
+set(leg,'Interpreter','latex', ...
+       'Position',[0.436917552718887 0.0353846154974763 0.158803168001834 0.0237869821356598], ...
+       'Orientation','horizontal');
+set(leg,'FontSize',13);
+
+if saveON
+    save2pdf(fullfile(figFolder, ('legend')),fig,600);
+end
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % -----------------------------------------------------------------------%
