@@ -75,9 +75,14 @@ end
  
 if forceplates_bool
     % Define contacts configuration for UW setup
-    bucket.contactLink{1} = 'RightFoot'; % human link in contact with forceplate 2
-    bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 1
-    % TODO:  forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData);
+    bucket.contactLink{1} = 'RightFoot'; % human link in contact with forceplate 2 (UW setup)
+    bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 1 (UW setup)
+
+    % The position of the forceplates are contained in the file
+    % 'unloaded_fp_4markers1.trc'.
+    filenameTrc = fullfile(bucket.pathToTrial,'/forceplates/unloaded_fp_4markers1.trc');
+    forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData, ...
+                                                filenameTrc);
 end                               
 
 %% Create URDF model
