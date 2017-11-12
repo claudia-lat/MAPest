@@ -35,7 +35,7 @@ leftHeel_T_leftFtShoePos.fromMatlab([0.037; 0 ; -0.029]); % fixed, from footInSh
 leftFoot_T_leftHeelPos = iDynTree.Position();
 leftFoot_T_leftHeelPos.fromMatlab(subjectParamsFromData.pLeftHeelFoot);
 leftFoot_T_leftFtShoe = iDynTree.Transform(leftHeel_T_leftFtShoeRot,...
-                        leftHeel_T_leftFtShoePos + leftFoot_T_leftHeelPos);
+                        leftFoot_T_leftHeelPos + leftHeel_T_leftFtShoePos);
 
 % RIGHT--------------------------------------------------------------------
 rightHeel_T_rightFtShoeRot = iDynTree.Rotation();
@@ -47,7 +47,7 @@ rightHeel_T_rightFtShoePos.fromMatlab([0.037; 0 ; -0.029]); % fixed, from footIn
 rightFoot_T_rightHeelPos = iDynTree.Position();
 rightFoot_T_rightHeelPos.fromMatlab(subjectParamsFromData.pRightHeelFoot);
 rightFoot_T_rightFtShoe = iDynTree.Transform(rightHeel_T_rightFtShoeRot,...
-                          rightHeel_T_rightFtShoePos + rightFoot_T_rightHeelPos);
+                          rightFoot_T_rightHeelPos + rightHeel_T_rightFtShoePos);
 
 %% Transform wrenches from shoes frames into human frames
 % Only totalForce for the moment, but it could be applied to frontForce and
