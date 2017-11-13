@@ -29,7 +29,7 @@ function [forceplates] = transformForceplatesWrenches (forceplates, ...
 % The subject performs the task with the shoes on the plates. The ankle
 % heigths to be considered are a sum of the real ankle height (coming from 
 % subjectParamsFromData) + the fixed height of each shoe = 4.5 cm.
-shoeHeight = 4.5; 
+shoeHeight = 0.045; % in m
 
 %% Change wrenches reference frames from Cortex to forceplates frames
 % Transform forceplates wrenches from Cortex reference frame to the 
@@ -69,48 +69,59 @@ forceplates.upsampled.FP2.wrenchesInFp2frames = ...
 
 % Transformation matrix T for forceplate 1 and 2 can be easily extracted 
 % from the following sketches:
-% - fixtureUW.pdf + footInShoe.pdf --> for the position of the each foot 
-%                                      wrt the related forceplate 
-% - rawSketch.jpg                  --> for the rotation between each foot 
-%                                      wrt the related forceplate 
+% - fixtureUW.pdf  --> for the position of the each foot wrt the related
+%                      forceplate is located at the center of the rear
+%                      sensor (assumption: on this point there is a
+%                      reference frame oriented as in the foot).
+%                      Do not forget to consider the height of the shoe!
+% - rawSketch.jpg  --> for the rotation between each foot
+%                      wrt the related forceplate
 
 % FP1 --> from FP1 to human frames (related to leftFoot in UW setup)
 leftSole_T_fp1Pos = iDynTree.Position();
-% leftSole_T_fp1Pos.fromMatlab([; ; ;]);
-leftFoot_T_leftSolePos = iDynTree.Position();
-% leftFoot_T_leftSolePos.fromMatlab([0.0; 0.0; ...
-%             -(subjectParamsFromData.rightFootBoxOrigin(3) + shoeHeight)] )
-leftFoot_R_fp1 = iDynTree.Rotation();
-leftFoot_R_fp1.fromMatlab ([ 0.0, -1.0,  0.0; ...
+leftSole_T_fp1Pos.fromMatlab([0.099; 0.063 ; 0]); % fixed, from fixtureUW.pdf
+leftSole_R_fp1 = iDynTree.Rotation();
+leftSole_R_fp1.fromMatlab ([ 0.0, -1.0,  0.0; ...
                             -1.0,  0.0,  0.0; ...
                              0.0,  0.0, -1.0]);
-leftFoot_T_fp1 = iDynTree.Transform(leftFoot_R_fp1,...
+leftFoot_T_leftSolePos = iDynTree.Position();
+leftFoot_T_leftSolePos.fromMatlab([0.0; 0.0; ...
+             subjectParamsFromData.leftFootBoxOrigin(3) - shoeHeight])
+leftFoot_T_fp1 = iDynTree.Transform(leftSole_R_fp1, ...
              leftFoot_T_leftSolePos + leftSole_T_fp1Pos);
 
-
-
-
-
+% Transform the wrench in the appropriate frame and change the sign
+forceplates.upsampled.FP1.humanLeftFootWrench = ...
+    -1*(leftFoot_T_fp1.asAdjointTransformWrench().toMatlab()* ...
+    forceplates.upsampled.FP1.wrenchesInFp1frames);
 
 % FP2 --> from FP2 to human frames (related to rightFoot in UW setup)
-rightFoot_R_fp2 = iDynTree.Rotation();
-rightFoot_R_fp2.fromMatlab ([ 0.0, -1.0,  0.0; ...
+rightSole_T_fp2Pos = iDynTree.Position();
+rightSole_T_fp2Pos.fromMatlab([0.099; -0.064; 0]); % fixed, from fixtureUW.pdf
+rightSole_R_fp2 = iDynTree.Rotation();
+rightSole_R_fp2.fromMatlab ([ 0.0, -1.0,  0.0; ...
                              -1.0,  0.0,  0.0; ...
                               0.0,  0.0, -1.0]);
-
-
+rightFoot_T_rightSolePos = iDynTree.Position();
+rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; ...
+             subjectParamsFromData.rightFootBoxOrigin(3) - shoeHeight])
+rightFoot_T_fp2 = iDynTree.Transform(rightSole_R_fp2,...
+             rightFoot_T_rightSolePos + rightSole_T_fp2Pos);
 
 % calibrationForceplate1Pos = iDynTree.Position();
 % calibrationForceplate1Pos.fromMatlab([0.0002; 0.0006; 0.0398]);
+
 % rightSole_T_fpRot = iDynTree.Rotation();
 % rightSole_T_fpRot.fromMatlab([ -1.0,  0.0,  0.0; ...
 %                                 0.0,  1.0,  0.0; ...
 %                                 0.0,  0.0, -1.0]);
 % rigthSole_T_fpPos = iDynTree.Position();
 % rigthSole_T_fpPos.fromMatlab([0.108; -0.107; 0]);
+
 % rightFoot_T_rightSolePos = iDynTree.Position();
 % rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; ...
 %             -(subjectParamsFromData.rightFootBoxOrigin(3) + shoeHeight)] ); %to be verified!
+
 % rightFoot_T_fp = iDynTree.Transform(rightSole_T_fpRot,...
 %             rightFoot_T_rightSolePos + rigthSole_T_fpPos + calibrationForceplate1Pos);
 %             
