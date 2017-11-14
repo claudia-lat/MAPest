@@ -29,28 +29,32 @@ subjectID = 10;
 trialID = 4;
 bucket.pathToSubject = sprintf(fullfile(pwd,'/dataUW/Subj_%02d'),subjectID);
 bucket.pathToTrial   = sprintf(fullfile(bucket.pathToSubject,'/trial_0%02d'),trialID);
+bucket.pathToProcessedData   = fullfile(bucket.pathToTrial,'/processed');
 
 %% Load measurements from SUIT
-if ~exist(fullfile(bucket.pathToTrial,'suit.mat'))
-    bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
+if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
+    bucket.mvnxFilename = sprintf(fullfile(bucket.pathToProcessedData,...
+                                  'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
     suit = extractSuitData(bucket.mvnxFilename);
     suit = computeSuitSensorPosition(suit); % obtain sensors position
-    save(fullfile(bucket.pathToTrial,'/suit.mat'),'suit');
+    save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
-    load(fullfile(bucket.pathToTrial,'suit.mat'));
+    load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
 %% Define force data modality (shoes or forceplates)
-shoes_bool              = false;     % if true --> shoes + Xsens
-forceplates_bool        = true;    % if true --> forceplates + Xsens
+shoes_bool              = true;     % if true --> shoes + Xsens
+forceplates_bool        = false;    % if true --> forceplates + Xsens
 shoesVSforceplates_bool = false;    % if true --> shoes + forceplates for the comparison
 
 %% Choose and synchronize FORCE measurements combination
-if shoes_bool 
+if shoes_bool
+   bucket.inFolder = fullfile(bucket.pathToProcessedData,'/shoes');
    synchro_suit_and_shoes
 end
  
-if forceplates_bool 
+if forceplates_bool
+   bucket.inFolder = fullfile(bucket.pathToProcessedData,'/forceplates');
    synchro_suit_and_forceplates
 end
 
@@ -102,22 +106,21 @@ if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim')
 end   
 
 %% Inverse Kinematic computation 
-
-if ~exist(fullfile(bucket.pathToTrial,'human_state_tmp.mat'))
+if ~exist(fullfile(bucket.inFolder,'human_state_tmp.mat'))
     bucket.setupFile = fullfile(pwd,'/dataUW/fileSetup.xml');
     bucket.trcFile = sprintf('dataUW/Subj_%02d/trial_0%02d/opensim-0%02d.trc',subjectID, trialID, trialID);
     [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
                                                 bucket.trcFile, ...
                                                 bucket.setupFile,...
-                                               rangeCut);
+                                                rangeCut);
     % here selectedJoints is the order of the Osim computation.
-    save(fullfile(bucket.pathToTrial,'/human_state_tmp.mat'),'human_state_tmp');
-    save(fullfile(bucket.pathToTrial,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    save(fullfile(bucket.pathToTrial,'/selectedJoints.mat'),'selectedJoints');
+    save(fullfile(bucket.inFolder,'/human_state_tmp.mat'),'human_state_tmp');
+    save(fullfile(bucket.inFolder,'/human_ddq_tmp.mat'),'human_ddq_tmp');
+    save(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
 else
-    load(fullfile(bucket.pathToTrial,'/human_state_tmp.mat'),'human_state_tmp');
-    load(fullfile(bucket.pathToTrial,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    load(fullfile(bucket.pathToTrial,'/selectedJoints.mat'),'selectedJoints');
+    load(fullfile(bucket.inFolder,'/human_state_tmp.mat'),'human_state_tmp');
+    load(fullfile(bucket.inFolder,'/human_ddq_tmp.mat'),'human_ddq_tmp');
+    load(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
 end
 
 %% Downsampling of the data
@@ -130,14 +133,21 @@ end
 % to 100Hz as follows:
 
 newSlaveTime  = suit.time.* 1.e-3; %to ms;
-newMasterTime = shoes.Left.interp_synch.time;
+if shoes_bool
+    newMasterTime = shoes.Left.interp_synch.time;
+end
+if forceplates_bool
+    newSlaveTime  = suit_time_abs; % because the forceplates time is only absolute!
+    clearvars suit_time_abs;
+    newMasterTime = forceplates.time;
+end
 
 % ----- Suit ----
 % WARNING: downsampled only the needed variables! 
 % In this case is useful only suit.sensors
 for i = 1 : suit.properties.nrOfSensors
     suit_downsampled.sensors{i,1}.label = suit.sensors{i}.label;
-    for j = 1 : vectDim
+    for j = 1 : 3
         suit_downsampled.sensors{i,1}.meas.sensorAcceleration(j,:) = interp1(newSlaveTime, ...
             suit.sensors{i}.meas.sensorAcceleration(j,:), newMasterTime);
         suit_downsampled.sensors{i,1}.meas.sensorAngularVelocity(j,:) = interp1(newSlaveTime, ...
@@ -164,7 +174,7 @@ clearvars human_state_tmp human_ddq_tmp;
 if shoes_bool  
     shoes.Left.downsampled.time  = newMasterTime;
     shoes.Right.downsampled.time = newMasterTime;
-    % let's consider only the forces already transformed in human frames.
+    % Let's consider only the forces already transformed in human frames.
     % If necessary, frontForce/rearForce/totalForce are exactly the interp_synch ones!
     for i = 1 : size(shoes.Left.upsampled.totalForce.humanFootWrench,1)
         % LEFT-------------------------------------------------------------
@@ -177,7 +187,16 @@ if shoes_bool
 end
 
 if forceplates_bool 
-    % to be completed
+    forceplates.downsampled.time = newMasterTime;
+    % Let's consider only the forces already transformed in human frames.
+        for i = 1 : size(forceplates.upsampled.FP1.humanLeftFootWrench,1)
+        % FP1--------------------------------------------------------------
+        forceplates.downsampled.FP1.humanLeftFootWrench(i,:) = interp1(newSlaveTime,...
+            forceplates.upsampled.FP1.humanLeftFootWrench(i,:), newMasterTime); 
+        % FP2--------------------------------------------------------------
+        forceplates.downsampled.FP2.humanRightFootWrench(i,:) = interp1(newSlaveTime,...
+            forceplates.upsampled.FP2.humanRightFootWrench(i,:), newMasterTime); 
+    end
 end
 
 %% Load URDF model with sensors
@@ -250,7 +269,8 @@ if shoes_bool
 end
 
 if forceplates_bool 
- % TODO
+  fext.rightHuman = forceplates.downsampled.FP2.humanRightFootWrench;
+  fext.leftHuman  = forceplates.downsampled.FP1.humanLeftFootWrench;
 end
 
 data = dataPackaging(humanModel,... 
@@ -288,23 +308,23 @@ temp.id = 'RightHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
 % Vector d computation
-if ~exist(fullfile(bucket.pathToTrial,'mu_dgiveny.mat'))
+if ~exist(fullfile(bucket.inFolder,'mu_dgiveny.mat'))
     % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     % [mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
     [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-    save(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
+    save(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
     else
-    load(fullfile(bucket.pathToTrial,'/mu_dgiveny.mat'),'mu_dgiveny');
+    load(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
 end
 
 % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
 % cannot be saved! therefore once computed it is necessary to extract data
 % related to tau and save that one!
-if ~exist(fullfile(bucket.pathToTrial,'Sigma_tau.mat'))
+if ~exist(fullfile(bucket.inFolder,'Sigma_tau.mat'))
     [~, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
     extractSigmaOfEstimatedVariables
-    save(fullfile(bucket.pathToTrial,'/Sigma_tau.mat'),'Sigma_tau');
+    save(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
     else
-    load(fullfile(bucket.pathToTrial,'/Sigma_tau.mat'),'Sigma_tau');
+    load(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
 end
 

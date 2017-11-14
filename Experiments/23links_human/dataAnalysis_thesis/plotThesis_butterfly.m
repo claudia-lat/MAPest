@@ -20,7 +20,7 @@ y_simulated = sim_y_test( berdy, human_state, mu_dgiveny);
 len = size(mu_dgiveny,2);
 specific_vector_sigma = zeros(1,len);
 
-figFolder = fullfile(bucket.pathToTrial,'/plots');
+figFolder = fullfile(bucket.inFolder,'/plots');
 if(exist(figFolder,'dir')==0)
     mkdir(figFolder);
 end
