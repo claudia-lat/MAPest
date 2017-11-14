@@ -80,9 +80,9 @@ if forceplates_bool
 
     % The position of the forceplates are contained in the file
     % 'unloaded_fp_4markers1.trc'.
-    filenameTrc = fullfile(bucket.pathToTrial,'/forceplates/unloaded_fp_4markers1.trc');
+    bucket.filenameTrc = fullfile(bucket.pathToTrial,'/forceplates/unloaded_fp_4markers1.trc');
     forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData, ...
-                                                filenameTrc);
+                                                bucket.filenameTrc);
 end                               
 
 %% Create URDF model

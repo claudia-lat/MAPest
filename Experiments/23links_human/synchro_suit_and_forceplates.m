@@ -66,6 +66,8 @@ for i = 1 : size(forceplates.FP1.wrenches,2)
                                          forceplates.tmp.FP2.wrenches(:,i), ...
                                          suit_time_abs);
 end
+
+forceplates.upsampled.time = suit_time_abs; % new time for the upsampled forceplates
 clearvars suit_time_rel suit_time_abs;
 
 %% Extract subject weight
