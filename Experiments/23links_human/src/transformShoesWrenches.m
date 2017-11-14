@@ -8,7 +8,8 @@ function [shoes] = transformShoesWrenches (shoes, subjectParamsFromData)
 %                           position of the reference frame of both feet
 %                           wrt their projection on each shoe.
 % Outputs:
-% - shoes       : updated struct containing new fields ...... 
+% - shoes       : updated struct containing new fields : humanFootWrench in
+%                 Left and Right folders.
 %
 % Shoes wrenches are estimated in their frames (origin and
 % orientation) that are located at a known position. 
@@ -25,15 +26,21 @@ function [shoes] = transformShoesWrenches (shoes, subjectParamsFromData)
 gravityZero = iDynTree.Vector3();
 gravityZero.zero();
 
+% TODO: to be verified the orientation of FtShoe and its value --> is it 
+% directly usable as raw data? or does it need some operation (remove offset bla bla bla)
+% --> Ask Luca!
+
 % LEFT---------------------------------------------------------------------
 leftHeel_T_leftFtShoeRot = iDynTree.Rotation();
 leftHeel_T_leftFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
                                       0.0,  1.0,  0.0; ...
                                       0.0,  0.0,  1.0]);
 leftHeel_T_leftFtShoePos = iDynTree.Position();
-leftHeel_T_leftFtShoePos.fromMatlab([0.037; 0 ; -0.029]); % fixed, from footInShoe.pdf 
+leftFtShoeSeenFromLeftHeel = [0.037; 0 ; -0.029];
+leftHeel_T_leftFtShoePos.fromMatlab(leftFtShoeSeenFromLeftHeel); % in m
 leftFoot_T_leftHeelPos = iDynTree.Position();
-leftFoot_T_leftHeelPos.fromMatlab(subjectParamsFromData.pLeftHeelFoot);
+leftHeelSeenFromLeftFoot = subjectParamsFromData.pLeftHeelFoot;
+leftFoot_T_leftHeelPos.fromMatlab(leftHeelSeenFromLeftFoot); % in m
 leftFoot_T_leftFtShoe = iDynTree.Transform(leftHeel_T_leftFtShoeRot,...
                         leftFoot_T_leftHeelPos + leftHeel_T_leftFtShoePos);
 
@@ -43,9 +50,11 @@ rightHeel_T_rightFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
                                         0.0,  1.0,  0.0; ...
                                         0.0,  0.0,  1.0]);
 rightHeel_T_rightFtShoePos = iDynTree.Position();
-rightHeel_T_rightFtShoePos.fromMatlab([0.037; 0 ; -0.029]); % fixed, from footInShoe.pdf 
+rightFtShoeSeenFromRightHeel = [0.037; 0 ; -0.029];
+rightHeel_T_rightFtShoePos.fromMatlab(rightFtShoeSeenFromRightHeel); % in m
 rightFoot_T_rightHeelPos = iDynTree.Position();
-rightFoot_T_rightHeelPos.fromMatlab(subjectParamsFromData.pRightHeelFoot);
+rightHeelSeenFromRightFoot = subjectParamsFromData.pRightHeelFoot;
+rightFoot_T_rightHeelPos.fromMatlab(rightHeelSeenFromRightFoot); % in m
 rightFoot_T_rightFtShoe = iDynTree.Transform(rightHeel_T_rightFtShoeRot,...
                           rightFoot_T_rightHeelPos + rightHeel_T_rightFtShoePos);
 
