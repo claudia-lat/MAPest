@@ -23,7 +23,7 @@ function [forceplates] = transformForceplatesWrenches (forceplates, ...
 %
 % This function computes the wrenches that each forceplate exerts on the link 
 % in contact thank to the relative information between the human and the 
-% forceplate, given by the setupUW.jpg file. 
+% forceplate, given by the rawSketch.jpg file. 
 
 %% Preliminary note: 
 % The subject performs the task with the shoes on the plates. The ankle
@@ -33,7 +33,7 @@ shoeHeight = 0.045; % in m
 
 %% Change wrenches reference frames from Cortex to forceplates frames
 % Transform forceplates wrenches from Cortex reference frame to the 
-% forceplates ones.
+% forceplates ones (see setupUw.jpg).
 
 % Extract wrenches and position from forceplate data 
 fp1Wrench = forceplates.upsampled.FP1.wrenches';
@@ -65,16 +65,15 @@ fp2_T_cortex = iDynTree.Transform(fp2_R_cortex, fp2PosWrtCortex);
 forceplates.upsampled.FP2.wrenchesInFp2frames = ...
             (fp2_T_cortex.asAdjointTransformWrench().toMatlab()*fp2Wrench);
 
-%% Transform wrench from forceplates frames to human frames
-
+%% Transform wrenches from forceplates frames to human frames
 % Transformation matrix T for forceplate 1 and 2 can be easily extracted 
 % from the following sketches:
-% - fixtureUW.pdf  --> for the position of the each foot wrt the related
+% - fixtureUW.pdf  --> the position of the each foot wrt the related
 %                      forceplate is located at the center of the rear
 %                      sensor (assumption: on this point there is a
 %                      reference frame oriented as in the foot).
 %                      Do not forget to consider the height of the shoe!
-% - rawSketch.jpg  --> for the rotation between each foot
+% - rawSketch.jpg  --> the rotation between each foot
 %                      wrt the related forceplate
 
 % FP1 --> from FP1 to human frames (related to leftFoot in UW setup)
@@ -90,7 +89,7 @@ leftFoot_T_leftSolePos.fromMatlab([0.0; 0.0; ...
 leftFoot_T_fp1 = iDynTree.Transform(leftSole_R_fp1, ...
              leftFoot_T_leftSolePos + leftSole_T_fp1Pos);
 
-% Transform the wrench in the appropriate frame and change the sign
+% transform the wrench in the proper frame and change the sign
 forceplates.upsampled.FP1.humanLeftFootWrench = ...
     -1*(leftFoot_T_fp1.asAdjointTransformWrench().toMatlab()* ...
     forceplates.upsampled.FP1.wrenchesInFp1frames);
@@ -108,27 +107,9 @@ rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; ...
 rightFoot_T_fp2 = iDynTree.Transform(rightSole_R_fp2,...
              rightFoot_T_rightSolePos + rightSole_T_fp2Pos);
 
-% calibrationForceplate1Pos = iDynTree.Position();
-% calibrationForceplate1Pos.fromMatlab([0.0002; 0.0006; 0.0398]);
+% transform the wrench in the proper frame and change the sign
+forceplates.upsampled.FP2.humanRightFootWrench = ...
+    -1*(rightFoot_T_fp2.asAdjointTransformWrench().toMatlab()* ...
+    forceplates.upsampled.FP2.wrenchesInFp2frames);
 
-% rightSole_T_fpRot = iDynTree.Rotation();
-% rightSole_T_fpRot.fromMatlab([ -1.0,  0.0,  0.0; ...
-%                                 0.0,  1.0,  0.0; ...
-%                                 0.0,  0.0, -1.0]);
-% rigthSole_T_fpPos = iDynTree.Position();
-% rigthSole_T_fpPos.fromMatlab([0.108; -0.107; 0]);
-
-% rightFoot_T_rightSolePos = iDynTree.Position();
-% rightFoot_T_rightSolePos.fromMatlab([0.0; 0.0; ...
-%             -(subjectParamsFromData.rightFootBoxOrigin(3) + shoeHeight)] ); %to be verified!
-
-% rightFoot_T_fp = iDynTree.Transform(rightSole_T_fpRot,...
-%             rightFoot_T_rightSolePos + rigthSole_T_fpPos + calibrationForceplate1Pos);
-%             
-% % Extract wrenches from forceplate data 
-% forceplate1Wrench(1:3,:) = forceplates.data.plateforms.plateform1.forces;
-% forceplate1Wrench(4:6,:) = forceplates.data.plateforms.plateform1.moments;
-% 
-% %% Transform the wrench in the appropriate frame and change the sign 
-% forceplates.processedData.humanRightFootWrench = -1*(rightFoot_T_fp.asAdjointTransformWrench().toMatlab()*forceplate1Wrench);
 end
