@@ -68,7 +68,12 @@ for i = 1 : size(forceplates.FP1.wrenches,2)
 end
 
 forceplates.upsampled.time = suit_time_abs; % new time for the upsampled forceplates
-clearvars suit_time_rel suit_time_abs;
+clearvars suit_time_rel;
+%% Save the rangeCut useful in IK computation
+% Since forceplates and suit started at the same time (per definition of
+% the UW setup), the rangeCut doesn't really exist and therefore
+% correspondes with the indexes of the first and the last value the time.
+rangeCut = (size(forceplates.upsampled.time,1):size(forceplates.upsampled.time,2));
 
 %% Extract subject weight
 % The weight of the subject is the sum of forceplates forces minus the
