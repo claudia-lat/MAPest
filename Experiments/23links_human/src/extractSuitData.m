@@ -173,7 +173,7 @@ for frameIdx = 1 : nrOfFrames
     for i = 1 : suit.properties.nrOfSensors
         suit.sensors{i}.meas.sensorAcceleration(:,j)    = currentFrame.sensorAcceleration(1, b*(i-1)+1 : b*i); 
         suit.sensors{i}.meas.sensorAngularVelocity(:,j) = currentFrame.sensorAngularVelocity(1, b*(i-1)+1 : b*i); 
-        suit.sensors{i}.meas.sensorMagneticField(:,j)   = currentFrame.sensorMagneticField(1, b*(i-1)+1 : b*i); 
+%         suit.sensors{i}.meas.sensorMagneticField(:,j)   = currentFrame.sensorMagneticField(1, b*(i-1)+1 : b*i); 
         suit.sensors{i}.meas.sensorOrientation(:,j)     = currentFrame.sensorOrientation(1, a*(i-1)+1 : a*i); 
     end 
     j = j + 1;

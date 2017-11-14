@@ -103,7 +103,7 @@ end
 for i = 1 : suit.properties.nrOfSensors
     suit.sensors{i}.meas.sensorAcceleration = suit.sensors{i}.meas.sensorAcceleration(:,rangeCut); 
     suit.sensors{i}.meas.sensorAngularVelocity = suit.sensors{i}.meas.sensorAngularVelocity(:,rangeCut); 
-    suit.sensors{i}.meas.sensorMagneticField = suit.sensors{i}.meas.sensorMagneticField(:,rangeCut); 
+%     suit.sensors{i}.meas.sensorMagneticField = suit.sensors{i}.meas.sensorMagneticField(:,rangeCut);
     suit.sensors{i}.meas.sensorOrientation = suit.sensors{i}.meas.sensorOrientation(:,rangeCut); 
 end
 
