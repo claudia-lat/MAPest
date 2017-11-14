@@ -16,7 +16,7 @@ FP2.frameRate = 100; %100Hz
 % Setting up conversion factors
 analogToVoltFactor = (2^16)/20; % analog units to voltage
 unitConv_force = 4.4482216282509; % lbf to N, lbf --> N (1lbf = 4.448222N)
-unitConv_moment = 0.11298482933333; % lbf inches in to Nm, lbf inches --> Nm (1inch = 0.0254m)
+unitConv_moment = 0.11298482933333; % lbf-inches into Nm, (1inch = 0.0254m)
 
 % Setting calibration matrices as from AMTI datasheet
 FP1_calib = [0.1857718	 -0.1510818	  0.2560428	   -0.2383812	 0.3552629	 -11.8969181  11.8100539   0.3578005
@@ -36,7 +36,7 @@ FP2_calib = [0.3119342	  -0.3027807	0.4253523	 -0.0834534	  0.3247007	   -11.686
 % Load ANC file from Cortex
 [cortex_time, cortex_f1_adc, cortex_f2_adc] = loadFPDataCortex(fileANC);
     
-% Load unloaded fp data if exist
+% Load unloaded fp data if exists
 if nargin > 1 && exist(Offset, 'file')
       [cortex_time_offset, cortex_f1_adc_offset, cortex_f2_adc_offset] = loadFPDataCortex(Offset);
 else
@@ -49,18 +49,17 @@ end
 [~, F1_lb] = calibrateFPdata(cortex_f1_adc, FP1_calib, analogToVoltFactor, cortex_f1_adc_offset);
 [~, F2_lb] = calibrateFPdata(cortex_f2_adc, FP2_calib, analogToVoltFactor, cortex_f2_adc_offset);
          
-% apply unit conversion
+% apply unit conversions
 FP1.wrenches = zeros(size(F1_lb));
 FP2.wrenches = zeros(size(F2_lb));
 
 FP1.wrenches(:, 1:3) = F1_lb(:, 1:3)* unitConv_force;
 FP2.wrenches(:, 1:3) = F2_lb(:, 1:3)* unitConv_force;
 
-FP1.wrenches(:, 4:6) = F1_lb(:, 4:6)* unitConv_force;
-FP2.wrenches(:, 4:6) = F2_lb(:, 4:6)* unitConv_force;   
+FP1.wrenches(:, 4:6) = F1_lb(:, 4:6)* unitConv_moment;
+FP2.wrenches(:, 4:6) = F2_lb(:, 4:6)* unitConv_moment;   
 
-time = cortex_time';
-         
+time = cortex_time';      
 end         
 
 %% UTILITY FUNCTIONS
