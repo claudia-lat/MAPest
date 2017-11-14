@@ -3,7 +3,7 @@ function pos = extractForceplatesPositionWrtCortex(filename)
 % vectors with:
 %  - the 4 markers positioned on top of them (2 x forceplate);
 %  - the reference frame of each forceplates.
-% Every output of this function is expressed wrt the known Cortex 
+% Every output of this function is expressed in m wrt the known Cortex 
 % reference frame. 
 
 %% Read the .trc file
@@ -73,7 +73,7 @@ originFP2frame_x = (midFP2x_viaTopLeft + midFP2x_viaBottomLeft)/2;
 originFP2frame_y = (TopLeft_mean(2)+BottomLeft_mean(2))/2;
 originFP2frame_z = heightValue_min; %origin on top of the forceplate
 
-pos.FP1 = [originFP1frame_x originFP1frame_y originFP1frame_z];
-pos.FP2 = [originFP2frame_x originFP2frame_y originFP2frame_z];
+pos.FP1 = [originFP1frame_x originFP1frame_y originFP1frame_z]*.1e-3; % in m
+pos.FP2 = [originFP2frame_x originFP2frame_y originFP2frame_z]*.1e-3; % in m
 
 end
