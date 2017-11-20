@@ -47,6 +47,9 @@ shoes_bool              = true;     % if true --> shoes + Xsens
 forceplates_bool        = false;    % if true --> forceplates + Xsens
 shoesVSforceplates_bool = false;    % if true --> shoes + forceplates for the comparison
 
+% TODO: VERIFIED RAW DATA OF THE SHOES! PROBABLY THEY NEED SOME PROCESSING
+% BEFORE THEIR USE!!!!!
+
 %% Choose and synchronize FORCE measurements combination
 if shoes_bool
    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/shoes');
@@ -184,6 +187,7 @@ if shoes_bool
         shoes.Right.downsampled.totalForce.humanFootWrench(i,:) = interp1(newSlaveTime,...
             shoes.Right.upsampled.totalForce.humanFootWrench(i,:), newMasterTime); 
     end
+    save(fullfile(bucket.inFolder,'/shoes.mat'),'shoes');
 end
 
 if forceplates_bool 
@@ -196,8 +200,10 @@ if forceplates_bool
         % FP2--------------------------------------------------------------
         forceplates.downsampled.FP2.humanRightFootWrench(i,:) = interp1(newSlaveTime,...
             forceplates.upsampled.FP2.humanRightFootWrench(i,:), newMasterTime); 
-    end
+        end
+    save(fullfile(bucket.inFolder,'/forceplates.mat'),'forceplates');
 end
+
 
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
