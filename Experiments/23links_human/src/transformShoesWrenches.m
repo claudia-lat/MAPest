@@ -26,10 +26,6 @@ function [shoes] = transformShoesWrenches (shoes, subjectParamsFromData)
 gravityZero = iDynTree.Vector3();
 gravityZero.zero();
 
-% TODO: to be verified the orientation of FtShoe and its value --> is it 
-% directly usable as raw data? or does it need some operation (remove offset bla bla bla)
-% --> Ask Luca!
-
 % LEFT---------------------------------------------------------------------
 leftHeel_T_leftFtShoeRot = iDynTree.Rotation();
 leftHeel_T_leftFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
@@ -59,8 +55,6 @@ rightFoot_T_rightFtShoe = iDynTree.Transform(rightHeel_T_rightFtShoeRot,...
                           rightFoot_T_rightHeelPos + rightHeel_T_rightFtShoePos);
 
 %% Transform wrenches from shoes frames into human frames
-% Only totalForce for the moment, but it could be applied to frontForce and
-% rearForce as well!
 
 leftShoeWrench(1:3,:) = shoes.Left.upsampled.totalForce.forces;
 leftShoeWrench(4:6,:) = shoes.Left.upsampled.totalForce.moments;
