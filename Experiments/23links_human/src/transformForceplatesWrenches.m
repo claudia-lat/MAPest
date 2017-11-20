@@ -29,7 +29,7 @@ function [forceplates] = transformForceplatesWrenches (forceplates, ...
 % The subject performs the task with the shoes on the plates. The ankle
 % heigths to be considered are a sum of the real ankle height (coming from 
 % subjectParamsFromData) + the fixed height of each shoe = 4.5 cm.
-shoeHeight = 0.045; % in m
+shoeHeight = 0.060; % in m
 
 %% Change wrenches reference frames from Cortex frame to forceplates frames
 % Transform forceplates wrenches from Cortex reference frame to the 
