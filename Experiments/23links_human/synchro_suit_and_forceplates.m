@@ -33,7 +33,11 @@ bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
 %   forceplates start and end at the same time!
 
 % Modified tmp the suit time from relative to absolute
-suit_time_rel = suit.time .* 1.e-3; %to ms.* 1.e-3; %to ms
+if shoesVSforceplates_bool
+    suit_time_rel = comparison.suit.time .* 1.e-3;
+else
+    suit_time_rel = suit.time .* 1.e-3; %to ms.* 1.e-3; %to ms
+end
 suit_time_abs = zeros(size(suit_time_rel));
 for i = 1 : size(suit_time_rel,2)
     suit_time_abs(:,i) = suit_time_rel(:,i) - suit_time_rel(:,1);
@@ -69,6 +73,11 @@ end
 
 forceplates.upsampled.time = suit_time_abs; % new time for the upsampled forceplates
 clearvars suit_time_rel;
+
+if shoesVSforceplates_bool
+    comparison.forceplates.upsampled = forceplates.upsampled;
+end
+
 %% Save the rangeCut useful in IK computation
 % Since forceplates and suit started at the same time (per definition of
 % the UW setup), the rangeCut doesn't really exist and therefore

@@ -43,37 +43,35 @@ else
 end
 
 %% Define force data modality (shoes or forceplates)
-shoes_bool              = true;     % if true --> shoes + Xsens
+shoes_bool              = false;     % if true --> shoes + Xsens
 forceplates_bool        = false;    % if true --> forceplates + Xsens
-shoesVSforceplates_bool = false;    % if true --> shoes + forceplates for the comparison
-
-% TODO: VERIFIED RAW DATA OF THE SHOES! PROBABLY THEY NEED SOME PROCESSING
-% BEFORE THEIR USE!!!!!
+shoesVSforceplates_bool = true;    % if true --> shoes + forceplates for the comparison
 
 %% Choose and synchronize FORCE measurements combination
-if shoes_bool
+if shoes_bool | shoesVSforceplates_bool
    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/shoes');
    synchro_suit_and_shoes
 end
  
-if forceplates_bool
+if forceplates_bool | shoesVSforceplates_bool
    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/forceplates');
    synchro_suit_and_forceplates
 end
 
-if shoesVSforceplates_bool 
-   % TODO: synchro_shoes_and_forceplates
-end
-
 %% Extract subject parameters from SUIT
 subjectParamsFromData = subjectParamsComputation(suit, bucket.weight);
+
+%% If we consider the shoes and forceplates VALIDATION
+if shoesVSforceplates_bool
+   validation_shoes_and_forceplates 
+end
 
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet 
 % with the shoes or both feet with two force plates)
 bucket.contactLink = cell(2,1); 
 
-if shoes_bool 
+if shoes_bool
     % Define contacts configuration
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with ftShoe_Right
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with ftShoe_Left

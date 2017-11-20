@@ -41,6 +41,15 @@ shoes.Right.single_synch = synchroIndividualShoe(shoes.Right);
 
 %% Synchronize measurements between Left and Right shoes
 shoes = synchroShoes(shoes);
+if shoesVSforceplates_bool
+    comparison.shoes.time = shoes.Left.interp_synch.time;
+    % LEFT---------------------------------------------------------------------
+    comparison.shoes.Left.forces  = shoes.Left.interp_synch.totalForce.forces;
+    comparison.shoes.Left.moments = shoes.Left.interp_synch.totalForce.moments;
+    % RIGHT--------------------------------------------------------------------
+    comparison.shoes.Right.forces  = shoes.Right.interp_synch.totalForce.forces;
+    comparison.shoes.Right.moments = shoes.Right.interp_synch.totalForce.moments;
+end
 
 %% Synchronize shoes and suit  
 % At this stage:
@@ -78,6 +87,11 @@ for i = 1 : size(suitIndex,2)
 end
 rangeCut = (suitIndex(1):suitIndex(bucket.firstZero-1));
 
+if shoesVSforceplates_bool
+    comparison.rangeCut = rangeCut;
+    comparison.suit.time = suit.time;
+end
+
 % Cut all the suit signals w.r.t. the suitIndex
 % TIME
 suit.time = suit.time(rangeCut);
@@ -92,7 +106,7 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.meas.velocity = suit.links{i}.meas.velocity(:,rangeCut);
     suit.links{i}.meas.acceleration = suit.links{i}.meas.acceleration(:,rangeCut);
     suit.links{i}.meas.angularVelocity = suit.links{i}.meas.angularVelocity(:,rangeCut);
-    suit.links{i}.meas.angularAcceleration = suit.links{i}.meas.angularAcceleration(:,rangeCut); 
+    suit.links{i}.meas.angularAcceleration = suit.links{i}.meas.angularAcceleration(:,rangeCut);
 end
 % JOINTS
 for i = 1 : suit.properties.nrOfJoints
@@ -104,7 +118,7 @@ for i = 1 : suit.properties.nrOfSensors
     suit.sensors{i}.meas.sensorAcceleration = suit.sensors{i}.meas.sensorAcceleration(:,rangeCut); 
     suit.sensors{i}.meas.sensorAngularVelocity = suit.sensors{i}.meas.sensorAngularVelocity(:,rangeCut); 
 %     suit.sensors{i}.meas.sensorMagneticField = suit.sensors{i}.meas.sensorMagneticField(:,rangeCut);
-    suit.sensors{i}.meas.sensorOrientation = suit.sensors{i}.meas.sensorOrientation(:,rangeCut); 
+    suit.sensors{i}.meas.sensorOrientation = suit.sensors{i}.meas.sensorOrientation(:,rangeCut);
 end
 
 % -------------------------------------------------------------------------
