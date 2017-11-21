@@ -1,4 +1,4 @@
-function [time, FP1, FP2] = parseForceplates(fileANC, Offset) 
+function [time, FP1, FP2, CoP_fp1, CoP_fp2] = parseForceplates(fileANC, Offset) 
 %PARSEFORCEPLATES parses forces acquired with the portable AMTI AccuGait
 % throught the mocap Cortex system.  
 % For the specific experiment setup:
@@ -59,7 +59,16 @@ FP2.wrenches(:, 1:3) = F2_lb(:, 1:3)* unitConv_force;
 FP1.wrenches(:, 4:6) = F1_lb(:, 4:6)* unitConv_moment;
 FP2.wrenches(:, 4:6) = F2_lb(:, 4:6)* unitConv_moment;   
 
-time = cortex_time';      
+% CoP
+thikness_AMTI_datasheet = 0.0413; %in m
+CoP_fp1.x = - (FP1.wrenches(:,5) + FP1.wrenches(:,1)*thikness_AMTI_datasheet)./FP1.wrenches(:,3);
+CoP_fp1.y = - (FP1.wrenches(:,4) + FP1.wrenches(:,2)*thikness_AMTI_datasheet)./FP1.wrenches(:,3);
+CoP_fp2.x = - (FP2.wrenches(:,5) + FP2.wrenches(:,1)*thikness_AMTI_datasheet)./FP2.wrenches(:,3);
+CoP_fp2.y = - (FP2.wrenches(:,4) + FP2.wrenches(:,2)*thikness_AMTI_datasheet)./FP2.wrenches(:,3);
+
+% time 
+time = cortex_time';
+
 end         
 
 %% UTILITY FUNCTIONS
