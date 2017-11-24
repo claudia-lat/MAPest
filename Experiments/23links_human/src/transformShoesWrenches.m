@@ -32,7 +32,7 @@ leftHeel_T_leftFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
                                       0.0,  1.0,  0.0; ...
                                       0.0,  0.0,  1.0]);
 leftHeel_T_leftFtShoePos = iDynTree.Position();
-leftFtShoeSeenFromLeftHeel = [0.037; 0 ; -0.029];
+leftFtShoeSeenFromLeftHeel = [0.037; 0 ; -0.050]; %FtShoe (totalForce ref)
 leftHeel_T_leftFtShoePos.fromMatlab(leftFtShoeSeenFromLeftHeel); % in m
 leftFoot_T_leftHeelPos = iDynTree.Position();
 leftHeelSeenFromLeftFoot = subjectParamsFromData.pLeftHeelFoot;
@@ -46,7 +46,7 @@ rightHeel_T_rightFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
                                         0.0,  1.0,  0.0; ...
                                         0.0,  0.0,  1.0]);
 rightHeel_T_rightFtShoePos = iDynTree.Position();
-rightFtShoeSeenFromRightHeel = [0.037; 0 ; -0.029];
+rightFtShoeSeenFromRightHeel = [0.037; 0 ; -0.050];
 rightHeel_T_rightFtShoePos.fromMatlab(rightFtShoeSeenFromRightHeel); % in m
 rightFoot_T_rightHeelPos = iDynTree.Position();
 rightHeelSeenFromRightFoot = subjectParamsFromData.pRightHeelFoot;
