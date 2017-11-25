@@ -18,6 +18,12 @@ bucket.leftShoe_rearForce  = sprintf(fullfile(bucket.pathToTrial,...
 %bucket.leftShoe_totalForce = sprintf(fullfile(bucket.pathToTrial,...
 %    '/ftShoeDriver_Left/totalForce_000%02d/data.log'), trialID);
 
+%static acquisition
+bucket.static.leftShoe_frontForce = fullfile(bucket.pathToSubject, ...
+    'staticAcquisition/ftShoeDriver_Left/frontForce_00001/data.log');
+bucket.static.leftShoe_rearForce  = fullfile(bucket.pathToSubject,...
+    'staticAcquisition/ftShoeDriver_Left/rearForce_00001/data.log');
+
 % RIGHT--------------------------------------------------------------------
 bucket.rightShoe_frontForce = sprintf(fullfile(bucket.pathToTrial,...
     '/ftShoeDriver_Right/frontForce_000%02d/data.log'), trialID);
@@ -26,18 +32,28 @@ bucket.rightShoe_rearForce  = sprintf(fullfile(bucket.pathToTrial,...
 %bucket.rightShoe_totalForce = sprintf(fullfile(bucket.pathToTrial,...
 %    '/ftShoeDriver_Right/totalForce_000%02d/data.log'), trialID);
 
+%static acquisition
+bucket.static.rightShoe_frontForce = fullfile(bucket.pathToSubject, ...
+    'staticAcquisition/ftShoeDriver_Right/frontForce_00001/data.log');
+bucket.static.rightShoe_rearForce  = fullfile(bucket.pathToSubject,...
+    'staticAcquisition/ftShoeDriver_Right/rearForce_00001/data.log');
+
 %% Parse shoes measurements
 % LEFT---------------------------------------------------------------------
 shoes.Left.frameRate  = 100; %100Hz
 shoes.Left.frontForce = parseYARPftShoes_fromDriver(bucket.leftShoe_frontForce);
 shoes.Left.rearForce  = parseYARPftShoes_fromDriver(bucket.leftShoe_rearForce);
 %shoes.Left.totalForce = parseYARPftShoes_fromDriver(bucket.leftShoe_totalForce);
+shoes.Left.static_frontForce = parseYARPftShoes_fromDriver(bucket.static.leftShoe_frontForce);
+shoes.Left.static_rearForce  = parseYARPftShoes_fromDriver(bucket.static.leftShoe_rearForce);
 
 % RIGHT--------------------------------------------------------------------
 shoes.Right.frameRate  = 100; %100Hz
 shoes.Right.frontForce = parseYARPftShoes_fromDriver(bucket.rightShoe_frontForce);
 shoes.Right.rearForce  = parseYARPftShoes_fromDriver(bucket.rightShoe_rearForce);
 %shoes.Right.totalForce = parseYARPftShoes_fromDriver(bucket.rightShoe_totalForce);
+shoes.Right.static_frontForce = parseYARPftShoes_fromDriver(bucket.static.rightShoe_frontForce);
+shoes.Right.static_rearForce  = parseYARPftShoes_fromDriver(bucket.static.rightShoe_rearForce);
 
 %% Synchronize YARP data (Front,Rear) within each shoe
 shoes.Left.single_synch  = synchroIndividualShoe(shoes.Left);

@@ -10,6 +10,10 @@ bucket.forceplate_fileANC = sprintf(fullfile(bucket.pathToTrial,...
 bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
     '/forceplates/unloaded_fp1.anc');
 
+%static acquisition
+bucket.forceplate_static = fullfile(bucket.pathToSubject,...
+    'staticAcquisition/forceplates/exercise1.anc');
+
 %% Parse forceplates measurements
 %----------------------------------------------------------------------
 % IMPORTANT NOTE:
@@ -24,7 +28,11 @@ bucket.forceplate_Offset = fullfile(bucket.pathToTrial,...
 [forceplates.time, forceplates.FP1, forceplates.FP2,  forceplates.CoP_fp1, forceplates.CoP_fp2] =  ...
                             parseForceplates(bucket.forceplate_fileANC, ...
                                              bucket.forceplate_Offset);
- 
+% static acquisition
+[~, forceplates.FP1_static, forceplates.FP2_static,~,~] =  ...
+                            parseForceplates(bucket.forceplate_static, ...
+                                             bucket.forceplate_Offset);
+                                         
 %% Synchronize forceplates and suit  
 % At this stage:
 % - data from forceplates are acquired at 100Hz, data from Xsens at 240Hz
@@ -92,3 +100,14 @@ bucket.weight_from_FP = (abs(mean(forceplates.upsampled.FP1.wrenches(:,3),'omitn
                 + abs(mean(forceplates.upsampled.FP2.wrenches(:,3),'omitnan')))/9.81;
 bucket.weight_shoes   = 4; %kg
 bucket.weight = bucket.weight_from_FP - bucket.weight_shoes;
+
+%% Remove offset between FP and shoes --> via static acquisition 
+% Between fp and shoes there is an offset that we
+% want to remove later by using the static acquisition (acquisition of the 
+% subject, in static pose, on the two fp with the shoes).  Here we want to
+% obtain the mean of the wrench of that static acquisition.
+% IMPORTANT NOTE:  the vector of the mean wrench is expressed in sensors 
+% (i.e., forceplates) frames.
+
+forceplates.FP1_staticMean.wrench = mean(forceplates.FP1_static.wrenches,1);
+forceplates.FP2_staticMean.wrench = mean(forceplates.FP2_static.wrenches,1);

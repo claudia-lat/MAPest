@@ -114,4 +114,148 @@ forceplates.upsampled.FP2.humanRightFootWrench = ...
               -1*(rightFoot_T_fp2.asAdjointTransformWrench().toMatlab()* ...
               fp2Wrench);
 
+%% Transform static mean vector of wrenches from forceplates frames into human frames
+forceplates.FP1_staticMean.humanLeftFootWrench_mean = ...
+      -1*(leftFoot_T_fp1.asAdjointTransformWrench().toMatlab()* ...
+                                forceplates.FP1_staticMean.wrench');
+forceplates.FP2_staticMean.humanRightFootWrench_mean = ...
+      -1*(rightFoot_T_fp2.asAdjointTransformWrench().toMatlab()* ...
+                                forceplates.FP2_staticMean.wrench');
+
+%% Plot tmp
+
+% ----- FP1
+fig = figure();
+axes1 = axes('Parent',fig,'FontSize',16);
+              box(axes1,'on');
+              hold(axes1,'on');
+              grid on;
+len = length(forceplates.upsampled.FP1.humanLeftFootWrench);
+              
+subplot (231) % comparison forces component x
+plot1 = plot(fp1Wrench(1,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(1,:),'r','lineWidth',1.5);
+ylabel('forces','HorizontalAlignment','center',...
+       'FontWeight','bold',...
+       'FontSize',18,...
+       'Interpreter','latex');
+xlim([0  len]);
+title ('x');
+grid on;
+
+subplot (232) % comparison forces component y 
+plot1 = plot(fp1Wrench(2,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(2,:),'r','lineWidth',1.5);
+title ('y');
+xlim([0  len]);
+grid on;
+
+subplot (233) % comparison forces component z
+plot1 = plot(fp1Wrench(3,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(3,:),'r','lineWidth',1.5);
+title ('z');
+xlim([0  len]);
+grid on;
+
+subplot (234) % comparison moment component x 
+plot1 = plot(fp1Wrench(4,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(4,:),'r','lineWidth',1.5);
+ylabel('moments','HorizontalAlignment','center',...
+       'FontWeight','bold',...
+       'FontSize',18,...
+       'Interpreter','latex');
+xlim([0  len]);
+grid on;
+
+subplot (235) % comparison moment component y
+plot1 = plot(fp1Wrench(5,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(5,:),'r','lineWidth',1.5);
+xlim([0  len]);
+grid on;
+
+subplot (236) % comparison moment component z 
+plot1 = plot(fp1Wrench(6,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP1.humanLeftFootWrench(6,:),'r','lineWidth',1.5);
+xlim([0  len]);
+grid on;
+
+leg = legend([plot1,plot2],{'FP1-frame','LeftFoot-frame'});
+set(leg,'Interpreter','latex', ...
+        'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
+       'Orientation','horizontal');
+set(leg,'FontSize',13);
+
+% ----- FP2
+fig = figure();
+axes1 = axes('Parent',fig,'FontSize',16);
+              box(axes1,'on');
+              hold(axes1,'on');
+              grid on;
+              
+subplot (231) % comparison forces component x
+plot1 = plot(fp2Wrench(1,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(1,:),'r','lineWidth',1.5);
+ylabel('forces','HorizontalAlignment','center',...
+       'FontWeight','bold',...
+       'FontSize',18,...
+       'Interpreter','latex');
+xlim([0  len]);
+title ('x');
+grid on;
+
+subplot (232) % comparison forces component y 
+plot1 = plot(fp2Wrench(2,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(2,:),'r','lineWidth',1.5);
+title ('y');
+xlim([0  len]);
+grid on;
+
+subplot (233) % comparison forces component z
+plot1 = plot(fp2Wrench(3,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(3,:),'r','lineWidth',1.5);
+title ('z');
+xlim([0  len]);
+grid on;
+
+subplot (234) % comparison moment component x 
+plot1 = plot(fp2Wrench(4,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(4,:),'r','lineWidth',1.5);
+ylabel('moments','HorizontalAlignment','center',...
+       'FontWeight','bold',...
+       'FontSize',18,...
+       'Interpreter','latex');
+xlim([0  len]);
+grid on;
+
+subplot (235) % comparison moment component y
+plot1 = plot(fp2Wrench(5,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(5,:),'r','lineWidth',1.5);
+xlim([0  len]);
+grid on;
+
+subplot (236) % comparison moment component z 
+plot1 = plot(fp2Wrench(6,:),'b','lineWidth',1.5);
+hold on 
+plot2 = plot(forceplates.upsampled.FP2.humanRightFootWrench(6,:),'r','lineWidth',1.5);
+xlim([0  len]);
+grid on;
+
+leg = legend([plot1,plot2],{'FP2-frame','RightFoot-frame'});
+ set(leg,'Interpreter','latex', ...
+         'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
+        'Orientation','horizontal');
+set(leg,'FontSize',13);
+
+          
 end
