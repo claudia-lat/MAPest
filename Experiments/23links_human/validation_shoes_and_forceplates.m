@@ -42,45 +42,6 @@ for i = 1 : size(comparison.forceplates.cut.FP1.wrenches,2)
                                          comparison.masterTime);
 end
 
-%% Plot raw comparison (no common ref. frames!)
-% plotting raw z-axis forces from fp and shoes. At this stage they are not 
-% in a common reference frame --> they have to be transformed into the
-% human frames for both feet.
-
-fig = figure();
-axes1 = axes('Parent',fig,'FontSize',16);
-              box(axes1,'on');
-              hold(axes1,'on');
-              grid on;
-
-subplot (211) % only z axis FP1-Left
-plot1 = plot(comparison.forceplates.downsampled.FP1.wrenches(:,3),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.forces(3,:),'r','lineWidth',1.5);
-ylabel('FP1-Left','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  size(comparison.shoes.Left.forces(3,:),2)])
-grid on;
-
-subplot (212) %only z axis FP2-Right
-plot1 = plot(comparison.forceplates.downsampled.FP2.wrenches(:,3),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.forces(3,:),'r','lineWidth',1.5);
-ylabel('FP2-Right','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  size(comparison.shoes.Left.forces(3,:),2)])   
-grid on;
-
-leg = legend([plot1,plot2],{'fp','shoe'});
-set(leg,'Interpreter','latex', ...
-       'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-       'Orientation','horizontal');
-set(leg,'FontSize',13);
-
 %% Transform shoes into human frames
 comparison.gravityZero = iDynTree.Vector3();
 comparison.gravityZero.zero();
@@ -179,145 +140,14 @@ comparison.rightFoot_T_fp2 = iDynTree.Transform(comparison.rightSole_R_fp2, ...
 comparison.forceplates.FP2.humanRightFootWrench = ...
               -1*(comparison.rightFoot_T_fp2.asAdjointTransformWrench().toMatlab()* ...
               comparison.fp2Wrench);  
-  
-%% Plot comparison in human frames
 
-%FP1-LEFT SHOE COMPARISON
-fig = figure();
-axes1 = axes('Parent',fig,'FontSize',16);
-              box(axes1,'on');
-              hold(axes1,'on');
-              grid on;
-len = length(comparison.forceplates.FP1.humanLeftFootWrench);
-              
-subplot (231) % comparison forces component x
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(1,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(1,:),'r','lineWidth',1.5);
-ylabel('forces','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-title ('x');
-grid on;
+%% Remove offset from static acquisition
 
+% already transformed in human frames
+staticOffset.FP1_LeftShoe = shoes.Left.static_totalForce.humanFootWrench_mean - ...
+                            forceplates.FP1_staticMean.humanLeftFootWrench_mean;
+staticOffset.FP2_RightShoe = shoes.Right.static_totalForce.humanFootWrench_mean - ...
+                             forceplates.FP2_staticMean.humanRightFootWrench_mean;
 
-subplot (232) % comparison forces component y 
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(2,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(2,:),'r','lineWidth',1.5);
-% xlim([0  length(comparison.forceplates.FP1.humanLeftFootWrench)]);
-title ('y');
-xlim([0  len]);
-grid on;
-
-subplot (233) % comparison forces component z
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(3,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(3,:),'r','lineWidth',1.5);
-% xlim([0  length(comparison.forceplates.FP1.humanLeftFootWrench)]);
-title ('z');
-xlim([0  len]);
-grid on;
-
-subplot (234) % comparison moment component x 
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(4,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(4,:),'r','lineWidth',1.5);
-ylabel('moments','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-grid on;
-
-subplot (235) % comparison moment component y
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(5,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(5,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-subplot (236) % comparison moment component z 
-plot1 = plot(comparison.forceplates.FP1.humanLeftFootWrench(6,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Left.humanFootWrench(6,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-leg = legend([plot1,plot2],{'fp1','Left_shoe'});
-set(leg,'Interpreter','latex', ...
-       'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-       'Orientation','horizontal');
-set(leg,'FontSize',13);
-
-
-%FP2-RIGH SHOE COMPARISON
-fig = figure();
-axes1 = axes('Parent',fig,'FontSize',16);
-              box(axes1,'on');
-              hold(axes1,'on');
-              grid on;
-              
-subplot (231) % comparison forces component x
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(1,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(1,:),'r','lineWidth',1.5);
-ylabel('forces','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-title ('x');
-grid on;
-
-
-subplot (232) % comparison forces component y 
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(2,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(2,:),'r','lineWidth',1.5);
-% xlim([0  length(comparison.forceplates.FP1.humanLeftFootWrench)]);
-title ('y');
-xlim([0  len]);
-grid on;
-
-subplot (233) % comparison forces component z
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(3,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(3,:),'r','lineWidth',1.5);
-% xlim([0  length(comparison.forceplates.FP1.humanLeftFootWrench)]);
-title ('z');
-xlim([0  len]);
-grid on;
-
-subplot (234) % comparison moment component x 
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(4,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(4,:),'r','lineWidth',1.5);
-ylabel('moments','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-grid on;
-
-subplot (235) % comparison moment component y
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(5,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(5,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-subplot (236) % comparison moment component z 
-plot1 = plot(comparison.forceplates.FP2.humanRightFootWrench(6,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(comparison.shoes.Right.humanFootWrench(6,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-leg = legend([plot1,plot2],{'fp2','Right-shoe'});
-set(leg,'Interpreter','latex', ...
-       'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-       'Orientation','horizontal');
-set(leg,'FontSize',13);
+%% Plot section
+plotThesis_validationShoesWRTfp

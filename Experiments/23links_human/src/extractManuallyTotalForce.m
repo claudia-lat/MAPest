@@ -15,6 +15,9 @@ bucket.rightShoe_frontForce_off = (fullfile(pathToSubject, ...
 bucket.rightShoe_rearForce_off  = (fullfile(pathToSubject,...
     '/ftShoeDriver_Right_offset/rearForce/data.log'));
 
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+% COMPUTATION OF THE OFFSET FROM SHOES CALIB
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 %% Parse shoesOff measurements
 % LEFT---------------------------------------------------------------------
 shoesOff.Left.frameRate  = 100; %100Hz
@@ -40,7 +43,7 @@ calibMatrices.left.rear   = matrices_left_calib.calibMatricesDriver.ftShoe_left_
 calibMatrices.right.front = matrices_right_calib.calibMatricesDriver.ftShoe_right_front;
 calibMatrices.right.rear  = matrices_right_calib.calibMatricesDriver.ftShoe_right_rear;
 
-%% Compute wrenchesOff with calibration matrices
+%% Compute wrenchesOff with new calibration matrices
 % we want to obtain: frontForceOUT = calibMatrixFront * frontForceIN and
 % rearForceOUT = calibMatrixRear * rearForceIN for both Left and Right
 
@@ -134,8 +137,11 @@ end
 shoesOff.Left.meanOff = mean(shoesOff.Left.totalWrench,2);
 shoesOff.Right.meanOff = mean(shoesOff.Right.totalWrench,2);
 
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+% DATA REPROCESSING WITH SHOES OFFSET
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 %% Now reprocess the trial data
-%% Compute wrenches with calibration matrices
+%% Compute wrenches with new calibration matrices
 % we want to obtain: frontForceOUT = calibMatrixFront * frontForceIN and
 % rearForceOUT = calibMatrixRear * rearForceIN for both Left and Right
 
@@ -214,6 +220,9 @@ for i = 1 : size(right_intermediate_wrench,2)
      shoes.Right.single_synch.totalForce.moments(:,i) = tmp_wrench_noOff(4:6);
 end
 
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+% DATA FROM STATIC PROCESSING WITH SHOES OFFSET
+% $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 %% Remove offset between FP and shoes --> via static acquisition 
 % Between fp and shoes there is an offset (both for Rear and Front) that we
 % want to remove later by using the static acquisition (acquisition of the 
@@ -241,6 +250,22 @@ rearRight_forcesStaticMean  = mean(shoes.Right.static_rearForce.forces,2);
 rearRight_momentsStaticMean = mean(shoes.Right.static_rearForce.moments,2);
 rearRight_staticWrenchMean  = [rearRight_forcesStaticMean; rearRight_momentsStaticMean];
 
+%% Compute static mean wrenches with calibration matrices
+% we want to obtain: frontForceOUT = calibMatrixFront * frontForceIN and
+% rearForceOUT = calibMatrixRear * rearForceIN for both Left and Right
+
+% LEFT---------------------------------------------------------------------
+  tmpLeft_front_static = calibMatrices.left.front * frontLeft_staticWrenchMean;
+  leftFront_staticWrench = -1 * tmpLeft_front_static; 
+  tmpLeft_rear_static = calibMatrices.left.rear * rearLeft_staticWrenchMean;
+  leftRear_staticWrench = -1 * tmpLeft_rear_static;
+% RIGHT--------------------------------------------------------------------
+  tmpRight_front_static = calibMatrices.right.front * frontRight_staticWrenchMean;
+  rightFront_staticWrench = -1 * tmpRight_front_static; 
+  tmpRight_rear_static = calibMatrices.right.rear * rearRight_staticWrenchMean;
+  rightRear_staticWrench = -1 * tmpRight_rear_static;
+
+%% Transform both wrenches into a new SoR -->TotalForce
 % Like in the previous computation, we need to change the SoR from 
 % Rear/Front into Total
 
@@ -248,11 +273,11 @@ rearRight_staticWrenchMean  = [rearRight_forcesStaticMean; rearRight_momentsStat
 % - Transform wrenches from Front into Rear --> only translation, no rot.
 % - In the following for loops the two forces are summed.
 % LEFT -------------------------------------------------------------
-totalLeft_tmp = rear_T_front.asAdjointTransformWrench().toMatlab()* frontLeft_staticWrenchMean;
-totalLeft_staticMean_partial = totalLeft_tmp + rearLeft_staticWrenchMean;
+totalLeft_tmp = rear_T_front.asAdjointTransformWrench().toMatlab()* leftFront_staticWrench;
+totalLeft_staticMean_partial = totalLeft_tmp + leftRear_staticWrench;
 % RIGHT ------------------------------------------------------------
-totalRight_tmp = rear_T_front.asAdjointTransformWrench().toMatlab()* frontRight_staticWrenchMean;
-totalRight_staticMean_partial = totalRight_tmp + rearRight_staticWrenchMean;
+totalRight_tmp = rear_T_front.asAdjointTransformWrench().toMatlab()* rightFront_staticWrench;
+totalRight_staticMean_partial = totalRight_tmp + rightRear_staticWrench;
 
 % ------------- 2step
 % - Transform wrenches from step1 Rear into Total --> only rotation, no trasl.
