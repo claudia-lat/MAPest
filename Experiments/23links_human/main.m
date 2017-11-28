@@ -8,7 +8,7 @@
 %----------------------------------------------------------------------
 
 % clearvars -except shoes_old;
-clc;close all;
+clc;close all;clear all;
 %clear;clc;close all;
 rng(1); % forcing the casual generator to be const
 format long;
