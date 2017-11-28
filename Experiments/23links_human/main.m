@@ -7,7 +7,9 @@
 % cortex frequency --> 100 Hz (both for MoCap + forcelates)
 %----------------------------------------------------------------------
 
-clear;clc;close all;
+% clearvars -except shoes_old;
+clc;close all;
+%clear;clc;close all;
 rng(1); % forcing the casual generator to be const
 format long;
 
@@ -61,24 +63,19 @@ end
 %% Extract subject parameters from SUIT
 subjectParamsFromData = subjectParamsComputation(suit, bucket.weight);
 
-%% If we consider the shoes and forceplates VALIDATION
-if shoesVSforceplates_bool
-   validation_shoes_and_forceplates 
-end
-
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet 
 % with the shoes or both feet with two force plates)
 bucket.contactLink = cell(2,1); 
 
-if shoes_bool
+if shoes_bool | shoesVSforceplates_bool
     % Define contacts configuration
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with ftShoe_Right
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with ftShoe_Left
     shoes = transformShoesWrenches(shoes, subjectParamsFromData);
 end
  
-if forceplates_bool
+if forceplates_bool | shoesVSforceplates_bool
     % Define contacts configuration for UW setup
     bucket.contactLink{1} = 'RightFoot'; % human link in contact with forceplate 2 (UW setup)
     bucket.contactLink{2} = 'LeftFoot';  % human link in contact with forceplate 1 (UW setup)
@@ -89,6 +86,11 @@ if forceplates_bool
     forceplates = transformForceplatesWrenches (forceplates, subjectParamsFromData, ...
                                                 bucket.filenameTrc);
 end                               
+
+%% If we consider the shoes and forceplates VALIDATION
+if shoesVSforceplates_bool
+   validation_shoes_and_forceplates
+end
 
 %% Create URDF model
 bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
