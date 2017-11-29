@@ -8,6 +8,7 @@
 
 close all
 len = length(comparison.forceplates.FP1.humanLeftFootWrench);
+% len = 2500; only for squat task
 
 figFolder = fullfile(bucket.pathToTrial,'/plots');
 if(exist(figFolder,'dir')==0)
@@ -91,12 +92,15 @@ for i = 1:3
         %legend
         leg = legend([plot1,plot2],{'fp1','LeftShoe'});
         set(leg,'Interpreter','latex');
-        set(leg,'FontSize',16);
+        set(leg,'FontSize',20);
+    end
+    if i == 3
+        xlabel('samples');
     end
     align_Ylabels(fig) % if there are  subplots, align the ylabels
 end
 if saveON
-    save2pdf(fullfile(figFolder, ('fp1_leftShoe_FORCE_validation')),fig,600);
+    save2pdf(fullfile(figFolder, ('fp1_leftShoe_FORCE_val')),fig,600);
 end
 
 % -----MOMENTS
@@ -125,12 +129,15 @@ for i = 1:3
         %legend
         leg = legend([plot1,plot2],{'fp1','LeftShoe'});
         set(leg,'Interpreter','latex');
-        set(leg,'FontSize',16);
+        set(leg,'FontSize',20);
+    end
+    if i == 3
+        xlabel('samples');
     end
     align_Ylabels(fig) % if there are  subplots, align the ylabels
 end
 if saveON
-    save2pdf(fullfile(figFolder, ('fp1_leftShoe_MOMENT_validation')),fig,600);
+    save2pdf(fullfile(figFolder, ('fp1_leftShoe_MOMENT_val')),fig,600);
 end
 
 %% ----------FP2-RIGHT SHOE COMPARISON
@@ -161,12 +168,15 @@ for i = 1:3
         %legend
         leg = legend([plot1,plot2],{'fp2','RightShoe'});
         set(leg,'Interpreter','latex');
-        set(leg,'FontSize',16);
+        set(leg,'FontSize',20);
+    end
+    if i == 3
+        xlabel('samples');
     end
     align_Ylabels(fig) % if there are  subplots, align the ylabels
 end
 if saveON
-    save2pdf(fullfile(figFolder, ('fp2_rightShoe_FORCE_validation')),fig,600);
+    save2pdf(fullfile(figFolder, ('fp2_rightShoe_FORCE_val')),fig,600);
 end
 
 % -----MOMENTS
@@ -195,10 +205,41 @@ for i = 1:3
         %legend
         leg = legend([plot1,plot2],{'fp2','RightShoe'});
         set(leg,'Interpreter','latex');
-        set(leg,'FontSize',16);
+        set(leg,'FontSize',20);
+    end
+    if i == 3
+        xlabel('samples');
     end
     align_Ylabels(fig) % if there are  subplots, align the ylabels
 end
 if saveON
-    save2pdf(fullfile(figFolder, ('fp2_rightShoe_MOMENT_validation')),fig,600);
+    save2pdf(fullfile(figFolder, ('fp2_rightShoe_MOMENT_val')),fig,600);
 end
+
+%% RMSE computation
+% RMSE = sqrt(mean(real-estim)^2) --> number value!
+% hp: real --> fp, estim -->shoes
+% since it could be present NaN values in one or both of real and estim,
+% just removed first and last 5 samples from both signals.
+
+comparison.RMSE.fp1 = comparison.forceplates.FP1.humanLeftFootWrench;
+comparison.RMSE.leftShoe = comparison.shoes.Left.humanFootWrench - staticOffset.FP1_LeftShoe;
+comparison.RMSE.fp1 = comparison.RMSE.fp1(:,5:end-5);
+comparison.RMSE.leftShoe = comparison.RMSE.leftShoe(:,5:end-5);
+
+comparison.RMSE.fp2 = comparison.forceplates.FP2.humanRightFootWrench;
+comparison.RMSE.rightShoe = comparison.shoes.Right.humanFootWrench - staticOffset.FP2_RightShoe;
+comparison.RMSE.fp2 = comparison.RMSE.fp2(:,5:end-5);
+comparison.RMSE.rightShoe = comparison.RMSE.rightShoe(:,5:end-5);
+
+
+comparison.RMSE.err1 = zeros(6,1);
+comparison.RMSE.err2 = zeros(6,1);
+for i =1 : 6
+    comparison.RMSE.err1(i) = sqrt(mean((comparison.RMSE.fp1(i,:) - comparison.RMSE.leftShoe(i,:)).^2));
+    comparison.RMSE.err2(i) = sqrt(mean((comparison.RMSE.fp2(i,:) - comparison.RMSE.rightShoe(i,:)).^2));
+end
+
+RMSE.fp1_leftShoe = comparison.RMSE.err1;
+RMSE.fp2_rightShoe = comparison.RMSE.err2;
+save(fullfile(bucket.pathToProcessedData,'/RMSE.mat'),'RMSE');
