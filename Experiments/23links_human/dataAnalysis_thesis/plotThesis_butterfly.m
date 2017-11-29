@@ -340,6 +340,7 @@ set(leg,'Interpreter','latex', ...
        'Position',[0.436917552718887 0.0353846154974763 0.158803168001834 0.0237869821356598], ...
        'Orientation','horizontal');
 set(leg,'FontSize',13);
+legend boxoff;
 
 if saveON
     save2pdf(fullfile(figFolder, ('legend')),fig,600);
@@ -590,6 +591,7 @@ grid on;
 % %        'Position',[0.436917552718887 0.0353846154974763 0.158803168001834 0.0237869821356598], ...
 % %        'Orientation','horizontal');
 % % set(leg,'FontSize',13);
+% % legend boxoff;
 
 align_Ylabels(fig) % if there are 9 subplots, align the ylabels
 % save
