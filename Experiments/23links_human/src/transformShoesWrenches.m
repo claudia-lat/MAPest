@@ -76,138 +76,138 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
                                 shoes.Right.static_totalForce.wrench_mean);
                             
 %% Plot tmp
-
-% LEFT SHOE
-fig = figure();
-axes1 = axes('Parent',fig,'FontSize',16);
-              box(axes1,'on');
-              hold(axes1,'on');
-              grid on;
-len = length(shoes.Left.upsampled.totalForce.humanFootWrench);
-              
-subplot (231) % comparison forces component x
-plot1 = plot(leftShoeWrench(1,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
-ylabel('forces','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-title ('x');
-grid on;
-
-subplot (232) % comparison forces component y 
-plot1 = plot(leftShoeWrench(2,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
-title ('y');
-xlim([0  len]);
-grid on;
-
-subplot (233) % comparison forces component z
-plot1 = plot(leftShoeWrench(3,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
-title ('z');
-xlim([0  len]);
-grid on;
-
-subplot (234) % comparison moment component x 
-plot1 = plot(leftShoeWrench(4,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
-ylabel('moments','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-grid on;
-
-subplot (235) % comparison moment component y
-plot1 = plot(leftShoeWrench(5,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-subplot (236) % comparison moment component z 
-plot1 = plot(leftShoeWrench(6,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-leg = legend([plot1,plot2],{'LeftShoes-frame','LeftFoot-frame'});
-set(leg,'Interpreter','latex', ...
-        'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-       'Orientation','horizontal');
-set(leg,'FontSize',13);
-
-% RIGHT SHOE
-fig = figure();
-axes1 = axes('Parent',fig,'FontSize',16);
-              box(axes1,'on');
-              hold(axes1,'on');
-              grid on;
-              
-subplot (231) % comparison forces component x
-plot1 = plot(rightShoeWrench(1,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
-ylabel('forces','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-title ('x');
-grid on;
-
-subplot (232) % comparison forces component y 
-plot1 = plot(rightShoeWrench(2,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
-title ('y');
-xlim([0  len]);
-grid on;
-
-subplot (233) % comparison forces component z
-plot1 = plot(rightShoeWrench(3,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
-title ('z');
-xlim([0  len]);
-grid on;
-
-subplot (234) % comparison moment component x 
-plot1 = plot(rightShoeWrench(4,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
-ylabel('moments','HorizontalAlignment','center',...
-       'FontWeight','bold',...
-       'FontSize',18,...
-       'Interpreter','latex');
-xlim([0  len]);
-grid on;
-
-subplot (235) % comparison moment component y
-plot1 = plot(rightShoeWrench(5,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-subplot (236) % comparison moment component z 
-plot1 = plot(rightShoeWrench(6,:),'b','lineWidth',1.5);
-hold on 
-plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
-xlim([0  len]);
-grid on;
-
-leg = legend([plot1,plot2],{'RightShoe_frame','RightFoot_frame'});
-set(leg,'Interpreter','latex', ...
-        'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
-       'Orientation','horizontal');
-set(leg,'FontSize',13);
+% 
+% % LEFT SHOE
+% fig = figure();
+% axes1 = axes('Parent',fig,'FontSize',16);
+%               box(axes1,'on');
+%               hold(axes1,'on');
+%               grid on;
+% len = length(shoes.Left.upsampled.totalForce.humanFootWrench);
+%               
+% subplot (231) % comparison forces component x
+% plot1 = plot(leftShoeWrench(1,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
+% ylabel('forces','HorizontalAlignment','center',...
+%        'FontWeight','bold',...
+%        'FontSize',18,...
+%        'Interpreter','latex');
+% xlim([0  len]);
+% title ('x');
+% grid on;
+% 
+% subplot (232) % comparison forces component y 
+% plot1 = plot(leftShoeWrench(2,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
+% title ('y');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (233) % comparison forces component z
+% plot1 = plot(leftShoeWrench(3,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
+% title ('z');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (234) % comparison moment component x 
+% plot1 = plot(leftShoeWrench(4,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
+% ylabel('moments','HorizontalAlignment','center',...
+%        'FontWeight','bold',...
+%        'FontSize',18,...
+%        'Interpreter','latex');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (235) % comparison moment component y
+% plot1 = plot(leftShoeWrench(5,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (236) % comparison moment component z 
+% plot1 = plot(leftShoeWrench(6,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
+% xlim([0  len]);
+% grid on;
+% 
+% leg = legend([plot1,plot2],{'LeftShoes-frame','LeftFoot-frame'});
+% set(leg,'Interpreter','latex', ...
+%         'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
+%        'Orientation','horizontal');
+% set(leg,'FontSize',13);
+% 
+% % RIGHT SHOE
+% fig = figure();
+% axes1 = axes('Parent',fig,'FontSize',16);
+%               box(axes1,'on');
+%               hold(axes1,'on');
+%               grid on;
+%               
+% subplot (231) % comparison forces component x
+% plot1 = plot(rightShoeWrench(1,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
+% ylabel('forces','HorizontalAlignment','center',...
+%        'FontWeight','bold',...
+%        'FontSize',18,...
+%        'Interpreter','latex');
+% xlim([0  len]);
+% title ('x');
+% grid on;
+% 
+% subplot (232) % comparison forces component y 
+% plot1 = plot(rightShoeWrench(2,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
+% title ('y');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (233) % comparison forces component z
+% plot1 = plot(rightShoeWrench(3,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
+% title ('z');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (234) % comparison moment component x 
+% plot1 = plot(rightShoeWrench(4,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
+% ylabel('moments','HorizontalAlignment','center',...
+%        'FontWeight','bold',...
+%        'FontSize',18,...
+%        'Interpreter','latex');
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (235) % comparison moment component y
+% plot1 = plot(rightShoeWrench(5,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
+% xlim([0  len]);
+% grid on;
+% 
+% subplot (236) % comparison moment component z 
+% plot1 = plot(rightShoeWrench(6,:),'b','lineWidth',1.5);
+% hold on 
+% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
+% xlim([0  len]);
+% grid on;
+% 
+% leg = legend([plot1,plot2],{'RightShoe_frame','RightFoot_frame'});
+% set(leg,'Interpreter','latex', ...
+%         'Position',[0.369020817175207 0.95613614004149 0.303215550427647 0.0305007585806261], ...
+%        'Orientation','horizontal');
+% set(leg,'FontSize',13);
 
 end
