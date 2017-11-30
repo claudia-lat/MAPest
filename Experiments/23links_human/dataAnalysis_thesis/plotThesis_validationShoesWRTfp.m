@@ -243,3 +243,24 @@ end
 RMSE.fp1_leftShoe = comparison.RMSE.err1;
 RMSE.fp2_rightShoe = comparison.RMSE.err2;
 save(fullfile(bucket.pathToProcessedData,'/RMSE.mat'),'RMSE');
+
+%% CORRELATION COEFF computation
+
+comparison.corrCoeff.fp1_leftShoe  = zeros(6,1);
+comparison.corrCoeff.fp2_rightShoe = zeros(6,1);
+for i = 1: 6
+    %fp1-leftShoe
+    tmp_fp1 = comparison.RMSE.fp1(i,:);
+    tmp_leftShoe = comparison.RMSE.leftShoe(i,:);
+    coeffCorrMatrix = corrcoef(tmp_fp1',tmp_leftShoe');
+    comparison.corrCoeff.fp1_leftShoe(i) = coeffCorrMatrix(1,2);
+    %fp2-rightShoe
+    tmp_fp2 = comparison.RMSE.fp2(i,:);
+    tmp_rightShoe = comparison.RMSE.rightShoe(i,:);
+    coeffCorrMatrix = corrcoef(tmp_fp2',tmp_rightShoe');
+    comparison.corrCoeff.fp2_rightShoe(i) = coeffCorrMatrix(1,2);
+end
+
+corrCoeff.fp1_leftShoe  = comparison.corrCoeff.fp1_leftShoe;
+corrCoeff.fp2_rightShoe = comparison.corrCoeff.fp2_rightShoe;
+save(fullfile(bucket.pathToProcessedData,'/corrCoeff.mat'),'corrCoeff');
