@@ -28,14 +28,14 @@ setupJAVAPath();
 % running the code
 bucket = struct;
 subjectID = 10;
-trialID = 4;
+trialID = 5;
 bucket.pathToSubject = sprintf(fullfile(pwd,'/dataUW/Subj_%02d'),subjectID);
 bucket.pathToTrial   = sprintf(fullfile(bucket.pathToSubject,'/trial_0%02d'),trialID);
 bucket.pathToProcessedData   = fullfile(bucket.pathToTrial,'/processed');
 
 %% Load measurements from SUIT
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
-    bucket.mvnxFilename = sprintf(fullfile(bucket.pathToProcessedData,...
+    bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,...
                                   'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
     suit = extractSuitData(bucket.mvnxFilename);
     suit = computeSuitSensorPosition(suit); % obtain sensors position
@@ -51,12 +51,18 @@ shoesVSforceplates_bool = true;    % if true --> shoes + forceplates for the com
 
 %% Choose and synchronize FORCE measurements combination
 if shoes_bool | shoesVSforceplates_bool
-   bucket.inFolder = fullfile(bucket.pathToProcessedData,'/shoes');
+    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/shoes');
+    if(exist(bucket.inFolder,'dir')==0)
+        mkdir(bucket.inFolder);
+    end
    synchro_suit_and_shoes
 end
  
 if forceplates_bool | shoesVSforceplates_bool
    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/forceplates');
+   if(exist(bucket.inFolder,'dir')==0)
+        mkdir(bucket.inFolder);
+   end
    synchro_suit_and_forceplates
 end
 
@@ -308,10 +314,18 @@ temp = struct;
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'LeftHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
-temp = struct;
+
 temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 temp.id = 'RightHand';
 sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+
+% temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% temp.id = 'RightFoot';
+% sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+%
+% temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% temp.id = 'LeftFoot';
+% sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
 % Vector d computation
 if ~exist(fullfile(bucket.inFolder,'mu_dgiveny.mat'))
