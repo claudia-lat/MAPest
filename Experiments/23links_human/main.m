@@ -6,6 +6,8 @@ rng(1); % forcing the casual generator to be const
 addpath(genpath('src')); 
 addpath(genpath('templates')); 
 addpath(genpath('../../src'));
+addpath(genpath('../../external'));
+addpath(genpath('../../utility'));
 
 % Create a structure 'bucket' where storing different stuff generating by
 % running the code
