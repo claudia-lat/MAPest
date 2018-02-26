@@ -16,9 +16,6 @@ bucket = struct;
 trialID0 = [];
 trialID = 20;
 
-%% Java path needed by OSIM
-setupJAVAPath();
-
 %% Load measurements from SUIT
 % bucket.mvnxFilename = sprintf('data/Subj-0%d%d.mvnx',trialID0, trialID);
 % suit = extractSuitData(bucket.mvnxFilename,'data002');
