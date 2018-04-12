@@ -33,6 +33,17 @@ bucket.pathToSubject = sprintf(fullfile(pwd,'/dataUW/Subj_%02d'),subjectID);
 bucket.pathToTrial   = sprintf(fullfile(bucket.pathToSubject,'/trial_0%02d'),trialID);
 bucket.pathToProcessedData   = fullfile(bucket.pathToTrial,'/processed');
 
+% Options on the base formalism
+opts.fixedBase = true;
+opts.floatingBase = false;
+
+if opts.fixedBase
+    disp(strcat('Current formalism is fixed base.'));
+else
+    disp(strcat('Current formalism is floating base.'));
+end
+
+
 %% Load measurements from SUIT
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
     bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,...
@@ -45,9 +56,9 @@ else
 end
 
 %% Define force data modality (shoes or forceplates)
-shoes_bool              = false;     % if true --> shoes + Xsens
+shoes_bool              = true;     % if true --> shoes + Xsens
 forceplates_bool        = false;    % if true --> forceplates + Xsens
-shoesVSforceplates_bool = true;    % if true --> shoes + forceplates for the comparison
+shoesVSforceplates_bool = false;    % if true --> shoes + forceplates for the comparison
 
 %% Choose and synchronize FORCE measurements combination
 if shoes_bool | shoesVSforceplates_bool
@@ -114,7 +125,10 @@ if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim')
                                                 bucket.filenameOSIM);
 end   
 
-%% Inverse Kinematic computation 
+%% Inverse Kinematic computation
+if opts.floatingBase
+    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/floating');
+end
 if ~exist(fullfile(bucket.inFolder,'human_state_tmp.mat'))
     bucket.setupFile = fullfile(pwd,'/dataUW/fileSetup.xml');
     bucket.trcFile = sprintf('dataUW/Subj_%02d/trial_0%02d/opensim-0%02d.trc',subjectID, trialID, trialID);
@@ -224,30 +238,41 @@ human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
-% Remove sensor on the fixed base
-fixedBase = 'LeftFoot';
-humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
-humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(fixedBase,'_gyro'));
-% We decided to remove gyroscopes from the analysis
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
-% humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
+if opts.floatingBase
+    base = 'RightFoot';
+else
+    % Remove sensor on the fixed base
+    base = 'RightFoot';
+    humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(base,'_accelerometer'));
+%     humanSensors.removeSensor(iDynTree.GYROSCOPE_SENSOR, strcat(base,'_gyro'));
+    % We decided to remove gyroscopes from the analysis
+    % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
+end
 
 %% Initialize berdy
 % Specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
-berdyOptions.baseLink = fixedBase; % change of the base link
-%--------------------------------------------------------------------------
-% IMPORTANT NOTE:
-% ---------------
-% Until this point the base link was 'Pelvis' but from now on  we decided
-% to change it with the 'LeftFoot' since it is really fixed during the
-% experiment.
-%--------------------------------------------------------------------------
+
+berdyOptions.baseLink = base;
 berdyOptions.includeAllNetExternalWrenchesAsSensors          = true;
 berdyOptions.includeAllNetExternalWrenchesAsDynamicVariables = true;
 berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
-berdyOptions.includeFixedBaseExternalWrench                  = true;
+
+if opts.floatingBase
+    berdyOptions.berdyVariant = iDynTree.BERDY_FLOATING_BASE;
+    berdyOptions.includeFixedBaseExternalWrench = false;
+else
+    %----------------------------------------------------------------
+    % IMPORTANT NOTE:
+    % ---------------
+    % Until this point the base link was 'Pelvis' but from now on  we
+    % decided to change it with the 'LeftFoot' since it is really fixed
+    % during the experiment.
+    %----------------------------------------------------------------
+    berdyOptions.includeFixedBaseExternalWrench = true;
+end
 
 % Load berdy
 berdy = iDynTree.BerdyHelper;
@@ -256,8 +281,9 @@ berdy.init(humanModel, humanSensors, berdyOptions);
 traversal = berdy.dynamicTraversal;
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('Current base is < ', currentBase,'>.'));
-disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
-
+if opts.fixedBase
+   disp(strcat('Be sure that sensors in URDF related to <', currentBase,'> has been removed!'));
+end
 % Get the tree is visited IS the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
@@ -270,10 +296,17 @@ for i = 0 : traversal.getNrOfVisitedLinks() - 1
     dVectorOrder{i + 1} = berdy.model().getLinkName(link.getIndex());
 end
 
-% -------------------------------------------------------------------------
-% CHECK: print the order of variables in d vector
-% printBerdyDynVariables(berdy)
-% -------------------------------------------------------------------------
+if opts.floatingBase
+    % ---------------------------------------------------
+    % CHECK: print the order of variables in d vector
+%     printBerdyDynVariables_floating(berdy)
+    % ---------------------------------------------------
+else
+    % ---------------------------------------------------
+    % CHECK: print the order of variables in d vector
+%     printBerdyDynVariables(berdy)
+    % ---------------------------------------------------
+end
 %% Measurements wrapping
 if shoes_bool 
   fext.rightHuman = shoes.Right.downsampled.totalForce.humanFootWrench;
@@ -291,7 +324,12 @@ data = dataPackaging(humanModel,...
                      fext,...
                      human_ddq,...
                      bucket.contactLink);
-                                 
+
+% % test 3: to constrain the accelerometer on the LeftFoot to be [0 0 9.81]
+% % with a small associated variance.
+% data(17).meas = repmat([0;0;9.81],1,size(data(17).meas,2));
+% data(17).var = 1e-9 * data(17).var;
+
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
 % -------------------------------------------------------------------------
 % CHECK: print the order of measurement in y 
@@ -309,15 +347,15 @@ priors.Sigmay = Sigmay;
 % Added the possibility to remove a sensor from the analysis
 % (excluding accelerometers and gyroscope for which already exists the
 % iDynTree option).
-sensorsToBeRemoved = [];
-temp = struct;
-temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-temp.id = 'LeftHand';
-sensorsToBeRemoved = [sensorsToBeRemoved; temp];
-
-temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-temp.id = 'RightHand';
-sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+% sensorsToBeRemoved = [];
+% temp = struct;
+% temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% temp.id = 'LeftHand';
+% sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+%
+% temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% temp.id = 'RightHand';
+% sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
 % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % temp.id = 'RightFoot';
@@ -327,24 +365,69 @@ sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 % temp.id = 'LeftFoot';
 % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 
-% Vector d computation
-if ~exist(fullfile(bucket.inFolder,'mu_dgiveny.mat'))
-    % [mu_dgiveny_3sens, Sigma_specific_3sens] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-    % [mu_dgiveny_ALLsens, Sigma_dgiveny_ALLsens] = MAPcomputation(berdy, human_state, y, priors);
-    [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-    save(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
-    else
-    load(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
+
+if opts.floatingBase
+    %--------------------------------------------------------
+    % we need to extract the angular velocity related to the chosen
+    % current base and to use it into the MAP computation
+    for i = 1 : length(suit_downsampled.sensors)
+        if strcmp(suit_downsampled.sensors{i, 1}.label, currentBase)
+            baseAngVel = suit_downsampled.sensors{i, 1}.meas.sensorAngularVelocity;
+            break;
+        end
+    end
+    %--------------------------------------------------------
+    % mu_dgiveny computation
+    if ~exist(fullfile(bucket.inFolder,'mu_dgiveny.mat'))
+        [mu_dgiveny, ~] = MAPcomputation_floating(berdy, traversal, human_state, y, priors, baseAngVel);
+        save(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
+        else
+        load(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
+    end
+    %--------------------------------------------------------
+    % variables extraction
+    estimated_variables = estimatedVariablesExtraction_floating(berdy, mu_dgiveny);
+    save(fullfile(bucket.inFolder,'/estimated_variables.mat'),'estimated_variables');
+    %--------------------------------------------------------
+    % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
+    % cannot be saved! therefore once computed it is necessary to extract data
+    % related to tau and save that one!
+     if ~exist(fullfile(bucket.inFolder,'Sigma_tau.mat'))
+        [~, Sigma_dgiveny] = MAPcomputation_floating(berdy, human_state, y, priors);
+        extractSigmaOfEstimatedVariables
+        save(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
+        else
+        load(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
+    end
 end
 
-% Sigma_tau extraction from Sigma d --> since sigma d is very big, it
-% cannot be saved! therefore once computed it is necessary to extract data
-% related to tau and save that one!
-if ~exist(fullfile(bucket.inFolder,'Sigma_tau.mat'))
-    [~, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors, 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-    extractSigmaOfEstimatedVariables
-    save(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
-    else
-    load(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
+if opts.fixedBase
+    %--------------------------------------------------------
+    % mu_dgiveny computation
+    if ~exist(fullfile(bucket.inFolder,'mu_dgiveny.mat'))
+        [mu_dgiveny, ~] = MAPcomputation(berdy, human_state, y, priors);
+        save(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
+        else
+        load(fullfile(bucket.inFolder,'/mu_dgiveny.mat'),'mu_dgiveny');
+    end
+    %--------------------------------------------------------
+    % variables extraction
+    estimated_variables = estimatedVariablesExtraction(berdy, currentBase, mu_dgiveny);
+    save(fullfile(bucket.inFolder,'/estimated_variables.mat'),'estimated_variables');
+    %--------------------------------------------------------
+    % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
+    % cannot be saved! therefore once computed it is necessary to extract data
+    % related to tau and save that one!
+    if ~exist(fullfile(bucket.inFolder,'Sigma_tau.mat'))
+        [~, Sigma_dgiveny] = MAPcomputation(berdy, human_state, y, priors);
+        extractSigmaOfEstimatedVariables
+        save(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
+        else
+        load(fullfile(bucket.inFolder,'/Sigma_tau.mat'),'Sigma_tau');
+    end
 end
+
+%% testing
+
+TEST_FLOATING_compareVariables;
 
