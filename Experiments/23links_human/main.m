@@ -1,13 +1,14 @@
 
 %----------------------------------------------------------------------
-% UW_experiments:
+% JSI_experiments:
 % ---------------
-% Xsens frequency  --> 240 Hz (see in suit.properties.frameRate)
-% shoes frequency  --> 100 Hz (see from data)
-% cortex frequency --> 100 Hz (both for MoCap + forcelates)
+% Xsens frequency  --> 60 Hz, acquired with MVNX2018
+% shoes frequency  -->
+% FP    frequency  -->
+% EMG   frequency  -->
+% exoskeleton passive
 %----------------------------------------------------------------------
 
-% clearvars -except shoes_old;
 clc;close all;clear all;
 %clear;clc;close all;
 rng(1); % forcing the casual generator to be const
@@ -18,7 +19,6 @@ addpath(genpath('src'));
 addpath(genpath('templates')); 
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
-addpath(genpath('dataAnalysis_thesis'));
 
 %% Java path needed by OSIM
 setupJAVAPath();
@@ -27,30 +27,71 @@ setupJAVAPath();
 % Create a structure 'bucket' where storing different stuff generating by
 % running the code
 bucket = struct;
-subjectID = 10;
-trialID = 5;
-bucket.pathToSubject = sprintf(fullfile(pwd,'/dataUW/Subj_%02d'),subjectID);
-bucket.pathToTrial   = sprintf(fullfile(bucket.pathToSubject,'/trial_0%02d'),trialID);
-bucket.pathToProcessedData   = fullfile(bucket.pathToTrial,'/processed');
+subjectID = 1;
+taskID = 0;
+bucket.pathToSubject = sprintf(fullfile(pwd,'/dataJSI/S%02d'),subjectID);
+bucket.pathToTask    = sprintf(fullfile(bucket.pathToSubject,'/task%d'),taskID);
+bucket.pathToRawData = fullfile(bucket.pathToTask,'/data');
+bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'/processed');
 
 % Options on the base formalism
 opts.fixedBase = true;
 opts.floatingBase = false;
-
 if opts.fixedBase
     disp(strcat('Current formalism is fixed base.'));
 else
     disp(strcat('Current formalism is floating base.'));
 end
 
+%% Master file
+% This file contains general information about each subject and
+% all the sensors involved in the analysis:
+% - Xsens : only timestamps
+% - FP    : timestamps + data
+% - EMG   : timestamps + data
+% - shoes : timestamps + data
 
-%% Load measurements from SUIT
+masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
+
+% Each subject performed 5 repetitions of the same task.
+% We need to extract now the Xsens timestampes for each block.
+% Once we have them, we cut all the data in order to cancel out
+% useless data.
+%
+% The struct masterFile.Subject.Xsens contains 5 Timestamp fields where the
+% external timestamps (the firts and the last) are exactly what we would
+% extract.  But there is an exception for the first one
+% (an error in the acquisition?)
+for i = 1 : length(masterFile.Subject.Xsens(1).Timestamp)
+    tmp.block1 = masterFile.Subject.Xsens(1).Timestamp - masterFile.Subject.Xsens(1).Timestamp(end);
+    if tmp.block1(i)<=0
+        tmp.block1Init = i;
+        break
+    end
+end
+
+for i = 1 : length(masterFile.Subject.Xsens) %5 blocks
+    if i == 1
+        XsensTimestamps(i).first = masterFile.Subject.Xsens(i).Timestamp(tmp.block1Init);
+    else
+        XsensTimestamps(i).first = masterFile.Subject.Xsens(i).Timestamp(1);
+    end
+    XsensTimestamps(i).last = masterFile.Subject.Xsens(i).Timestamp(end);
+end
+
+%% Data cutting
+% to be done
+
+%% Measurements from the suit acquisition
+% The files parsed from MVNX2018 (.csv, .log) contain the data.
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
-    bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,...
-                                  'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
-    suit = extractSuitData(bucket.mvnxFilename);
-    suit = computeSuitSensorPosition(suit); % obtain sensors position
-    save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
+extractSuitDataFromParsing;
+save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
+%     bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,...
+%                                   'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
+%     suit = extractSuitData(bucket.mvnxFilename);
+%     suit = computeSuitSensorPosition(suit); % obtain sensors position
+%     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
