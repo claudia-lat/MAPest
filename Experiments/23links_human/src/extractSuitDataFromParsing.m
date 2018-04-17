@@ -5,9 +5,24 @@ bucket.XMLfilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d.xml'),su
 mvnxData = xml_read(bucket.XMLfilename);
 
 bucket.CSVfilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d.csv'),subjectID,taskID);
-% csvData = csvread(bucket.CSVfilename);
+bucket.fileToBeSaved = sprintf(fullfile('S%02d_%02d.mat'),subjectID,taskID);
+if ~exist(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved))
+    mvnxDataFromCSV.orderedLabel = (importCSVfile(bucket.CSVfilename,1,1))'; %list of strings
+    mvnxDataFromCSV.data         = table2array(readtable(bucket.CSVfilename,'Delimiter',',')); %array
+    save(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved),'mvnxDataFromCSV');
+else
+    load(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved),'mvnxDataFromCSV');
+end
 
 bucket.runtimeFilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d_runtime.csv'),subjectID,taskID);
+bucket.fileToBeSaved = sprintf(fullfile('S%02d_%02d_runtime.mat'),subjectID,taskID);
+if ~exist(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved))
+    mvnxDataFromCSV_runtime.orderedLabel = (importCSVfile(bucket.runtimeFilename,1,1))'; %list of strings
+    mvnxDataFromCSV_runtime.data         = table2array(readtable(bucket.runtimeFilename,'Delimiter',',')); %array
+    save(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved),'mvnxDataFromCSV_runtime');
+else
+    load(fullfile(bucket.pathToProcessedData,'/',bucket.fileToBeSaved),'mvnxDataFromCSV_runtime');
+end
 
 %% Create data struct
 suit =[];
