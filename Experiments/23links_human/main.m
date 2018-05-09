@@ -87,8 +87,6 @@ end
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
     extractSuitDataFromParsing;
     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
-    %     suit = computeSuitSensorPosition(suit); % obtain sensors position
-    %     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
