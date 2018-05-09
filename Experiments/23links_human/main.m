@@ -85,13 +85,10 @@ end
 %% Measurements from the suit acquisition
 % The files parsed from MVNX2018 (.csv, .log) contain the data.
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
-extractSuitDataFromParsing;
-save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
-%     bucket.mvnxFilename = sprintf(fullfile(bucket.pathToTrial,...
-%                                   'Subject_%02d-0%02d.mvnx'), subjectID, trialID);
-%     suit = extractSuitData(bucket.mvnxFilename);
-%     suit = computeSuitSensorPosition(suit); % obtain sensors position
-%     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
+    extractSuitDataFromParsing;
+    save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
+    %     suit = computeSuitSensorPosition(suit); % obtain sensors position
+    %     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
