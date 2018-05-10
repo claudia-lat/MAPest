@@ -1,4 +1,4 @@
-function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, suitSyncIndex)
+function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile)
 %I K function computes the Inverse Kinematics computation by using the
 % OpenSim API.  After computing q angles, it uses  Savitzi-Golay for
 % obtaining dq and ddq.  Outputs: state and ddq are in radians.
@@ -11,7 +11,7 @@ osimModel.initSystem();
 ikTool = InverseKinematicsTool(setupFile);
 % subject info are set manually:
 ikTool.setModel(osimModel);
-ikTool.setMarkerDataFileName(fullfile(pwd,filenameTrc));
+ikTool.setMarkerDataFileName(filenameTrc);
 outputMotionFilename = tempname;
 ikTool.setOutputMotionFileName(outputMotionFilename);
 ikTool.run();
@@ -44,11 +44,9 @@ ddq      = zeros(size(state.q));
 state.q = motionData.data(:, 8:end)';  % in deg
 [~,state.dq,ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder,Sg.window,state.q,Sg.samplingTime); % in deg
 
-%% Cut state and ddq
-% Before storing the state and ddq, an eventual cut has to be done.  Since
-% their are computed with IK that, in turn, uses the .trc file from the
-% Xsens acquisition ==> the cut index used is suitSyncIndex.
-ddq      = ddq(:,suitSyncIndex) * pi/180;      % in rad
-state.q  = state.q(:,suitSyncIndex) * pi/180;  % in rad
-state.dq = state.dq(:,suitSyncIndex) * pi/180; % in rad
+%% Transformation in radians
+ddq      = ddq * pi/180;      % in rad
+state.q  = state.q * pi/180;  % in rad
+state.dq = state.dq * pi/180; % in rad
+
 end

@@ -1,14 +1,7 @@
 
-%----------------------------------------------------------------------
-% JSI_experiments:
-% ---------------
-% Xsens frequency  --> 60 Hz, acquired with MVNX2018
-% shoes frequency  -->
-% FP    frequency  -->
-% EMG   frequency  -->
-% exoskeleton passive
-%----------------------------------------------------------------------
-
+%--------------------------------------------------------------------------
+% JSI_experiments main
+%--------------------------------------------------------------------------
 clc;close all;clear all;
 %clear;clc;close all;
 rng(1); % forcing the casual generator to be const
@@ -43,46 +36,13 @@ else
     disp(strcat('Current formalism is floating base.'));
 end
 
-%% Master file
+% Extraction of the masterFile
+masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
 % This file contains general information about each subject and
 % all the sensors involved in the analysis:
-% - Xsens : only timestamps
-% - FP    : timestamps + data
-% - EMG   : timestamps + data
-% - shoes : timestamps + data
 
-masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
-
-% Each subject performed 5 repetitions of the same task.
-% We need to extract now the Xsens timestampes for each block.
-% Once we have them, we cut all the data in order to cancel out
-% useless data.
-%
-% The struct masterFile.Subject.Xsens contains 5 Timestamp fields where the
-% external timestamps (the firts and the last) are exactly what we would
-% extract.  But there is an exception for the first one
-% (an error in the acquisition?)
-for i = 1 : length(masterFile.Subject.Xsens(1).Timestamp)
-    tmp.block1 = masterFile.Subject.Xsens(1).Timestamp - masterFile.Subject.Xsens(1).Timestamp(end);
-    if tmp.block1(i)<=0
-        tmp.block1Init = i;
-        break
-    end
-end
-
-for i = 1 : length(masterFile.Subject.Xsens) %5 blocks
-    if i == 1
-        XsensTimestamps(i).first = masterFile.Subject.Xsens(i).Timestamp(tmp.block1Init);
-    else
-        XsensTimestamps(i).first = masterFile.Subject.Xsens(i).Timestamp(1);
-    end
-    XsensTimestamps(i).last = masterFile.Subject.Xsens(i).Timestamp(end);
-end
-
-%% Data cutting
-% to be done
-
-%% Suit struct creation
+%% ---------------------UNA TANTUM PROCEDURE-------------------------------
+%% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
     % 1) extract data from C++ parsed files
     extractSuitDataFromParsing;
@@ -91,6 +51,45 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
+end
+
+%% Extract subject parameters from SUIT
+subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
+
+%% Create URDF model
+bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
+if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID))
+    bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
+                                                suit.sensors,...
+                                                'filename',bucket.filenameURDF,...
+                                                'GazeboModel',false);
+end
+
+%% Create OSIM model
+bucket.filenameOSIM = sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID);
+if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID))
+    bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+                                                bucket.filenameOSIM);
+end
+
+%% Inverse Kinematic computation
+% if opts.floatingBase
+%     bucket.inFolder = fullfile(bucket.pathToProcessedData,'/floating');
+% end
+if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'))
+    bucket.setupFile = fullfile(pwd,'/dataJSI/fileSetup.xml');
+    bucket.trcFile = fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.trc'),subjectID,taskID));
+    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
+                                                          bucket.trcFile, ...
+                                                          bucket.setupFile);
+    % here selectedJoints is the order of the Osim computation.
+    save(fullfile(bucket.pathToProcessedData,'/human_state_tmp.mat'),'human_state_tmp');
+    save(fullfile(bucket.pathToProcessedData,'/human_ddq_tmp.mat'),'human_ddq_tmp');
+    save(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
+else
+    load(fullfile(bucket.pathToProcessedData,'/human_state_tmp.mat'),'human_state_tmp');
+    load(fullfile(bucket.pathToProcessedData,'/human_ddq_tmp.mat'),'human_ddq_tmp');
+    load(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
 end
 
 %% Define force data modality (shoes or forceplates)
@@ -115,8 +114,6 @@ if forceplates_bool | shoesVSforceplates_bool
    synchro_suit_and_forceplates
 end
 
-%% Extract subject parameters from SUIT
-subjectParamsFromData = subjectParamsComputation(suit, bucket.weight);
 
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet 
@@ -145,43 +142,6 @@ end
 %% If we consider the shoes and forceplates VALIDATION
 if shoesVSforceplates_bool
    validation_shoes_and_forceplates
-end
-
-%% Create URDF model
-bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
-if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID))
-    bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-                                                suit.sensors,...
-                                                'filename',bucket.filenameURDF,...
-                                                'GazeboModel',false);
-end   
-
-%% Create OSIM model
-bucket.filenameOSIM = sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID);
-if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID))
-    bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
-                                                bucket.filenameOSIM);
-end   
-
-%% Inverse Kinematic computation
-if opts.floatingBase
-    bucket.inFolder = fullfile(bucket.pathToProcessedData,'/floating');
-end
-if ~exist(fullfile(bucket.inFolder,'human_state_tmp.mat'))
-    bucket.setupFile = fullfile(pwd,'/dataUW/fileSetup.xml');
-    bucket.trcFile = sprintf('dataUW/Subj_%02d/trial_0%02d/opensim-0%02d.trc',subjectID, trialID, trialID);
-    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
-                                                bucket.trcFile, ...
-                                                bucket.setupFile,...
-                                                rangeCut);
-    % here selectedJoints is the order of the Osim computation.
-    save(fullfile(bucket.inFolder,'/human_state_tmp.mat'),'human_state_tmp');
-    save(fullfile(bucket.inFolder,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    save(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
-else
-    load(fullfile(bucket.inFolder,'/human_state_tmp.mat'),'human_state_tmp');
-    load(fullfile(bucket.inFolder,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    load(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
 end
 
 %% Downsampling of the data
@@ -262,7 +222,7 @@ if forceplates_bool
     save(fullfile(bucket.inFolder,'/forceplates.mat'),'forceplates');
 end
 
-
+%% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
