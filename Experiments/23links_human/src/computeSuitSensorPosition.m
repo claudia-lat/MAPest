@@ -1,9 +1,11 @@
 function [suit] = computeSuitSensorPosition(suit)
 % COMPUTESUITSENSORPOSITION computes the position of the sensors in the
-% suite wrt the link frame. It returns its value in a new field of the same
+% suit wrt the link frame. It returns its value in a new field of the same
 % suit stucture. Notation: G = global, S = sensor; L = link.
 
-len = suit.properties.lenData;
+% len = suit.properties.lenData;
+len = 10000; % fixed nr of frames useful to capture all the movements done
+             % during the experiment.
 
 for sIdx = 1: suit.properties.nrOfSensors
     sensor = suit.sensors{sIdx};
@@ -21,18 +23,18 @@ for sIdx = 1: suit.properties.nrOfSensors
         G_R_L = G_R_L.toMatlab();
         A(3*i-2:3*i,:) = (S1 + S2*S2) * G_R_L;
 
+        G_acc_S = sensor.meas.sensorFreeAcceleration(:,i);
+        G_acc_L = link.meas.acceleration(:,i);
+
+        b(3*i-2:3*i) = G_acc_S - G_acc_L;
+
+        % compute S_R_L = S_R_G x G_R_L
         quaternion = iDynTree.Vector4();
         quaternion.fromMatlab(sensor.meas.sensorOrientation(:,i));
         G_R_S = iDynTree.Rotation();
         G_R_S.fromQuaternion(quaternion);
         G_R_S = G_R_S.toMatlab();
-        G_acc_S = G_R_S * sensor.meas.sensorAcceleration(:,i);
 
-        G_acc_L = link.meas.acceleration(:,i);
-
-        b(3*i-2:3*i) = G_acc_S - G_acc_L + [0;0;-9.81];
-
-        % compute S_R_L = S_R_G x G_R_L
         S_R_L = G_R_S' * G_R_L;
         L_R_S = S_R_L' ;
         rot = iDynTree.Rotation();

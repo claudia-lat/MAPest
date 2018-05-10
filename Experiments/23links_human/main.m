@@ -82,10 +82,12 @@ end
 %% Data cutting
 % to be done
 
-%% Measurements from the suit acquisition
-% The files parsed from MVNX2018 (.csv, .log) contain the data.
+%% Suit struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
+    % 1) extract data from C++ parsed files
     extractSuitDataFromParsing;
+    % 2) compute sensor position
+    suit = computeSuitSensorPosition(suit);
     save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
