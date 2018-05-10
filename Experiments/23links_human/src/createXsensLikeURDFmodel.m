@@ -108,8 +108,8 @@ urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIXX',num2str(subjectParam
 urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIYY',num2str(subjectParams.T8Iyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIZZ',num2str(subjectParams.T8Izz));
 urdfModelTemplate = strrep(urdfModelTemplate,'jT1C7_ORIGIN',num2str(subjectParams.jT1C7'));
-urdfModelTemplate = strrep(urdfModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightC7Shoulder'));
-urdfModelTemplate = strrep(urdfModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftC7Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightT4Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftT4Shoulder'));
 %% NECK (solid: cylinder)
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
@@ -158,7 +158,7 @@ urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMMASS',num2str(subjectP
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIXX',num2str(subjectParams.rightForeArmIxx));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIYY',num2str(subjectParams.rightForeArmIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIZZ',num2str(subjectParams.rightForeArmIzz));
-urdfModelTemplate = strrep(urdfModelTemplate,'jRightElbow_ORIGIN',num2str(subjectParams.jRightC7Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jRightElbow_ORIGIN',num2str(subjectParams.jRightT4Shoulder'));
 urdfModelTemplate = strrep(urdfModelTemplate,'jRightWrist_ORIGIN',num2str(subjectParams.jRightWrist'));
 %% RIGHT HAND (solid: box)
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTHAND_BOX_ORIGIN',num2str(subjectParams.rightHandBoxOrigin));

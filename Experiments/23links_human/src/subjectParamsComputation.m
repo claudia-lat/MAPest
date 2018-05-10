@@ -107,13 +107,13 @@ subjectParams.T12Izz        = (subjectParams.T12Mass/12) * (T12_x^2 + T12_y^2);
 % joints
 [T8_struct, ~] = linksFromName(suit.links, 'T8');
 [subjectParams.jT1C7, ~] = pointsFromName(T8_struct.points, 'jT1C7');
-[subjectParams.jRightC7Shoulder, ~] = pointsFromName(T8_struct.points, 'jRightC7Shoulder');
-[subjectParams.jLeftC7Shoulder, ~] = pointsFromName(T8_struct.points, 'jLeftC7Shoulder');
+[subjectParams.jRightT4Shoulder, ~] = pointsFromName(T8_struct.points, 'jRightT4Shoulder');
+[subjectParams.jLeftT4Shoulder, ~] = pointsFromName(T8_struct.points, 'jLeftT4Shoulder');
 % box sizes
 [pC7SpinalProcess, ~] = pointsFromName(T8_struct.points, 'pC7SpinalProcess');
 [pPX, ~] = pointsFromName(T8_struct.points, 'pPX');
 T8_x = pPX(1) - pC7SpinalProcess(1);
-T8_y = subjectParams.jLeftC7Shoulder(2) - subjectParams.jRightC7Shoulder(2) ;
+T8_y = subjectParams.jLeftT4Shoulder(2) - subjectParams.jRightT4Shoulder(2) ;
 T8_z = subjectParams.jT1C7(3);
 subjectParams.T8Box = [T8_x, T8_y, T8_z];
 % box origin
