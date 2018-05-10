@@ -146,8 +146,8 @@ for frameIdx = 1 : nrOfCalibFrames
     end
 end
 % --------TIME
-if isempty(suit.time)
-lenCSVlabel = size(mvnxDataFromCSV.orderedLabel,1);
+if ~isempty(suit.time)
+    lenCSVlabel = size(mvnxDataFromCSV.orderedLabel,1);
     for frameIdx = 1 : nrOfFrames
         for labelIdx = 1 : lenCSVlabel
             if (strcmp(mvnxDataFromCSV.orderedLabel{labelIdx,1}, 'msTime'))
