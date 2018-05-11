@@ -38,8 +38,6 @@ end
 
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
-% This file contains general information about each subject and
-% all the sensors involved in the analysis:
 
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
@@ -91,6 +89,9 @@ else
     load(fullfile(bucket.pathToProcessedData,'/human_ddq_tmp.mat'),'human_ddq_tmp');
     load(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
 end
+
+%% Raw data handling
+rawDataHandling;
 
 %% Define force data modality (shoes or forceplates)
 shoes_bool              = true;     % if true --> shoes + Xsens
