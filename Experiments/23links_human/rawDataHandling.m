@@ -44,8 +44,46 @@ for i = 1 : size(suit.sensors{1, 1}.meas.sensorOrientation,2) % sens1 since it i
     end
 end
 
-%% Subdivide suit.mat in 5 blocks accordingly to the masterFile
-% No synchronization among the different sensors is adopted at this stage!
+%% Timestamps struct
+for blockIdx = 1 : (tmp.nrOfBlocks)
+    % ---Labels
+    timestampTable(blockIdx).block  = tmp.block_labels(blockIdx);
+
+    % ---Xsens Timestamp Range
+    if blockIdx == 1 %exception
+        for i = 1: size(masterFile.Subject.Xsens(blockIdx).Timestamp,1)
+            if masterFile.Subject.Xsens(blockIdx).Timestamp(i) == tmp.XsensBlockRange(1).first
+                tmp.exception_first = i;
+            end
+            if masterFile.Subject.Xsens(blockIdx).Timestamp(i) == tmp.XsensBlockRange(1).last
+                tmp.exception_last = i;
+            end
+        end
+        tmp.cutRange = (tmp.exception_first : tmp.exception_last);
+        timestampTable(blockIdx).masterfileTimestamps = masterFile.Subject.Xsens(blockIdx).Timestamp(tmp.cutRange,:); %exception
+        timestampTable(blockIdx).masterfileTimeRT = masterFile.Subject.Xsens(blockIdx).TimeRT(tmp.cutRange,:); %exception
+    else
+        timestampTable(blockIdx).masterfileTimestamps  = masterFile.Subject.Xsens(blockIdx).Timestamp;
+        timestampTable(blockIdx).masterfileTimeRT  = masterFile.Subject.Xsens(blockIdx).TimeRT;
+    end
+
+    % ---Cut MVNX in 5 blocks according to previous ranges
+    timestampTable(blockIdx).XsensTimestampRange = [tmp.XsensBlockRange(blockIdx).first, tmp.XsensBlockRange(blockIdx).last];
+    timestampTable(blockIdx).XsensCutRange = [tmp.blockRange(blockIdx).first, tmp.blockRange(blockIdx).last];
+    tmp.cutRange = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
+    timestampTable(blockIdx).timeMVNX = suit.time.xSens(:,tmp.cutRange);
+    %timestampTable(blockIdx).timeMVNX_ms = suit.time.ms(:,tmp.cutRange);
+
+    % ---Create a new sampling vector
+    % NOTE: this vector will be used as sampling vector for the FP and
+    % ftShoes data contained in the masterfile!
+    tmp.RTblock_samples = size(timestampTable(blockIdx).timeMVNX,2);
+    tmp.step = (timestampTable(blockIdx).masterfileTimeRT(end) - timestampTable(blockIdx).masterfileTimeRT(1))/(tmp.RTblock_samples -1);
+    timestampTable(blockIdx).masterfileNewTimeRT = timestampTable(blockIdx).masterfileTimeRT(1) : tmp.step : timestampTable(blockIdx).masterfileTimeRT(end);
+end
+
+%% Subdivide suit.mat meas in 5 blocks accordingly to the above division
+
 for sensIdx = 1: size(suit.sensors,1)
     suit_runtime.sensors{sensIdx, 1}.label        = suit.sensors{sensIdx, 1}.label;
     suit_runtime.sensors{sensIdx, 1}.attachedLink = suit.sensors{sensIdx, 1}.attachedLink;
@@ -54,48 +92,13 @@ for sensIdx = 1: size(suit.sensors,1)
     for blockIdx = 1 : (tmp.nrOfBlocks)
         % ---Labels
         suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).block  = tmp.block_labels(blockIdx);
-        
-        % ---Xsens Timestamp Range
-        if blockIdx == 1 %exception
-            for i = 1: size(masterFile.Subject.Xsens(blockIdx).Timestamp,1)
-                if masterFile.Subject.Xsens(blockIdx).Timestamp(i) == tmp.XsensBlockRange(1).first
-                    tmp.exception_first = i;
-                end
-                if masterFile.Subject.Xsens(blockIdx).Timestamp(i) == tmp.XsensBlockRange(1).last
-                    tmp.exception_last = i;
-                end
-            end
-            tmp.cutRange = (tmp.exception_first : tmp.exception_last);
-            suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).masterfileTimestamps = masterFile.Subject.Xsens(blockIdx).Timestamp(tmp.cutRange,:); %exception
-        else
-            suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).masterfileTimestamps  = masterFile.Subject.Xsens(blockIdx).Timestamp;
-        end
-
-        % ---Cut (useful) meas in 5 blocks
-        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).XsensTimestampRange  = [tmp.XsensBlockRange(blockIdx).first, tmp.XsensBlockRange(blockIdx).last];
+        % ---Cut (useful) meas
         tmp.cutRange = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
-        suit_tmp.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange);
-        suit_tmp.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,tmp.cutRange);
-
-        % ---Interpolation:
-        % Blocks from masterFile and suit do not have the same lenght!! We need to
-        % interpolate (useful) meas according to the masterFile (master) timestamps.
-        tmp.slaveTime  = suit.time.xSens(:,tmp.cutRange)';
-        if blockIdx == 1
-            tmp.masterTime = suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).masterfileTimestamps; %exception
-        else
-            tmp.masterTime = masterFile.Subject.Xsens(blockIdx).Timestamp;
-        end
-        for i = 1 : 4 %column elements in the orientation vector
-            suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(i,:) = interp1(tmp.slaveTime, ...
-                    suit_tmp.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(i,:), tmp.masterTime);
-        end
-        for i = 1 : 3 %column elements in the freAcceleration vector
-            suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration(i,:) = interp1(tmp.slaveTime, ...
-                    suit_tmp.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration(i,:), tmp.masterTime);
-        end
+        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange);
+        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,tmp.cutRange);
+        % NOTE: MVNX data do not need interpolation!
     end
 end
 
 %% Cleaning up workspace
-clearvars suit_tmp;
+clearvars tmp;
