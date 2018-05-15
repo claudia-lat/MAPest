@@ -103,13 +103,16 @@ end
 % Struct where every external is synchronized:
 % - masterTime
 % - ftshoes
-%
+
 for blockIdx = 1 : (tmp.nrOfBlocks)
     synchroData(blockIdx).block = tmp.block_labels(blockIdx);
     synchroData(blockIdx).masterTime = timestampTable(blockIdx).masterfileNewTimeRT;
 end
 
 %% ftShoes Interpolation
+% FS1 --> Right ftShoe wrench
+% FS2 --> Left ftShoe wrench
+
 % Cutting (when needed) signals
 for blockIdx = 1 : (tmp.nrOfBlocks)
      tmp.length = size(masterFile.Subject.FS(blockIdx).Measurement,1);
@@ -121,24 +124,24 @@ for blockIdx = 1 : (tmp.nrOfBlocks)
      end
      tmp.ftShoes.cutRange = (tmp.idx(blockIdx) : size(masterFile.Subject.FS(blockIdx).Measurement,1));
      if tmp.ftShoes.cutRange(1) ~= 1
-        tmp.ftShoes.cut(blockIdx).FS1    = masterFile.Subject.FS(blockIdx).FS1(tmp.ftShoes.cutRange,:);
-        tmp.ftShoes.cut(blockIdx).FS2    = masterFile.Subject.FS(blockIdx).FS2(tmp.ftShoes.cutRange,:);
-        tmp.ftShoes.cut(blockIdx).timeRT = masterFile.Subject.FS(blockIdx).TimeRT(tmp.ftShoes.cutRange,:);
+        tmp.ftShoes.cut(blockIdx).RightShoe = masterFile.Subject.FS(blockIdx).FS1(tmp.ftShoes.cutRange,:);
+        tmp.ftShoes.cut(blockIdx).LeftShoe  = masterFile.Subject.FS(blockIdx).FS2(tmp.ftShoes.cutRange,:);
+        tmp.ftShoes.cut(blockIdx).timeRT    = masterFile.Subject.FS(blockIdx).TimeRT(tmp.ftShoes.cutRange,:);
      else
-        tmp.ftShoes.cut(blockIdx).FS1    = masterFile.Subject.FS(blockIdx).FS1;
-        tmp.ftShoes.cut(blockIdx).FS2    = masterFile.Subject.FS(blockIdx).FS2;
-        tmp.ftShoes.cut(blockIdx).timeRT = masterFile.Subject.FS(blockIdx).TimeRT;
+        tmp.ftShoes.cut(blockIdx).RightShoe = masterFile.Subject.FS(blockIdx).FS1;
+        tmp.ftShoes.cut(blockIdx).LeftShoe  = masterFile.Subject.FS(blockIdx).FS2;
+        tmp.ftShoes.cut(blockIdx).timeRT    = masterFile.Subject.FS(blockIdx).TimeRT;
      end
 end
 
 % Interpolation
 for blockIdx = 1 : (tmp.nrOfBlocks)
     for i = 1 : 6
-        synchroData(blockIdx).FS1(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
-                                                 tmp.ftShoes.cut(blockIdx).FS1(:,i), ...
+        synchroData(blockIdx).RightShoe(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
+                                                 tmp.ftShoes.cut(blockIdx).RightShoe(:,i), ...
                                                  timestampTable(blockIdx).masterfileNewTimeRT);
-        synchroData(blockIdx).FS2(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
-                                                 tmp.ftShoes.cut(blockIdx).FS2(:,i), ...
+        synchroData(blockIdx).LeftShoe(:,i)  = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
+                                                 tmp.ftShoes.cut(blockIdx).LeftShoe(:,i), ...
                                                  timestampTable(blockIdx).masterfileNewTimeRT);
     end
 end
