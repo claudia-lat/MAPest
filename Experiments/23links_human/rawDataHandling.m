@@ -83,7 +83,6 @@ for blockIdx = 1 : (tmp.nrOfBlocks)
 end
 
 %% Subdivide suit.mat meas in 5 blocks accordingly to the above division
-
 for sensIdx = 1: size(suit.sensors,1)
     suit_runtime.sensors{sensIdx, 1}.label        = suit.sensors{sensIdx, 1}.label;
     suit_runtime.sensors{sensIdx, 1}.attachedLink = suit.sensors{sensIdx, 1}.attachedLink;
@@ -97,6 +96,50 @@ for sensIdx = 1: size(suit.sensors,1)
         suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange);
         suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,tmp.cutRange);
         % NOTE: MVNX data do not need interpolation!
+    end
+end
+
+%% Create the synchroData struct
+% Struct where every external is synchronized:
+% - masterTime
+% - ftshoes
+%
+for blockIdx = 1 : (tmp.nrOfBlocks)
+    synchroData(blockIdx).block = tmp.block_labels(blockIdx);
+    synchroData(blockIdx).masterTime = timestampTable(blockIdx).masterfileNewTimeRT;
+end
+
+%% ftShoes Interpolation
+% Cutting (when needed) signals
+for blockIdx = 1 : (tmp.nrOfBlocks)
+     tmp.length = size(masterFile.Subject.FS(blockIdx).Measurement,1);
+     for j = 1 : tmp.length
+          if (timestampTable(blockIdx).masterfileNewTimeRT(1) - masterFile.Subject.FS(blockIdx).TimeRT(j) < 0.01)
+              tmp.idx(blockIdx) = j;
+              break;
+          end
+     end
+     tmp.ftShoes.cutRange = (tmp.idx(blockIdx) : size(masterFile.Subject.FS(blockIdx).Measurement,1));
+     if tmp.ftShoes.cutRange(1) ~= 1
+        tmp.ftShoes.cut(blockIdx).FS1    = masterFile.Subject.FS(blockIdx).FS1(tmp.ftShoes.cutRange,:);
+        tmp.ftShoes.cut(blockIdx).FS2    = masterFile.Subject.FS(blockIdx).FS2(tmp.ftShoes.cutRange,:);
+        tmp.ftShoes.cut(blockIdx).timeRT = masterFile.Subject.FS(blockIdx).TimeRT(tmp.ftShoes.cutRange,:);
+     else
+        tmp.ftShoes.cut(blockIdx).FS1    = masterFile.Subject.FS(blockIdx).FS1;
+        tmp.ftShoes.cut(blockIdx).FS2    = masterFile.Subject.FS(blockIdx).FS2;
+        tmp.ftShoes.cut(blockIdx).timeRT = masterFile.Subject.FS(blockIdx).TimeRT;
+     end
+end
+
+% Interpolation
+for blockIdx = 1 : (tmp.nrOfBlocks)
+    for i = 1 : 6
+        synchroData(blockIdx).FS1(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
+                                                 tmp.ftShoes.cut(blockIdx).FS1(:,i), ...
+                                                 timestampTable(blockIdx).masterfileNewTimeRT);
+        synchroData(blockIdx).FS2(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
+                                                 tmp.ftShoes.cut(blockIdx).FS2(:,i), ...
+                                                 timestampTable(blockIdx).masterfileNewTimeRT);
     end
 end
 
