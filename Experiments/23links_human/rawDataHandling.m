@@ -10,12 +10,12 @@
 % Data in the masterFile.mat are saved in 5 separate blocks while the 
 % suit.mat (extracted from MVNX) does not have this division.
 
-tmp.block_labels = {'block1'; ...
+block.labels = {'block1'; ...
                     'block2'; ...
                     'block3'; ...
                     'block4'; ...
                     'block5'};
-tmp.nrOfBlocks = size(tmp.block_labels,1);
+block.nrOfBlocks = size(block.labels,1);
 
 for i = 1 : length(masterFile.Subject.Xsens(1).Timestamp)
     tmp.block1 = masterFile.Subject.Xsens(1).Timestamp - masterFile.Subject.Xsens(1).Timestamp(end);
@@ -34,7 +34,7 @@ for i = 1 : length(masterFile.Subject.Xsens) %5 blocks
 end
 
 for i = 1 : size(suit.sensors{1, 1}.meas.sensorOrientation,2) % sens1 since it is equal for all the sensors
-    for j = 1 : tmp.nrOfBlocks
+    for j = 1 : block.nrOfBlocks
         if suit.time.xSens(i) == tmp.XsensBlockRange(1,j).first
             tmp.blockRange(j).first = i;
         end
@@ -45,9 +45,9 @@ for i = 1 : size(suit.sensors{1, 1}.meas.sensorOrientation,2) % sens1 since it i
 end
 
 %% Timestamps struct
-for blockIdx = 1 : (tmp.nrOfBlocks)
+for blockIdx = 1 : block.nrOfBlocks
     % ---Labels
-    timestampTable(blockIdx).block  = tmp.block_labels(blockIdx);
+    timestampTable(blockIdx).block  = block.labels(blockIdx);
 
     % ---Xsens Timestamp Range
     if blockIdx == 1 %exception
@@ -88,9 +88,9 @@ for sensIdx = 1: size(suit.sensors,1)
     suit_runtime.sensors{sensIdx, 1}.attachedLink = suit.sensors{sensIdx, 1}.attachedLink;
     suit_runtime.sensors{sensIdx, 1}.position     = suit.sensors{sensIdx, 1}.position;
 
-    for blockIdx = 1 : (tmp.nrOfBlocks)
+    for blockIdx = 1 : block.nrOfBlocks
         % ---Labels
-        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).block  = tmp.block_labels(blockIdx);
+        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).block  = block.labels(blockIdx);
         % ---Cut (useful) meas
         tmp.cutRange = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
         suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange);
@@ -104,8 +104,8 @@ end
 % - masterTime
 % - ftshoes
 
-for blockIdx = 1 : (tmp.nrOfBlocks)
-    synchroData(blockIdx).block = tmp.block_labels(blockIdx);
+for blockIdx = 1 : block.nrOfBlocks
+    synchroData(blockIdx).block = block.labels(blockIdx);
     synchroData(blockIdx).masterTime = timestampTable(blockIdx).masterfileNewTimeRT;
 end
 
@@ -114,7 +114,7 @@ end
 % FS2 --> Left ftShoe wrench
 
 % Cutting (when needed) signals
-for blockIdx = 1 : (tmp.nrOfBlocks)
+for blockIdx = 1 : block.nrOfBlocks
      tmp.length = size(masterFile.Subject.FS(blockIdx).Measurement,1);
      for j = 1 : tmp.length
           if (timestampTable(blockIdx).masterfileNewTimeRT(1) - masterFile.Subject.FS(blockIdx).TimeRT(j) < 0.01)
@@ -135,7 +135,7 @@ for blockIdx = 1 : (tmp.nrOfBlocks)
 end
 
 % Interpolation
-for blockIdx = 1 : (tmp.nrOfBlocks)
+for blockIdx = 1 : block.nrOfBlocks
     for i = 1 : 6
         synchroData(blockIdx).RightShoe(:,i) = interp1(tmp.ftShoes.cut(blockIdx).timeRT, ...
                                                  tmp.ftShoes.cut(blockIdx).RightShoe(:,i), ...
@@ -145,6 +145,9 @@ for blockIdx = 1 : (tmp.nrOfBlocks)
                                                  timestampTable(blockIdx).masterfileNewTimeRT);
     end
 end
+
+%% forcePlates Interpolation
+% to be done
 
 %% Cleaning up workspace
 clearvars tmp;
