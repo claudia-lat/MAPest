@@ -1,15 +1,15 @@
-function [shoes] = transformShoesWrenches (shoes, subjectParamsFromData)
+function [shoes] = transformShoesWrenches(synchroStruct, subjectParamsFromData)
 % TRANSFORMSHOESWRENCHES transforms external wrenches coming 
 % from the ftShoes into human frames. 
 %
 % Inputs:
-% - shoes                 : right and left data;
+% - synchroStruct,        : right and left data releated to a block;
 % - subjectParamsFromData : for getting the ankle heights, i.e the origin 
 %                           position of the reference frame of both feet
 %                           wrt their projection on each shoe.
 % Outputs:
-% - shoes       : updated struct containing new fields : humanFootWrench in
-%                 Left and Right folders.
+% - shoes  : struct containing the Shoes wrenches transformed in human frames
+%            (humanFootWrench) in Left and Right folders.
 %
 % Shoes wrenches are estimated in their frames (origin and
 % orientation) that are located at a known position. 
@@ -56,39 +56,41 @@ rightFoot_T_rightFtShoe = iDynTree.Transform(rightHeel_T_rightFtShoeRot,...
 
 %% Transform wrenches from shoes frames into human frames
 
-leftShoeWrench(1:3,:) = shoes.Left.upsampled.totalForce.forces;
-leftShoeWrench(4:6,:) = shoes.Left.upsampled.totalForce.moments;
+leftShoeWrench(1:3,:) = synchroStruct.LeftShoe(:,1:3)';
+leftShoeWrench(4:6,:) = synchroStruct.LeftShoe(:,4:6)';
 
-rightShoeWrench(1:3,:) = shoes.Right.upsampled.totalForce.forces;
-rightShoeWrench(4:6,:) = shoes.Right.upsampled.totalForce.moments;
+rightShoeWrench(1:3,:) = synchroStruct.RightShoe(:,1:3)';
+rightShoeWrench(4:6,:) = synchroStruct.RightShoe(:,4:6)';
 
-shoes.Left.upsampled.totalForce.humanFootWrench = ...
+shoes.block = synchroStruct.block;
+
+shoes.Left.humanFootWrench = ...
       -1*(leftFoot_T_leftFtShoe.asAdjointTransformWrench().toMatlab()*leftShoeWrench);
-shoes.Right.upsampled.totalForce.humanFootWrench = ...
+shoes.Right.humanFootWrench = ...
       -1*(rightFoot_T_rightFtShoe.asAdjointTransformWrench().toMatlab()*rightShoeWrench);
 
 %% Transform static mean vector of wrenches from shoes frames into human frames
-shoes.Left.static_totalForce.humanFootWrench_mean = ...
-      -1*(leftFoot_T_leftFtShoe.asAdjointTransformWrench().toMatlab()* ...
-                                shoes.Left.static_totalForce.wrench_mean);
-shoes.Right.static_totalForce.humanFootWrench_mean = ...
-      -1*(rightFoot_T_rightFtShoe.asAdjointTransformWrench().toMatlab()* ...
-                                shoes.Right.static_totalForce.wrench_mean);
-                            
+% shoes.Left.static_totalForce.humanFootWrench_mean = ...
+%       -1*(leftFoot_T_leftFtShoe.asAdjointTransformWrench().toMatlab()* ...
+%                                 shoes.Left.static_totalForce.wrench_mean);
+% shoes.Right.static_totalForce.humanFootWrench_mean = ...
+%       -1*(rightFoot_T_rightFtShoe.asAdjointTransformWrench().toMatlab()* ...
+%                                 shoes.Right.static_totalForce.wrench_mean);
+%               
 %% Plot tmp
-% 
+% %
 % % LEFT SHOE
 % fig = figure();
 % axes1 = axes('Parent',fig,'FontSize',16);
 %               box(axes1,'on');
 %               hold(axes1,'on');
 %               grid on;
-% len = length(shoes.Left.upsampled.totalForce.humanFootWrench);
+% len = length(shoes.Left.humanFootWrench);
 %               
 % subplot (231) % comparison forces component x
 % plot1 = plot(leftShoeWrench(1,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(1,:),'r','lineWidth',1.5);
 % ylabel('forces','HorizontalAlignment','center',...
 %        'FontWeight','bold',...
 %        'FontSize',18,...
@@ -100,7 +102,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (232) % comparison forces component y 
 % plot1 = plot(leftShoeWrench(2,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(2,:),'r','lineWidth',1.5);
 % title ('y');
 % xlim([0  len]);
 % grid on;
@@ -108,7 +110,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (233) % comparison forces component z
 % plot1 = plot(leftShoeWrench(3,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(3,:),'r','lineWidth',1.5);
 % title ('z');
 % xlim([0  len]);
 % grid on;
@@ -116,7 +118,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (234) % comparison moment component x 
 % plot1 = plot(leftShoeWrench(4,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(4,:),'r','lineWidth',1.5);
 % ylabel('moments','HorizontalAlignment','center',...
 %        'FontWeight','bold',...
 %        'FontSize',18,...
@@ -127,14 +129,14 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (235) % comparison moment component y
 % plot1 = plot(leftShoeWrench(5,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(5,:),'r','lineWidth',1.5);
 % xlim([0  len]);
 % grid on;
 % 
 % subplot (236) % comparison moment component z 
 % plot1 = plot(leftShoeWrench(6,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Left.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Left.humanFootWrench(6,:),'r','lineWidth',1.5);
 % xlim([0  len]);
 % grid on;
 % 
@@ -154,7 +156,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (231) % comparison forces component x
 % plot1 = plot(rightShoeWrench(1,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(1,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(1,:),'r','lineWidth',1.5);
 % ylabel('forces','HorizontalAlignment','center',...
 %        'FontWeight','bold',...
 %        'FontSize',18,...
@@ -166,7 +168,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (232) % comparison forces component y 
 % plot1 = plot(rightShoeWrench(2,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(2,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(2,:),'r','lineWidth',1.5);
 % title ('y');
 % xlim([0  len]);
 % grid on;
@@ -174,7 +176,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (233) % comparison forces component z
 % plot1 = plot(rightShoeWrench(3,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(3,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(3,:),'r','lineWidth',1.5);
 % title ('z');
 % xlim([0  len]);
 % grid on;
@@ -182,7 +184,7 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (234) % comparison moment component x 
 % plot1 = plot(rightShoeWrench(4,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(4,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(4,:),'r','lineWidth',1.5);
 % ylabel('moments','HorizontalAlignment','center',...
 %        'FontWeight','bold',...
 %        'FontSize',18,...
@@ -193,14 +195,14 @@ shoes.Right.static_totalForce.humanFootWrench_mean = ...
 % subplot (235) % comparison moment component y
 % plot1 = plot(rightShoeWrench(5,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(5,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(5,:),'r','lineWidth',1.5);
 % xlim([0  len]);
 % grid on;
 % 
 % subplot (236) % comparison moment component z 
 % plot1 = plot(rightShoeWrench(6,:),'b','lineWidth',1.5);
 % hold on 
-% plot2 = plot(shoes.Right.upsampled.totalForce.humanFootWrench(6,:),'r','lineWidth',1.5);
+% plot2 = plot(shoes.Right.humanFootWrench(6,:),'r','lineWidth',1.5);
 % xlim([0  len]);
 % grid on;
 % 
