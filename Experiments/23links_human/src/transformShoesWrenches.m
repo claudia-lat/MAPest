@@ -56,17 +56,17 @@ rightFoot_T_rightFtShoe = iDynTree.Transform(rightHeel_T_rightFtShoeRot,...
 
 %% Transform wrenches from shoes frames into human frames
 
-leftShoeWrench(1:3,:) = synchroStruct.LeftShoe(:,1:3)';
-leftShoeWrench(4:6,:) = synchroStruct.LeftShoe(:,4:6)';
+leftShoeWrench(1:3,:) = synchroStruct.LeftShoe_SF(:,1:3)';
+leftShoeWrench(4:6,:) = synchroStruct.LeftShoe_SF(:,4:6)';
 
-rightShoeWrench(1:3,:) = synchroStruct.RightShoe(:,1:3)';
-rightShoeWrench(4:6,:) = synchroStruct.RightShoe(:,4:6)';
+rightShoeWrench(1:3,:) = synchroStruct.RightShoe_SF(:,1:3)';
+rightShoeWrench(4:6,:) = synchroStruct.RightShoe_SF(:,4:6)';
 
 shoes.block = synchroStruct.block;
-
-shoes.Left.humanFootWrench = ...
+% HF = human frame
+shoes.Left_HF = ...
       -1*(leftFoot_T_leftFtShoe.asAdjointTransformWrench().toMatlab()*leftShoeWrench);
-shoes.Right.humanFootWrench = ...
+shoes.Right_HF = ...
       -1*(rightFoot_T_rightFtShoe.asAdjointTransformWrench().toMatlab()*rightShoeWrench);
 
 %% Transform static mean vector of wrenches from shoes frames into human frames

@@ -1,4 +1,4 @@
-function [ dataPacked ] = dataPackaging(model, sensors, suit, fext, ddq, contactLink)
+function [ dataPacked ] = dataPackaging(blockIdx, model, sensors, suit, fext, ddq, contactLink)
 %DATAPACKAGING creates a data struct organised in the following way:
 % - data.time (a unified time for all type of sensors)
 % Each substructure is identified by:
@@ -33,7 +33,7 @@ for i = 1 :  nOfSensor.acc
     sensorsLabelToCmp{i}= tempData(i,1);
     for j = 1 : nOfSensorsFromSuit 
         if  strcmp(sensorsLabelToCmp{i},suit.sensors{j, 1}.label)
-            data.acc.meas{i} = suit.sensors{i, 1}.meas.sensorAcceleration;
+            data.acc.meas{i} = suit.sensors{i, 1}.meas(blockIdx).sensorFreeAcceleration;
             break;
         end
     end
@@ -91,8 +91,8 @@ data.ddq.var = 6.66e-6; %from datasheet
 %% FROM FORCE SOURCE (it could be forceplates OR shoes)
 % ---------------------------------------------------------------
 % Both sensors are considered as external forces acting as follow:
-% - on human rightFoot --> FP2 or ftShoe_Right
-% - on human leftFoot  --> FP1 or ftShoe_Left
+% - on human rightFoot --> FP1 or ftShoe_Right
+% - on human leftFoot  --> FP2 or ftShoe_Left
 % - null meas for all the others.
 % ---------------------------------------------------------------
 nOfSensor.fext = model.getNrOfLinks;
