@@ -83,6 +83,8 @@ for blockIdx = 1 : block.nrOfBlocks
 end
 
 %% Subdivide suit.mat meas in 5 blocks accordingly to the above division
+
+tmp.cutRange = cell(5,1);
 for sensIdx = 1: size(suit.sensors,1)
     suit_runtime.sensors{sensIdx, 1}.label        = suit.sensors{sensIdx, 1}.label;
     suit_runtime.sensors{sensIdx, 1}.attachedLink = suit.sensors{sensIdx, 1}.attachedLink;
@@ -92,9 +94,9 @@ for sensIdx = 1: size(suit.sensors,1)
         % ---Labels
         suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).block  = block.labels(blockIdx);
         % ---Cut (useful) meas
-        tmp.cutRange = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
-        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange);
-        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,tmp.cutRange);
+        tmp.cutRange{blockIdx} = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
+        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation = suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,tmp.cutRange{blockIdx});
+        suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,tmp.cutRange{blockIdx});
         % NOTE: MVNX data do not need interpolation!
     end
 end
@@ -103,11 +105,17 @@ end
 % Struct where every external is synchronized:
 % - masterTime
 % - ftshoes
+% - state (q,dq)
+% - ddq
 
 for blockIdx = 1 : block.nrOfBlocks
     synchroData(blockIdx).block = block.labels(blockIdx);
     synchroData(blockIdx).masterTime = timestampTable(blockIdx).masterfileNewTimeRT;
+    synchroData(blockIdx).q   = human_state_tmp.q(:,tmp.cutRange{blockIdx});
+    synchroData(blockIdx).dq  = human_state_tmp.dq(:,tmp.cutRange{blockIdx});
+    synchroData(blockIdx).ddq = human_ddq_tmp(:,tmp.cutRange{blockIdx});
 end
+clearvars human_state_tmp human_ddq_tmp;
 
 %% ftShoes Interpolation
 % FS1 --> Right ftShoe wrench
