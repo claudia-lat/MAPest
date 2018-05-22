@@ -1,4 +1,4 @@
-function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, joint_q, joint_dq, y, priors, varargin)
+function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors, varargin)
 % MAPCOMPUTATION solves the inverse dynamics problem with a 
 % maximum-a-posteriori estimation by using the Newton-Euler algorithm and 
 % redundant sensor measurements as originally described in the paper 
@@ -79,8 +79,8 @@ for i = 1 : size(options.SENSORS_TO_REMOVE)
 end
 
 y(rangeOfRemovedSensors,:) = [];
-priors.Sigmay(rangeOfRemovedSensors, :) = [];  % TO BE CHECKED!
-priors.Sigmay(:, rangeOfRemovedSensors) = [];  % TO BE CHECKED!
+priors.Sigmay(rangeOfRemovedSensors, :) = [];
+priors.Sigmay(:, rangeOfRemovedSensors) = [];
 %% 
 % Set gravity 
 gravity = [0 0 -9.81];
@@ -100,13 +100,13 @@ berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
                                  berdyMatrices.b_Y);
 % Set priors
 mud        = priors.mud;
-Sigmad_inv = sparse(1\priors.Sigmad);
-SigmaD_inv = sparse(1\priors.SigmaD);
-Sigmay_inv = sparse(1\priors.Sigmay);
+Sigmad_inv = sparse(inv(priors.Sigmad));
+SigmaD_inv = sparse(inv(priors.SigmaD));
+Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs 
 samples = size(y, 2); 
-% samples = 25;
+samples = 25;
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
@@ -118,8 +118,8 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 
 for i = 1 : samples
     
-    q.fromMatlab(joint_q(:,i));
-    dq.fromMatlab(joint_dq(:,i));
+    q.fromMatlab(state.q(:,i));
+    dq.fromMatlab(state.dq(:,i));
     
     berdy.updateKinematicsFromTraversalFixedBase(q,dq,grav);
 
@@ -159,7 +159,7 @@ for i = 1 : samples
     rhs             = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
     
     if nargout > 1   % Sigma_dgiveny requested as output
-        Sigma_dgiveny{i}   = 1\Sigma_dgiveny_inv;
+        Sigma_dgiveny{i}   = inv(Sigma_dgiveny_inv);
         mu_dgiveny(:,i)    = Sigma_dgiveny{i} * rhs;
     else             % Sigma_dgiveny does not requested as output
         mu_dgiveny(:,i)    = CholSolve(Sigma_dgiveny_inv, rhs, P);
