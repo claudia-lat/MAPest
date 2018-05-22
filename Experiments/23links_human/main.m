@@ -240,7 +240,7 @@ for blockIdx = 1 : block.nrOfBlocks
                                                                     priors, baseAngVel);
         % Variables extraction
         extractTauFromBerdy
-        if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy')
+        if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy'))
             save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
         else
             load(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
