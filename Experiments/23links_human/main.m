@@ -45,6 +45,12 @@ else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
+%% IMPORTANT NOTE:
+% The subjects performed the experimental tasks with the drill on the right
+% hand. This code will be modified for taking into account the presence of
+% the drill. URDF/OSIM models and IK computation will be affected
+% from this change.
+
 %% Extract subject parameters from SUIT
 subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
 
@@ -167,8 +173,6 @@ for blockIdx = 1 : block.nrOfBlocks
       [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
                                                                             data(blockIdx).data);
 end
-
-% TODO: consider the contribution of the drill.
 
 % ---------------------------------------------------
 % CHECK: print the order of measurement in y 
