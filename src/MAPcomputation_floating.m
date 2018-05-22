@@ -36,8 +36,8 @@ for i = 1 : size(options.SENSORS_TO_REMOVE)
 end
 
 y(rangeOfRemovedSensors,:) = [];
-priors.Sigmay(rangeOfRemovedSensors, :) = [];  % TO BE CHECKED!
-priors.Sigmay(:, rangeOfRemovedSensors) = [];  % TO BE CHECKED!
+priors.Sigmay(rangeOfRemovedSensors, :) = [];
+priors.Sigmay(:, rangeOfRemovedSensors) = [];
 %% 
 % % Set angularVector 
 % angVect = [0 0 0];
@@ -62,7 +62,7 @@ SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(pinv(priors.Sigmay));
 
 % Allocate outputs 
-samples = size(y, 2); 
+samples = size(y, 2);
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
@@ -74,18 +74,17 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 baseIndex = berdy.model().getFrameIndex(currentBase);
 base_angVel = iDynTree.Vector3();
+base_angVel.fromMatlab(baseAngVel);
 
 % % test ang vel == 0
 % angVel = [0 0 0];
 % base_angVel  = iDynTree.Vector3();
 % base_angVel.fromMatlab(angVel);
 
-samples = 2000;
 for i = 1 : samples
     
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
-    base_angVel.fromMatlab(baseAngVel(:,i));
     
     berdy.updateKinematicsFromFloatingBase(q,dq,baseIndex,base_angVel);
 
