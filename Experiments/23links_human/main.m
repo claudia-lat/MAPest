@@ -195,9 +195,9 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 % % temp.id = 'LeftHand';
 % % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 % %
-% % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-% % temp.id = 'RightHand';
-% % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+temp.id = 'RightHand';
+sensorsToBeRemoved = [sensorsToBeRemoved; temp];
 % %
 % % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % % temp.id = 'RightFoot';
