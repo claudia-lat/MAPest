@@ -189,7 +189,7 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 %% Possibility to remove a sensor from the analysis
 % excluding the accelerometers and gyroscope for whose removal already
 % exists the iDynTree option.
-% % sensorsToBeRemoved = [];
+sensorsToBeRemoved = [];
 % % temp = struct;
 % % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % % temp.id = 'LeftHand';
