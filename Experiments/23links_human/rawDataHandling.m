@@ -101,6 +101,29 @@ for sensIdx = 1: size(suit.sensors,1)
     end
 end
 
+%% Transform the sensorFreeAcceleration of MVNX2018 into the oldest version
+if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
+    quaternion = iDynTree.Vector4();
+    G_R_S = iDynTree.Rotation();
+    gravity = [0; 0; -9.81];
+    for sensIdx = 1: size(suit.sensors,1)
+        for blockIdx = 1 : block.nrOfBlocks
+            suit_runtime_rot.sensors{sensIdx, 1}.meas(blockIdx).block  = block.labels(blockIdx);
+            len = size(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation,2);
+            for lenIdx = 1 : len
+                quaternion.fromMatlab(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(:,lenIdx));
+                G_R_S.fromQuaternion(quaternion);
+                % Transformation:        S_a_old = S_R_G * (G_a_new - gravity)
+                suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOldAcceleration(:,lenIdx) = ...
+                    (G_R_S.toMatlab())' * (suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration(:,lenIdx) - gravity);
+            end
+        end
+    end
+    save(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'));
+else
+    load(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'));
+end
+
 %% Create the synchroData struct
 % Struct where every external is synchronized:
 % - masterTime
