@@ -82,7 +82,6 @@ base_angVel.fromMatlab(baseAngVel);
 % base_angVel.fromMatlab(angVel);
 
 for i = 1 : samples
-    
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
     

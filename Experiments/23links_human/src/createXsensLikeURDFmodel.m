@@ -298,7 +298,6 @@ urdfModelTemplate = strrep(urdfModelTemplate,'FAKEIN',num2str(fakein));
 % Filename
 if ~isempty(options.FILENAME)
     [dir,~,~] = fileparts(options.FILENAME);
-    dir = fullfile(pwd, dir);
     if ~exist(dir,'dir')
         mkdir(dir);
     end

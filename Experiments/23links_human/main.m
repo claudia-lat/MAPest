@@ -22,8 +22,12 @@ setupJAVAPath();
 bucket = struct;
 subjectID = 1;
 taskID = 0;
-bucket.pathToSubject = sprintf(fullfile(pwd,'/dataJSI/S%02d'),subjectID);
-bucket.pathToTask    = sprintf(fullfile(bucket.pathToSubject,'/task%d'),taskID);
+
+bucket.datasetRoot = fullfile(pwd, 'dataJSI');
+%bucket.datasetRoot = fullfile('D:\Datasets\2018_Feb_JSI');
+
+bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
+bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('/task%d',taskID));
 bucket.pathToRawData = fullfile(bucket.pathToTask,'/data');
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'/processed');
 
@@ -55,8 +59,8 @@ end
 subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
 
 %% Create URDF model
-bucket.filenameURDF = sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID);
-if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf'), subjectID))
+bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
+if ~exist(bucket.filenameURDF, 'file')
     bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
                                                 suit.sensors,...
                                                 'filename',bucket.filenameURDF,...
@@ -64,16 +68,16 @@ if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensURDF_subj%02d_48dof.urdf')
 end
 
 %% Create OSIM model
-bucket.filenameOSIM = sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID);
-if ~exist(sprintf(fullfile(bucket.pathToSubject,'XSensOSIM_subj%02d_48dof.osim'), subjectID))
+bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
+if ~exist(bucket.filenameOSIM, 'file')
     bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
                                                 bucket.filenameOSIM);
 end
 
 %% Inverse Kinematic computation
-if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'))
-    bucket.setupFile = fullfile(pwd,'/dataJSI/fileSetup.xml');
-    bucket.trcFile = fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.trc'),subjectID,taskID));
+if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
+    bucket.setupFile = fullfile(bucket.datasetRoot, 'fileSetup.xml');
+    bucket.trcFile = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
                                                           bucket.trcFile, ...
                                                           bucket.setupFile);

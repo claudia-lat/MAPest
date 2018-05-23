@@ -4,12 +4,12 @@ bucket.pathToSuitData   = fullfile(bucket.pathToRawData,'/parsedFromMvnx');
 % -----
 % from XML file:
 % generic info, points, identity/tpose/tpose-isb
-bucket.XMLfilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d.xml'),subjectID,taskID);
+bucket.XMLfilename = fullfile(bucket.pathToSuitData, sprintf('S%02d_%02d.xml',subjectID,taskID));
 mvnxData = xml_read(bucket.XMLfilename);
 % -----
 % from LOG file:
 % segment and sensor list
-bucket.LOGfilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d.log'),subjectID,taskID);
+bucket.LOGfilename = fullfile(bucket.pathToSuitData, sprintf('S%02d_%02d.log',subjectID,taskID));
 fileID = fopen(bucket.LOGfilename);
 formatSpec = '%s';
 tmp.dummyParsedMatrix = textscan(fileID, formatSpec,'MultipleDelimsAsOne', 1, 'Delimiter', {','});
@@ -20,7 +20,7 @@ fclose(fileID);
 % velocity, angular acceleration), each sensor (orientation, free acceleration).
 % NOTE: This file is used for the MODEL CREATION and it is loaded and
 % processed once (i.e., one trial) per each subject!
-bucket.CSVfilename = sprintf(fullfile(bucket.pathToSuitData,'S%02d_%02d.csv'),subjectID,taskID);
+bucket.CSVfilename = fullfile(bucket.pathToSuitData, sprintf('S%02d_%02d.csv',subjectID,taskID));
 mvnxDataFromCSV.orderedLabel = (importCSVfile(bucket.CSVfilename,1,1))'; %list of strings
 mvnxDataFromCSV.data         = table2array(readtable(bucket.CSVfilename,'Delimiter',',')); %array
 
