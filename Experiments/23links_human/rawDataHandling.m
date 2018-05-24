@@ -108,7 +108,6 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
     gravity = [0; 0; -9.81];
     for sensIdx = 1: size(suit.sensors,1)
         for blockIdx = 1 : block.nrOfBlocks
-            suit_runtime_rot.sensors{sensIdx, 1}.meas(blockIdx).block  = block.labels(blockIdx);
             len = size(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation,2);
             for lenIdx = 1 : len
                 quaternion.fromMatlab(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(:,lenIdx));
@@ -119,9 +118,9 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
             end
         end
     end
-    save(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'));
+    save(fullfile(bucket.pathToProcessedData,'/suit_runtime.mat'),'suit_runtime');
 else
-    load(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'));
+    load(fullfile(bucket.pathToProcessedData,'/suit_runtime.mat'),'suit_runtime');
 end
 
 %% Create the synchroData struct
