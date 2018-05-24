@@ -181,4 +181,4 @@ end
 % to be done
 
 %% Cleaning up workspace
-clearvars tmp;
+clearvars tmp timestampTable;
