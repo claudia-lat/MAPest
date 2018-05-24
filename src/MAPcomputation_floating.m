@@ -59,7 +59,7 @@ berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
 mud        = priors.mud;
 Sigmad_inv = sparse(inv(priors.Sigmad));
 SigmaD_inv = sparse(inv(priors.SigmaD));
-Sigmay_inv = sparse(pinv(priors.Sigmay));
+Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs 
 samples = size(y, 2);
