@@ -76,7 +76,7 @@ end
 
 %% Inverse Kinematic computation
 if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
-    bucket.setupFile = fullfile(bucket.datasetRoot, 'fileSetup.xml');
+    bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
     bucket.trcFile = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
                                                           bucket.trcFile, ...
