@@ -39,7 +39,7 @@ opts.Sigma_dgiveny = false;
 
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
-if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'))
+if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     % 1) extract data from C++ parsed files
     extractSuitDataFromParsing;
     % 2) compute sensor position
@@ -225,7 +225,7 @@ baseAngVel = [0 0 0]; % forced to be zero, acceptable hp for this task.
 % end
 
 %% MAP computation
-if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'))
+if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
         priors.Sigmay = data(blockIdx).Sigmay;
         estimation(blockIdx).block = block.labels(blockIdx);
@@ -257,7 +257,7 @@ else
 end
 
 % Variables extraction
-if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'))
+if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'), 'file')
     extractTauFromBerdy
     save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
 else
