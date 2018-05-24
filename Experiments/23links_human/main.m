@@ -225,33 +225,41 @@ baseAngVel = [0 0 0]; % forced to be zero, acceptable hp for this task.
 % end
 
 %% MAP computation
-for blockIdx = 1 : block.nrOfBlocks
-    priors.Sigmay = data(blockIdx).Sigmay;
-    estimation(blockIdx).block = block.labels(blockIdx);
-    if opts.Sigma_dgiveny
-        [estimation(blockIdx).mu_dgiveny, estimation(blockIdx).Sigma_dgiveny] = ...
-                             MAPcomputation_floating(berdy, ...
-                                                     traversal, ...
-                                                     synchroData(blockIdx), ...
-                                                     data(blockIdx).y, ...
-                                                     priors, baseAngVel);
-        % TODO: variables extraction
-        % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
-        % cannot be saved! therefore once computed it is necessary to extract data
-        % related to tau and save that one!
-        % TODO: extractSigmaOfEstimatedVariables
-    else
-        [estimation(blockIdx).mu_dgiveny] = MAPcomputation_floating(berdy, ...
-                                                                    traversal, ...
-                                                                    synchroData(blockIdx), ...
-                                                                    data(blockIdx).y, ...
-                                                                    priors, baseAngVel);
-        % Variables extraction
-        extractTauFromBerdy
-        if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy'))
-            save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
+if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'))
+    for blockIdx = 1 : block.nrOfBlocks
+        priors.Sigmay = data(blockIdx).Sigmay;
+        estimation(blockIdx).block = block.labels(blockIdx);
+        if opts.Sigma_dgiveny
+            [estimation(blockIdx).mu_dgiveny, estimation(blockIdx).Sigma_dgiveny] = ...
+                                 MAPcomputation_floating(berdy, ...
+                                                         traversal, ...
+                                                         synchroData(blockIdx), ...
+                                                         data(blockIdx).y, ...
+                                                         priors, baseAngVel);
+            % TODO: variables extraction
+            % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
+            % cannot be saved! therefore once computed it is necessary to extract data
+            % related to tau and save that one!
+            % TODO: extractSigmaOfEstimatedVariables
         else
-            load(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
+            [estimation(blockIdx).mu_dgiveny] = MAPcomputation_floating(berdy, ...
+                                                                        traversal, ...
+                                                                        synchroData(blockIdx), ...
+                                                                        data(blockIdx).y, ...
+                                                                        priors, ...
+                                                                        baseAngVel, ...
+                                                                        'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         end
     end
+    save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');
+else
+    load(fullfile(bucket.pathToProcessedData,'estimation.mat'));
+end
+
+% Variables extraction
+if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'))
+    extractTauFromBerdy
+    save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
+else
+    load(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'));
 end
