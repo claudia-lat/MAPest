@@ -256,10 +256,18 @@ else
     load(fullfile(bucket.pathToProcessedData,'estimation.mat'));
 end
 
-% Variables extraction
+%% Variables extraction
+% torques
 if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'), 'file')
     extractTauFromBerdy
     save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
 else
     load(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'));
+end
+% external forces
+if ~exist(fullfile(bucket.pathToProcessedData,'computedFext.mat'), 'file')
+    extractFext
+    save(fullfile(bucket.pathToProcessedData,'computedFext.mat'),'computedFext');
+else
+    load(fullfile(bucket.pathToProcessedData,'computedFext.mat'));
 end
