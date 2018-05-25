@@ -49,13 +49,6 @@ for sIdx = 1: suit.properties.nrOfSensors
     suit.sensors{sIdx}.RPY = mean(L_RPY_S);
 
 end
-% Save the suit with the sensor
-outputDir = 'data';
-filename = sprintf('%s_suit.mat',strrep(strtrim(suit.properties.experimentLabel),' ','_'));
-if ~exist(outputDir,'dir')
-    mkdir(outputDir);
-end
-save(fullfile(outputDir, filename),'suit');
 end
 
 function [ S ] = skewMatrix(x)
