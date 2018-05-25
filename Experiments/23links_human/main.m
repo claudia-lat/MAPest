@@ -121,13 +121,13 @@ human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
-base = 'LeftFoot'; % floating base
+bucket.base = 'LeftFoot'; % floating base
 
 %% Initialize berdy
 % Specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
 
-berdyOptions.baseLink = base;
+berdyOptions.baseLink = bucket.base;
 berdyOptions.includeAllNetExternalWrenchesAsSensors          = true;
 berdyOptions.includeAllNetExternalWrenchesAsDynamicVariables = true;
 berdyOptions.includeAllJointAccelerationsAsSensors           = true;
@@ -194,32 +194,32 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 % excluding the accelerometers and gyroscope for whose removal already
 % exists the iDynTree option.
 sensorsToBeRemoved = [];
-% % temp = struct;
-% % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-% % temp.id = 'LeftHand';
-% % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+
+% % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% % bucket.temp.id = 'LeftHand';
+% % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % %
-temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-temp.id = 'RightHand';
-sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+bucket.temp.id = 'RightHand';
+sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % %
-% % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-% % temp.id = 'RightFoot';
-% % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+% % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% % bucket.temp.id = 'RightFoot';
+% % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % %
-% % temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-% % temp.id = 'LeftFoot';
-% % sensorsToBeRemoved = [sensorsToBeRemoved; temp];
+% % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% % bucket.temp.id = 'LeftFoot';
+% % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 
 %% Angular velocity
 % related to the chosen current base and to use it into the MAP
 % computation.
-baseAngVel = [0 0 0]; % forced to be zero, acceptable hp for this task.
+bucket.baseAngVel = [0 0 0]; % forced to be zero, acceptable hp for this task.
 % NOTE: we do not have this info anymore from sensors!
 
 % for i = 1 : length(suit_downsampled.sensors)
 %     if strcmp(suit_downsampled.sensors{i, 1}.label, currentBase)
-%         baseAngVel = suit_downsampled.sensors{i, 1}.meas.sensorAngularVelocity;
+%         bucket.baseAngVel = suit_downsampled.sensors{i, 1}.meas.sensorAngularVelocity;
 %         break;
 %     end
 % end
@@ -235,7 +235,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                                                          traversal, ...
                                                          synchroData(blockIdx), ...
                                                          data(blockIdx).y, ...
-                                                         priors, baseAngVel);
+                                                         priors, bucket.baseAngVel);
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
             % cannot be saved! therefore once computed it is necessary to extract data
@@ -247,7 +247,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                                                                         synchroData(blockIdx), ...
                                                                         data(blockIdx).y, ...
                                                                         priors, ...
-                                                                        baseAngVel, ...
+                                                                        bucket.baseAngVel, ...
                                                                         'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         end
     end
