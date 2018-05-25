@@ -5,6 +5,8 @@ computedFext = struct;
 range = zeros(bucket.nrOfLinks,1);
 
 for blockIdx = 1 : block.nrOfBlocks
+    computedFext(blockIdx).label  = dVectorOrder;
+
     nrOfSamples  = size(data(blockIdx).y, 2);
     computedFext(blockIdx).values = zeros(6*size(dVectorOrder,1), nrOfSamples);
     for i = 1 : bucket.nrOfLinks
@@ -13,7 +15,6 @@ for blockIdx = 1 : block.nrOfBlocks
         computedFext(blockIdx).values(6*(i-1)+1:6*i,:) = ...
                                                    estimation(blockIdx).mu_dgiveny(tmpRange,:);
     end
-    computedFext(blockIdx).label  = dVectorOrder;
 end
 
 % % % Script to extract via berdy the estimated external wrenches by MAP.

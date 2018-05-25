@@ -21,6 +21,6 @@ for blockIdx = 1 : block.nrOfBlocks
         berdy.extractJointTorquesFromDynamicVariables(mu_dgiveny_berdy,q_berdy, tau_berdy);
         tauFromBerdy(:,i) = tau_berdy.toMatlab();
     end
-    computedTauFromBerdy(blockIdx).values = tauFromBerdy;
     computedTauFromBerdy(blockIdx).label  = selectedJoints;
+    computedTauFromBerdy(blockIdx).values = tauFromBerdy;
 end
