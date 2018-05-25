@@ -102,7 +102,7 @@ for sensIdx = 1: size(suit.sensors,1)
 end
 
 %% Transform the sensorFreeAcceleration of MVNX2018 into the oldest version
-if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
+if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'), 'file')
     quaternion = iDynTree.Vector4();
     G_R_S = iDynTree.Rotation();
     gravity = [0; 0; -9.81];
@@ -120,7 +120,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
     end
     save(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'),'suit_runtime');
 else
-    load(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'),'suit_runtime');
+    load(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'));
 end
 
 %% Create the synchroData struct

@@ -86,9 +86,9 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
 else
-    load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
-    load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
-    load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
+    load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
+    load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
+    load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
 end
 
 %% Raw data handling
