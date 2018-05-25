@@ -1,6 +1,6 @@
 
 %% Load and read parsed file
-bucket.pathToSuitData   = fullfile(bucket.pathToRawData,'/parsedFromMvnx');
+bucket.pathToSuitData   = fullfile(bucket.pathToRawData,'parsedFromMvnx');
 % -----
 % from XML file:
 % generic info, points, identity/tpose/tpose-isb

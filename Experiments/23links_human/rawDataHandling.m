@@ -118,9 +118,9 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'))
             end
         end
     end
-    save(fullfile(bucket.pathToProcessedData,'/suit_runtime.mat'),'suit_runtime');
+    save(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'),'suit_runtime');
 else
-    load(fullfile(bucket.pathToProcessedData,'/suit_runtime.mat'),'suit_runtime');
+    load(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'),'suit_runtime');
 end
 
 %% Create the synchroData struct

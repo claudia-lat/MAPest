@@ -27,9 +27,9 @@ bucket.datasetRoot = fullfile(pwd, 'dataJSI');
 %bucket.datasetRoot = fullfile('D:\Datasets\2018_Feb_JSI');
 
 bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
-bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('/task%d',taskID));
-bucket.pathToRawData = fullfile(bucket.pathToTask,'/data');
-bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'/processed');
+bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
+bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
+bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
@@ -44,7 +44,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     extractSuitDataFromParsing;
     % 2) compute sensor position
     suit = computeSuitSensorPosition(suit);
-    save(fullfile(bucket.pathToProcessedData,'/suit.mat'),'suit');
+    save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
@@ -82,13 +82,13 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
                                                           bucket.trcFile, ...
                                                           bucket.setupFile);
     % here selectedJoints is the order of the Osim computation.
-    save(fullfile(bucket.pathToProcessedData,'/human_state_tmp.mat'),'human_state_tmp');
-    save(fullfile(bucket.pathToProcessedData,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    save(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
+    save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
+    save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
+    save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
 else
-    load(fullfile(bucket.pathToProcessedData,'/human_state_tmp.mat'),'human_state_tmp');
-    load(fullfile(bucket.pathToProcessedData,'/human_ddq_tmp.mat'),'human_ddq_tmp');
-    load(fullfile(bucket.pathToProcessedData,'/selectedJoints.mat'),'selectedJoints');
+    load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
+    load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
+    load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
 end
 
 %% Raw data handling
