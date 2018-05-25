@@ -4,7 +4,7 @@ function [ selectedJoints ] = cell2iDynTreeStringVector( array )
 
 selectedJoints = iDynTree.StringVector();
 for i = 1 : length(array)
-     selectedJoints.push_back(array{i});
-end 
+    selectedJoints.push_back(array{i});
+end
 assert(selectedJoints.size == length(array), 'Vector size mismatch');
 end

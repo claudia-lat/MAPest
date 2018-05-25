@@ -16,7 +16,7 @@ end
 
 for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     inpName = upper(pair{1}); % make case insensitive
-
+    
     if any(strcmp(inpName,optionNames))
         % overwrite options. If you want you can test for the right class here
         % Also, if you find out that there is an option you keep getting wrong,
@@ -38,8 +38,8 @@ end
 y(rangeOfRemovedSensors,:) = [];
 priors.Sigmay(rangeOfRemovedSensors, :) = [];
 priors.Sigmay(:, rangeOfRemovedSensors) = [];
-%% 
-% % Set angularVector 
+%%
+% % Set angularVector
 % angVect = [0 0 0];
 % omega  = iDynTree.Vector3();
 % omega.fromMatlab(angVect);
@@ -52,16 +52,16 @@ berdyMatrices.Y     = iDynTree.MatrixDynSize();
 berdyMatrices.b_Y   = iDynTree.VectorDynSize();
 
 berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
-                                 berdyMatrices.b_D,...
-                                 berdyMatrices.Y,...
-                                 berdyMatrices.b_Y);
+    berdyMatrices.b_D,...
+    berdyMatrices.Y,...
+    berdyMatrices.b_Y);
 % Set priors
 mud        = priors.mud;
 Sigmad_inv = sparse(inv(priors.Sigmad));
 SigmaD_inv = sparse(inv(priors.SigmaD));
 Sigmay_inv = sparse(inv(priors.Sigmay));
 
-% Allocate outputs 
+% Allocate outputs
 samples = size(y, 2);
 nrOfDynVariables = berdy.getNrOfDynamicVariables();
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
@@ -86,12 +86,12 @@ for i = 1 : samples
     dq.fromMatlab(state.dq(:,i));
     
     berdy.updateKinematicsFromFloatingBase(q,dq,baseIndex,base_angVel);
-
+    
     berdy.getBerdyMatrices(berdyMatrices.D,...
-                           berdyMatrices.b_D,...
-                           berdyMatrices.Y,...
-                           berdyMatrices.b_Y);        
-                                        
+        berdyMatrices.b_D,...
+        berdyMatrices.Y,...
+        berdyMatrices.b_Y);
+    
     D   = sparse(berdyMatrices.D.toMatlab());
     b_D = berdyMatrices.b_D.toMatlab();
     Y_nonsparse = berdyMatrices.Y.toMatlab();
@@ -100,12 +100,12 @@ for i = 1 : samples
     b_Y = berdyMatrices.b_Y.toMatlab();
     
     b_Y(rangeOfRemovedSensors) = [];
-
+    
     SigmaBarD_inv   = D' * SigmaD_inv * D + Sigmad_inv;
     
     % the permutation matrix for SigmaBarD_inv is computed only for the first
-    % sample, beacuse this matrix does not change in the experiment     
-    if (i==1)  
+    % sample, beacuse this matrix does not change in the experiment
+    if (i==1)
         [~,~,PBarD]= chol(SigmaBarD_inv);
     end
     
@@ -115,7 +115,7 @@ for i = 1 : samples
     Sigma_dgiveny_inv = SigmaBarD_inv + Y' * Sigmay_inv * Y;
     
     % the permutation matrix for Sigma_dgiveny_inv is computed only for the first
-    % sample, beacuse this matrix does not change in the experiment     
+    % sample, beacuse this matrix does not change in the experiment
     if (i==1)
         [~,~,P]= chol(Sigma_dgiveny_inv);
     end
@@ -134,7 +134,7 @@ end
 function [x] = CholSolve(A, b, P)
 % control if A is symmetric
 if (issymmetric(round(A,4)) == 1)
-    C              = P'*A*P;  % P is given as input 
+    C              = P'*A*P;  % P is given as input
     [R]            = chol(C); % R is such that R'*R = P'*C*P
     
     w_forward      = P\b;
@@ -142,6 +142,6 @@ if (issymmetric(round(A,4)) == 1)
     y_forward      = R\z_forward;
     x              = P'\y_forward;
 else
-    error('matrix A is not symmetric')        
-end    
+    error('matrix A is not symmetric')
+end
 end

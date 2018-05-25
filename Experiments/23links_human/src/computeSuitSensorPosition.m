@@ -5,7 +5,7 @@ function [suit] = computeSuitSensorPosition(suit)
 
 % len = suit.properties.lenData;
 len = 10000; % fixed nr of frames useful to capture all the movements done
-             % during the experiment.
+% during the experiment.
 
 quaternion = iDynTree.Vector4();
 G_R_L = iDynTree.Rotation();
@@ -17,28 +17,28 @@ for sIdx = 1: suit.properties.nrOfSensors
     [link, ~] = linksFromName(suit.links, sensor.attachedLink);
     A = zeros(3*len,3);
     b = zeros(3*len,1);
-
+    
     for i = 1 : len
         S1 = skewMatrix(link.meas.angularAcceleration(:,i));
         S2 = skewMatrix(link.meas.angularVelocity(:,i));
-
+        
         quaternion.fromMatlab(link.meas.orientation(:,i));
         G_R_L.fromQuaternion(quaternion);
         G_R_L_mat = G_R_L.toMatlab();
         A(3*i-2:3*i,:) = (S1 + S2*S2) * G_R_L_mat;
-
+        
         G_acc_S = sensor.meas.sensorFreeAcceleration(:,i);
         G_acc_L = link.meas.acceleration(:,i);
-
+        
         b(3*i-2:3*i) = G_acc_S - G_acc_L;
-
+        
         % compute S_R_L = S_R_G x G_R_L
         quaternion.fromMatlab(sensor.meas.sensorOrientation(:,i));
         G_R_S.fromQuaternion(quaternion);
         G_R_S_mat = G_R_S.toMatlab();
         S_R_L = G_R_S_mat' * G_R_L_mat;
         L_R_S = S_R_L' ;
-
+        
         rot.fromMatlab(L_R_S);
         L_RPY_S(i,:) = rot.asRPY.toMatlab(); %RPY in rad
     end
@@ -47,7 +47,7 @@ for sIdx = 1: suit.properties.nrOfSensors
     sensor.origin = B_pos_SL;
     suit.sensors{sIdx}.position = sensor.origin;
     suit.sensors{sIdx}.RPY = mean(L_RPY_S);
-
+    
 end
 end
 

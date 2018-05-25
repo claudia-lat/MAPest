@@ -8,8 +8,8 @@ rng(1); % forcing the casual generator to be const
 format long;
 
 %% Add src to the path
-addpath(genpath('src')); 
-addpath(genpath('templates')); 
+addpath(genpath('src'));
+addpath(genpath('templates'));
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
 
@@ -62,16 +62,16 @@ subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.W
 bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
 if ~exist(bucket.filenameURDF, 'file')
     bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-                                                suit.sensors,...
-                                                'filename',bucket.filenameURDF,...
-                                                'GazeboModel',false);
+        suit.sensors,...
+        'filename',bucket.filenameURDF,...
+        'GazeboModel',false);
 end
 
 %% Create OSIM model
 bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
 if ~exist(bucket.filenameOSIM, 'file')
     bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
-                                                bucket.filenameOSIM);
+        bucket.filenameOSIM);
 end
 
 %% Inverse Kinematic computation
@@ -79,8 +79,8 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
     bucket.trcFile = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
-                                                          bucket.trcFile, ...
-                                                          bucket.setupFile);
+        bucket.trcFile, ...
+        bucket.setupFile);
     % here selectedJoints is the order of the Osim computation.
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
@@ -95,9 +95,9 @@ end
 rawDataHandling;
 
 %% Transform forces into human forces
-% Preliminary assumption on contact links: 2 contacts only (or both feet 
+% Preliminary assumption on contact links: 2 contacts only (or both feet
 % with the shoes or both feet with two force plates)
-bucket.contactLink = cell(2,1); 
+bucket.contactLink = cell(2,1);
 
 % Define contacts configuration
 bucket.contactLink{1} = 'RightFoot'; % human link in contact with RightShoe
@@ -111,9 +111,9 @@ end
 humanModel.filename = bucket.filenameURDF;
 humanModelLoader = iDynTree.ModelLoader();
 if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
-    cell2iDynTreeStringVector(selectedJoints))
-% here the model loads the same order of selectedJoints.
-fprintf('Something wrong with the model loading.')
+        cell2iDynTreeStringVector(selectedJoints))
+    % here the model loads the same order of selectedJoints.
+    fprintf('Something wrong with the model loading.')
 end
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
@@ -147,7 +147,7 @@ disp(strcat('Current base is < ', currentBase,'>.'));
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
 for i = 0 : traversal.getNrOfVisitedLinks() - 1
-    if i ~= 0 
+    if i ~= 0
         joint  = traversal.getParentJoint(i);
         dJointOrder{i} = berdy.model().getJointName(joint.getIndex());
     end
@@ -162,24 +162,24 @@ end
 
 %% Measurements wrapping
 for blockIdx = 1 : block.nrOfBlocks
-      fext.rightHuman = shoes(blockIdx).Right_HF;
-      fext.leftHuman  = shoes(blockIdx).Left_HF;
-
-      data(blockIdx).block = block.labels(blockIdx);
-      data(blockIdx).data  = dataPackaging(blockIdx, ...
-                                           humanModel,...
-                                           humanSensors,...
-                                           suit_runtime,...
-                                           fext,...
-                                           synchroData(blockIdx).ddq,...
-                                           bucket.contactLink);
-      % y vector as input for MAP
-      [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
-                                                                            data(blockIdx).data);
+    fext.rightHuman = shoes(blockIdx).Right_HF;
+    fext.leftHuman  = shoes(blockIdx).Left_HF;
+    
+    data(blockIdx).block = block.labels(blockIdx);
+    data(blockIdx).data  = dataPackaging(blockIdx, ...
+        humanModel,...
+        humanSensors,...
+        suit_runtime,...
+        fext,...
+        synchroData(blockIdx).ddq,...
+        bucket.contactLink);
+    % y vector as input for MAP
+    [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
+        data(blockIdx).data);
 end
 
 % ---------------------------------------------------
-% CHECK: print the order of measurement in y 
+% CHECK: print the order of measurement in y
 % printBerdySensorOrder(berdy);
 % ---------------------------------------------------
 
@@ -231,12 +231,12 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
         estimation(blockIdx).block = block.labels(blockIdx);
         if opts.Sigma_dgiveny
             [estimation(blockIdx).mu_dgiveny, estimation(blockIdx).Sigma_dgiveny] = MAPcomputation_floating(berdy, ...
-                                                                        traversal, ...
-                                                                        synchroData(blockIdx), ...
-                                                                        data(blockIdx).y, ...
-                                                                        priors, ...
-                                                                        bucket.baseAngVel, ...
-                                                                        'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+                traversal, ...
+                synchroData(blockIdx), ...
+                data(blockIdx).y, ...
+                priors, ...
+                bucket.baseAngVel, ...
+                'SENSORS_TO_REMOVE', sensorsToBeRemoved);
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
             % cannot be saved! therefore once computed it is necessary to extract data
@@ -244,12 +244,12 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
             % TODO: extractSigmaOfEstimatedVariables
         else
             [estimation(blockIdx).mu_dgiveny] = MAPcomputation_floating(berdy, ...
-                                                                        traversal, ...
-                                                                        synchroData(blockIdx), ...
-                                                                        data(blockIdx).y, ...
-                                                                        priors, ...
-                                                                        bucket.baseAngVel, ...
-                                                                        'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+                traversal, ...
+                synchroData(blockIdx), ...
+                data(blockIdx).y, ...
+                priors, ...
+                bucket.baseAngVel, ...
+                'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         end
     end
     save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');

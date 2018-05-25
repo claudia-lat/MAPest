@@ -13,7 +13,7 @@ for i = 1 : size(sensorOrder,2)
     
     type = currentInfo.type;
     typeStr = '';
-    switch(type) 
+    switch(type)
         case iDynTree.SIX_AXIS_FORCE_TORQUE_SENSOR
             typeStr = 'Int_Wrench_sensor       ';
         case iDynTree.ACCELEROMETER_SENSOR
@@ -22,7 +22,7 @@ for i = 1 : size(sensorOrder,2)
             typeStr= 'Gyroscope                ';
         case iDynTree.DOF_ACCELERATION_SENSOR
             typeStr = 'JointAcceleration_sensor';
-        case iDynTree.DOF_TORQUE_SENSOR 
+        case iDynTree.DOF_TORQUE_SENSOR
             typeStr = 'JointTorque_sensor      ';
         case iDynTree.NET_EXT_WRENCH_SENSOR
             typeStr = 'Ext_wrench_sensor       ';
@@ -32,6 +32,6 @@ for i = 1 : size(sensorOrder,2)
     range = currentInfo.range;
     
     fprintf('[%d]Var type %s - id %s -- (idx-length) = (%d-%d)\n', i, typeStr,...
-             currentInfo.id, range.offset, range.size);
+        currentInfo.id, range.offset, range.size);
 end
 end

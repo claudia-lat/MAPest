@@ -50,13 +50,13 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.label = mvnxData.segments.segment(i).ATTRIBUTE.label;
     suit.links{i}.meas = struct;
     suit.links{i}.meas.orientation         = zeros(4, suit.properties.lenData);
-%    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %not used in JSI analysis
-%    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %not used in JSI analysis
+    %    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %not used in JSI analysis
+    %    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %not used in JSI analysis
     suit.links{i}.meas.acceleration        = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularVelocity     = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularAcceleration = zeros(3, suit.properties.lenData);
     suit.links{i}.points                   = struct;
-    suit.links{i}.points.nrOfPoints        = size(mvnxData.segments.segment(i).points.point,1); 
+    suit.links{i}.points.nrOfPoints        = size(mvnxData.segments.segment(i).points.point,1);
     suit.links{i}.points.pointsValue       = zeros(3,suit.links{i}.points.nrOfPoints);
     for k = 1 : suit.links{i}.points.nrOfPoints
         suit.links{i}.points.label(1,k) = cellstr(mvnxData.segments.segment(i).points.point(k).ATTRIBUTE.label);
@@ -75,10 +75,10 @@ end
 suit.sensors = cell(suit.properties.nrOfSensors,1);
 for i = 1 : suit.properties.nrOfSensors
     suit.sensors{i}.label                      = mvnxData.sensors.sensor(i).ATTRIBUTE.label;
-    suit.sensors{i}.attachedLink               = suit.sensors{i}.label; % assumption: the label of the sensor is the same one of the link on which the sensor is attached  
+    suit.sensors{i}.attachedLink               = suit.sensors{i}.label; % assumption: the label of the sensor is the same one of the link on which the sensor is attached
     suit.sensors{i}.meas.sensorOrientation     = zeros(4, suit.properties.lenData);
     suit.sensors{i}.meas.sensorFreeAcceleration = zeros(3, suit.properties.lenData);
-%     suit.sensors{i}.meas.sensorMagneticField    = zeros(3, suit.properties.lenData); %not used in JSI analysis
+    %     suit.sensors{i}.meas.sensorMagneticField    = zeros(3, suit.properties.lenData); %not used in JSI analysis
 end
 
 %% Fill the struct with recording data
@@ -96,11 +96,11 @@ end
 
 segmentList = cell(suit.properties.nrOfLinks,1);
 for suitLinkIdx = 1 : suit.properties.nrOfLinks
-segmentList{suitLinkIdx,1} = tmp.dummyParsedMatrix{1, 1}{suitLinkIdx+1, 1};
+    segmentList{suitLinkIdx,1} = tmp.dummyParsedMatrix{1, 1}{suitLinkIdx+1, 1};
 end
 sensorList = cell(suit.properties.nrOfSensors,1);
 for suitSensorIdx = 1 : suit.properties.nrOfSensors
-sensorList{suitSensorIdx,1} = tmp.dummyParsedMatrix{1, 1}{suitSensorIdx+1, 1};
+    sensorList{suitSensorIdx,1} = tmp.dummyParsedMatrix{1, 1}{suitSensorIdx+1, 1};
 end
 % --------CALIBRATION
 % calibration data obtained from XML file
@@ -111,7 +111,7 @@ for frameIdx = 1 : nrOfCalibFrames
     % identity FIELD
     if (strcmp(mvnxData.frames.frame(frameIdx).ATTRIBUTE.type, 'identity'))
         suit.calibration.identity             = struct;
-%       suit.calibration.identity.index       = -3;
+        %       suit.calibration.identity.index       = -3;
         suit.calibration.identity.orientation = zeros(4, suit.properties.nrOfLinks);
         suit.calibration.identity.position    = zeros(3, suit.properties.nrOfLinks);
         for i = 1 : suit.properties.nrOfLinks
@@ -123,7 +123,7 @@ for frameIdx = 1 : nrOfCalibFrames
     % Tpose FIELD
     if (strcmp(mvnxData.frames.frame(frameIdx).ATTRIBUTE.type, 'tpose'))
         suit.calibration.tpose             = struct;
-%       suit.calibration.tpose.index       = -2;
+        %       suit.calibration.tpose.index       = -2;
         suit.calibration.tpose.orientation = zeros(4, suit.properties.nrOfLinks);
         suit.calibration.tpose.position    = zeros(3, suit.properties.nrOfLinks);
         for i = 1 : suit.properties.nrOfLinks
@@ -135,7 +135,7 @@ for frameIdx = 1 : nrOfCalibFrames
     % Tpose-isb FIELD
     if (strcmp(mvnxData.frames.frame(frameIdx).ATTRIBUTE.type, 'tpose-isb'))
         suit.calibration.tpose_isb             = struct;
-%       suit.calibration.tpose_isb.index       = -1;
+        %       suit.calibration.tpose_isb.index       = -1;
         suit.calibration.tpose_isb.orientation = zeros(4, suit.properties.nrOfLinks);
         suit.calibration.tpose_isb.position    = zeros(3, suit.properties.nrOfLinks);
         for i = 1 : suit.properties.nrOfLinks
@@ -151,10 +151,10 @@ if ~isempty(suit.time)
     for frameIdx = 1 : nrOfFrames
         for labelIdx = 1 : lenCSVlabel
             if (strcmp(mvnxDataFromCSV.orderedLabel{labelIdx,1}, 'msTime'))
-               suit.time.ms = mvnxDataFromCSV.data(:,labelIdx)';
+                suit.time.ms = mvnxDataFromCSV.data(:,labelIdx)';
             end
             if (strcmp(mvnxDataFromCSV.orderedLabel{labelIdx,1}, 'xSensTime'))
-               suit.time.xSens = mvnxDataFromCSV.data(:,labelIdx)';
+                suit.time.xSens = mvnxDataFromCSV.data(:,labelIdx)';
             end
         end
     end
@@ -186,22 +186,22 @@ tmp.link.angularAcceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1
 tmp.link.angularAcceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
 for i = 1 : 3*(suit.properties.nrOfLinks)
-        tmp.link.acceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)), 1};
-        tmp.link.acceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)));
-
-        tmp.link.angularVelocity.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)), 1};
-        tmp.link.angularVelocity.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)));
-
-        tmp.link.angularAcceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)), 1};
-        tmp.link.angularAcceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)));
+    tmp.link.acceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.acceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)));
+    
+    tmp.link.angularVelocity.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.angularVelocity.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)));
+    
+    tmp.link.angularAcceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.angularAcceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)));
 end
 % (23x4 variables)
 tmp.link.orientation.orderedLabel = cell(4*(suit.properties.nrOfLinks),1);
 tmp.link.orientation.data = zeros(nrOfFrames,4*(suit.properties.nrOfLinks));
 
 for i = 1 : 4*(suit.properties.nrOfLinks)
-        tmp.link.orientation.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxOr - 4*(suit.properties.nrOfLinks)), 1};
-        tmp.link.orientation.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxOr - 4*(suit.properties.nrOfLinks)));
+    tmp.link.orientation.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxOr - 4*(suit.properties.nrOfLinks)), 1};
+    tmp.link.orientation.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxOr - 4*(suit.properties.nrOfLinks)));
 end
 %--SENSORS
 for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
@@ -216,15 +216,15 @@ end
 tmp.sensor.orientation.orderedLabel = cell(4*(suit.properties.nrOfSensors),1);
 tmp.sensor.orientation.data = zeros(nrOfFrames,4*(suit.properties.nrOfSensors));
 for i = 1 : 4*(suit.properties.nrOfSensors)
-        tmp.sensor.orientation.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxSensOr - 4*(suit.properties.nrOfSensors)), 1};
-        tmp.sensor.orientation.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxSensOr - 4*(suit.properties.nrOfSensors)));
+    tmp.sensor.orientation.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxSensOr - 4*(suit.properties.nrOfSensors)), 1};
+    tmp.sensor.orientation.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxSensOr - 4*(suit.properties.nrOfSensors)));
 end
 % (17x3 variables)
 tmp.sensor.freeAcceleration.orderedLabel = cell(3*(suit.properties.nrOfSensors),1);
 tmp.sensor.freeAcceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfSensors));
 for i = 1 : 3*(suit.properties.nrOfSensors)
-        tmp.sensor.freeAcceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxSensFreeAcc - 3*(suit.properties.nrOfSensors)), 1};
-        tmp.sensor.freeAcceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxSensFreeAcc - 3*(suit.properties.nrOfSensors)));
+    tmp.sensor.freeAcceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxSensFreeAcc - 3*(suit.properties.nrOfSensors)), 1};
+    tmp.sensor.freeAcceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxSensFreeAcc - 3*(suit.properties.nrOfSensors)));
 end
 %--------FROM TMP TO SUIT
 %--LINKS
@@ -244,71 +244,71 @@ for suitLinkIdx = 1 : size(suit.links,1)
             break;
         end
     end
-    suit.links{suitLinkIdx}.meas.orientation = tmp.link.orientation.data(:,tmpIndex:tmpIndex+3)'; 
-
-% !!!!!!!!!!!!!!!! PART TO BE VERIFIED !!!!!!!!!!!!!!!!!!!
-%     currentOrientation = tmp.link.orientation.data(:,tmpIndex:tmpIndex+3)';
-%     %----------------------------------------------------------------------
-%     % IMPORTANT NOTE:
-%     % ---------------
-%     % In general, mvnxData are expressed in Tpose (Fig.60 of manual) with
-%     % the exception of mvnxData.subject.frames.frame.orientation that is
-%     % expressed in a frame (defined 'anatomical') wrt to G.  Please note
-%     % that this anatomical pose A is neither T pose or N pose.
-%     % From data, by using the quaternion as rotation matrix form,
-%     % we have: G_R_A;  we would like to have G_R_T., i.e:
-%     %                    G_R_T =  G_R_A x A_R_T.
-%     %----------------------------------------------------------------------
-% %     if isempty(suit.links{suitLinkIdx}.meas.orientation)
-%         for tmpIdx = 1 : nrOfFrames
-%             %temporary variables
-%             quaternion = iDynTree.Vector4();
-%             rotation   = iDynTree.Rotation();
-%             % get G_R_A matrix from quaternion data
-%             quaternion.fromMatlab(currentOrientation(:,tmpIdx));
-%             rotation.fromQuaternion(quaternion);
-%             G_R_A(:,:,suitLinkIdx) = rotation.toMatlab;
-%             % compute T_R_A using Npose field
-%             quaternion.fromMatlab(suit.calibration.identity.orientation(:,suitLinkIdx));
-%             rotation.fromQuaternion(quaternion);
-%             T_R_A(:,:,suitLinkIdx) = rotation.toMatlab;
-%             % compute A_R_T
-%             A_R_T(:,:,suitLinkIdx) = T_R_A(:,:,suitLinkIdx)';
-%             % compute G_R_T
-%             G_Rot_T(:,:,suitLinkIdx) = G_R_A(:,:,suitLinkIdx) * A_R_T(:,:,suitLinkIdx);
-%             % re-transform G_R_T in quaternion
-%             rotation.fromMatlab(G_Rot_T(:,:,suitLinkIdx));
-%             G_q_T = rotation.asQuaternion();
-%         %
-%         %         % ====test RPY
-%         %         if j == 4998  %Tpose position
-%         %         G_RPY_T(i,:) = rotation.asRPY.toMatlab() / pi * 180;
-%         %         else
-%         %             break
-%         %         end
-%         %         % ===========
-%
-%         %         suit.links{i}.meas.orientation(:,j)         = G_q_T.toMatlab();
-%             suit.links{suitLinkIdx}.meas.orientation(:,tmpIdx) = G_q_T.toMatlab();
-%         end
-% %     end
+    suit.links{suitLinkIdx}.meas.orientation = tmp.link.orientation.data(:,tmpIndex:tmpIndex+3)';
+    
+    % !!!!!!!!!!!!!!!! PART TO BE VERIFIED !!!!!!!!!!!!!!!!!!!
+    %     currentOrientation = tmp.link.orientation.data(:,tmpIndex:tmpIndex+3)';
+    %     %----------------------------------------------------------------------
+    %     % IMPORTANT NOTE:
+    %     % ---------------
+    %     % In general, mvnxData are expressed in Tpose (Fig.60 of manual) with
+    %     % the exception of mvnxData.subject.frames.frame.orientation that is
+    %     % expressed in a frame (defined 'anatomical') wrt to G.  Please note
+    %     % that this anatomical pose A is neither T pose or N pose.
+    %     % From data, by using the quaternion as rotation matrix form,
+    %     % we have: G_R_A;  we would like to have G_R_T., i.e:
+    %     %                    G_R_T =  G_R_A x A_R_T.
+    %     %----------------------------------------------------------------------
+    % %     if isempty(suit.links{suitLinkIdx}.meas.orientation)
+    %         for tmpIdx = 1 : nrOfFrames
+    %             %temporary variables
+    %             quaternion = iDynTree.Vector4();
+    %             rotation   = iDynTree.Rotation();
+    %             % get G_R_A matrix from quaternion data
+    %             quaternion.fromMatlab(currentOrientation(:,tmpIdx));
+    %             rotation.fromQuaternion(quaternion);
+    %             G_R_A(:,:,suitLinkIdx) = rotation.toMatlab;
+    %             % compute T_R_A using Npose field
+    %             quaternion.fromMatlab(suit.calibration.identity.orientation(:,suitLinkIdx));
+    %             rotation.fromQuaternion(quaternion);
+    %             T_R_A(:,:,suitLinkIdx) = rotation.toMatlab;
+    %             % compute A_R_T
+    %             A_R_T(:,:,suitLinkIdx) = T_R_A(:,:,suitLinkIdx)';
+    %             % compute G_R_T
+    %             G_Rot_T(:,:,suitLinkIdx) = G_R_A(:,:,suitLinkIdx) * A_R_T(:,:,suitLinkIdx);
+    %             % re-transform G_R_T in quaternion
+    %             rotation.fromMatlab(G_Rot_T(:,:,suitLinkIdx));
+    %             G_q_T = rotation.asQuaternion();
+    %         %
+    %         %         % ====test RPY
+    %         %         if j == 4998  %Tpose position
+    %         %         G_RPY_T(i,:) = rotation.asRPY.toMatlab() / pi * 180;
+    %         %         else
+    %         %             break
+    %         %         end
+    %         %         % ===========
+    %
+    %         %         suit.links{i}.meas.orientation(:,j)         = G_q_T.toMatlab();
+    %             suit.links{suitLinkIdx}.meas.orientation(:,tmpIdx) = G_q_T.toMatlab();
+    %         end
+    % %     end
 end
 %--SENSORS
 for suitSensorIdx = 1 : size(suit.sensors,1)
-   for j = 1:4*(suit.properties.nrOfSensors) % for sensor orientation
+    for j = 1:4*(suit.properties.nrOfSensors) % for sensor orientation
         if (contains(tmp.sensor.orientation.orderedLabel{j, 1}, suit.sensors{suitSensorIdx, 1}.label))
             tmpIndex = j;
             break;
         end
-   end
-   suit.sensors{suitSensorIdx}.meas.sensorOrientation = tmp.sensor.orientation.data(:,tmpIndex:tmpIndex+3)';
-   for j = 1:3*(suit.properties.nrOfSensors) % for sensor freeAcc
+    end
+    suit.sensors{suitSensorIdx}.meas.sensorOrientation = tmp.sensor.orientation.data(:,tmpIndex:tmpIndex+3)';
+    for j = 1:3*(suit.properties.nrOfSensors) % for sensor freeAcc
         if (contains(tmp.sensor.freeAcceleration.orderedLabel{j, 1}, suit.sensors{suitSensorIdx, 1}.label))
             tmpIndex = j;
             break;
         end
-   end
-   suit.sensors{suitSensorIdx}.meas.sensorFreeAcceleration = tmp.sensor.freeAcceleration.data(:,tmpIndex:tmpIndex+2)';
+    end
+    suit.sensors{suitSensorIdx}.meas.sensorFreeAcceleration = tmp.sensor.freeAcceleration.data(:,tmpIndex:tmpIndex+2)';
 end
 
 %% Cleaning-up workspace

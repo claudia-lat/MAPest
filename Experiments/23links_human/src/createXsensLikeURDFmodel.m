@@ -26,7 +26,7 @@ end
 
 for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     inpName = upper(pair{1}); % make case insensitive
-
+    
     if any(strcmp(inpName,optionNames))
         % overwrite options. If you want you can test for the right class here
         % Also, if you find out that there is an option you keep getting wrong,
@@ -42,7 +42,7 @@ fileUrdfName = 'XSensModelStyle_URDFtemplate.urdf';
 urdfModelTemplate = fileread(fileUrdfName);
 %% Check sensor existence
 if exist('sensors', 'var')
-   fileID = fopen(fileUrdfName, 'w');
+    fileID = fopen(fileUrdfName, 'w');
     for i = 1 : size(sensors,1)
         fprintf(fileID,sprintf('<!-- Sensor % d-->\n',i));
         fprintf(fileID,sprintf('<sensor name="%s_gyro" type="gyroscope">\n',sensors{i, 1}.label));

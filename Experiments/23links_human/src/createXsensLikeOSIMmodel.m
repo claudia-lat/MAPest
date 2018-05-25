@@ -1,13 +1,13 @@
 function [osimModelTemplate] = createXsensLikeOSIMmodel(subjectParams, filename)
-%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. Joints of 
-% the OSIM model are spherical joints.  The base of the model (pelvis) is 
+%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. Joints of
+% the OSIM model are spherical joints.  The base of the model (pelvis) is
 % defined as floating base.
 %
-% Inputs : 
+% Inputs :
 % -  subjectParams  : anthropometric parameters;
-% -  filename       : (optional) allows to save the file.osim in a folder 
-%                      called 'Models'.  
-    
+% -  filename       : (optional) allows to save the file.osim in a folder
+%                      called 'Models'.
+
 osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate.osim');
 %% -- LINK BASE
 %% PELVIS (solid: box)
@@ -327,8 +327,8 @@ if nargin == 2
     if ~exist(dir,'dir')
         mkdir(dir);
     end
-fileID = fopen(filename,'w');
-fprintf(fileID,'%s', osimModelTemplate);
-fclose(fileID);
+    fileID = fopen(filename,'w');
+    fprintf(fileID,'%s', osimModelTemplate);
+    fclose(fileID);
 end
 end

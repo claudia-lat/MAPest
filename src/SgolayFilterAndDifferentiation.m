@@ -1,6 +1,6 @@
 function [smooth, varargout] = SgolayFilterAndDifferentiation(polynOrder,window,a, varargin)
-% SGOLAYFILTERANDDIFFERENTIATION computes the smmothing, first order and 
-% second order derivation of a signal using SgolayFilt choosing properly 
+% SGOLAYFILTERANDDIFFERENTIATION computes the smmothing, first order and
+% second order derivation of a signal using SgolayFilt choosing properly
 % the polynomial order and the size of the moving window.
 % It computes a diffCoeff matrix of (polynomialOrder-1) columns where:
 % - ( ,1)                 --> coefficient for S-Golay as smoother;

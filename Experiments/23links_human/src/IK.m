@@ -24,8 +24,8 @@ delete(outputMotionFilename);
 %% Create a joint name vector ordered as in OSIM
 selectedJoints = cell(size(motionData.colheaders,2)-7,1);
 for i = 8 : size(motionData.colheaders,2)
-      selectedJoints{i-7} = motionData.colheaders{i};
-end 
+    selectedJoints{i-7} = motionData.colheaders{i};
+end
 % 8 is the column from which starting to select joints. Column 1 (time) and
 % columns from 2 to 7 (ground joints) will be discarded. We decide here
 % what will be the order of joints because this order will be passed to the
@@ -37,7 +37,7 @@ Sg.samplingTime = 1/240; % 240Hz is the frame rate of Xsens data.
 Sg.polinomialOrder = 3;
 Sg.window = 57;
 %[Sg.time, ~] = angleFromName(motionData, 'time');
-state.q  = zeros(size(motionData.data,2)-7, size(motionData.data,1)); 
+state.q  = zeros(size(motionData.data,2)-7, size(motionData.data,1));
 state.dq = zeros(size(state.q));
 ddq      = zeros(size(state.q));
 
