@@ -103,18 +103,15 @@ end
 
 %% Transform the sensorFreeAcceleration of MVNX2018 into the oldest version
 if ~exist(fullfile(bucket.pathToProcessedData,'suit_runtime.mat'), 'file')
-    quaternion = iDynTree.Vector4();
-    G_R_S = iDynTree.Rotation();
     gravity = [0; 0; -9.81];
     for sensIdx = 1: size(suit.sensors,1)
         for blockIdx = 1 : block.nrOfBlocks
             len = size(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation,2);
             for lenIdx = 1 : len
-                quaternion.fromMatlab(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(:,lenIdx));
-                G_R_S.fromQuaternion(quaternion);
+                G_R_S = quat2Mat(suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOrientation(:,lenIdx));% fromQuaternion(quaternion);
                 % Transformation:        S_a_old = S_R_G * (G_a_new - gravity)
                 suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorOldAcceleration(:,lenIdx) = ...
-                    (G_R_S.toMatlab())' * (suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration(:,lenIdx) - gravity);
+                    transpose(G_R_S) * (suit_runtime.sensors{sensIdx, 1}.meas(blockIdx).sensorFreeAcceleration(:,lenIdx) - gravity);
             end
         end
     end
