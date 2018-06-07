@@ -142,14 +142,14 @@ clearvars human_state_tmp human_ddq_tmp;
 
 % Cutting (when needed) signals
 for blockIdx = 1 : block.nrOfBlocks
-     tmp.length = size(masterFile.Subject.FS(blockIdx).Measurement,1);
-     for j = 1 : tmp.length
+     tmp.lengthFS = size(masterFile.Subject.FS(blockIdx).Measurement,1);
+     for j = 1 : tmp.lengthFS
           if (timestampTable(blockIdx).masterfileNewTimeRT(1) - masterFile.Subject.FS(blockIdx).TimeRT(j) < 0.01)
-              tmp.idx(blockIdx) = j;
+              tmp.idxFS(blockIdx) = j;
               break;
           end
      end
-     tmp.ftShoes.cutRange = (tmp.idx(blockIdx) : size(masterFile.Subject.FS(blockIdx).Measurement,1));
+     tmp.ftShoes.cutRange = (tmp.idxFS(blockIdx) : size(masterFile.Subject.FS(blockIdx).Measurement,1));
      if tmp.ftShoes.cutRange(1) ~= 1
         tmp.ftShoes.cut(blockIdx).RightShoe = masterFile.Subject.FS(blockIdx).FS1(tmp.ftShoes.cutRange,:);
         tmp.ftShoes.cut(blockIdx).LeftShoe  = masterFile.Subject.FS(blockIdx).FS2(tmp.ftShoes.cutRange,:);
@@ -174,8 +174,37 @@ for blockIdx = 1 : block.nrOfBlocks
     end
 end
 
-%% forcePlates Interpolation
-% to be done
+%% Forceplates Interpolation
+% The total force is outputted as a single value.
+
+% Cutting (when needed) signals
+for blockIdx = 1 : block.nrOfBlocks
+     tmp.lengthFP = size(masterFile.Subject.FP(blockIdx).Measurement,1);
+     for j = 1 : tmp.lengthFP
+          if (timestampTable(blockIdx).masterfileNewTimeRT(1) - masterFile.Subject.FP(blockIdx).TimeRT(j) < 0.001)
+              tmp.idxFP(blockIdx) = j;
+              break;
+          end
+     end
+     tmp.fp.cutRange = (tmp.idxFP(blockIdx) : size(masterFile.Subject.FP(blockIdx).Measurement,1));
+     if tmp.fp.cutRange(1) ~= 1
+        tmp.fp.cut(blockIdx).fpTot   = masterFile.Subject.FP(blockIdx).FPC(tmp.fp.cutRange,:);
+        tmp.fp.cut(blockIdx).timeRT  = masterFile.Subject.FP(blockIdx).TimeRT(tmp.fp.cutRange,:);
+     else
+        tmp.fp.cut(blockIdx).fpTot   = masterFile.Subject.FP(blockIdx).FPC;
+        tmp.fp.cut(blockIdx).timeRT  = masterFile.Subject.FP(blockIdx).TimeRT;
+     end
+end
+
+% Interpolation
+% SF = sensor frame
+for blockIdx = 1 : block.nrOfBlocks
+    for i = 1 : 8
+        synchroData(blockIdx).FP_SF(:,i) = interp1(tmp.fp.cut(blockIdx).timeRT, ...
+                                                 tmp.fp.cut(blockIdx).fpTot(:,i), ...
+                                                 timestampTable(blockIdx).masterfileNewTimeRT);
+    end
+end
 
 %% Cleaning up workspace
 clearvars tmp timestampTable;
