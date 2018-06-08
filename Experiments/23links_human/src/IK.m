@@ -1,4 +1,4 @@
-function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, frameRate)
+function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, frameRate, motFilename)
 %I K function computes the Inverse Kinematics computation by using the
 % OpenSim API.  After computing q angles, it uses  Savitzi-Golay for
 % obtaining dq and ddq.  Outputs: state and ddq are in radians.
@@ -12,14 +12,15 @@ ikTool = InverseKinematicsTool(setupFile);
 % subject info are set manually:
 ikTool.setModel(osimModel);
 ikTool.setMarkerDataFileName(filenameTrc);
-outputMotionFilename = tempname;
+outputMotionFilename = motFilename;
 ikTool.setOutputMotionFileName(outputMotionFilename);
-ikTool.run();
+if ~exist(outputMotionFilename, 'file')
+    ikTool.run();
+end
 
 %% Extract data from motion file.mot
-% motionFile = fileread('./data/subject1_bowingtask.mot');
 motionData = importdata(outputMotionFilename);
-delete(outputMotionFilename);
+% delete(outputMotionFilename);
 
 %% Create a joint name vector ordered as in OSIM
 selectedJoints = cell(size(motionData.colheaders,2)-7,1);
