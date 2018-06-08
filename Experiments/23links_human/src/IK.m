@@ -1,4 +1,4 @@
-function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile)
+function [ state, ddq, selectedJoints ] = IK(filenameOsimModel, filenameTrc, setupFile, frameRate)
 %I K function computes the Inverse Kinematics computation by using the
 % OpenSim API.  After computing q angles, it uses  Savitzi-Golay for
 % obtaining dq and ddq.  Outputs: state and ddq are in radians.
@@ -33,7 +33,7 @@ end
 
 %% Savitzi-Golay computation
 % set Sg parameters
-Sg.samplingTime = 1/240; % 240Hz is the frame rate of Xsens data.
+Sg.samplingTime = 1/frameRate;
 Sg.polinomialOrder = 3;
 Sg.window = 57;
 %[Sg.time, ~] = angleFromName(motionData, 'time');
