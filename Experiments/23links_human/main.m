@@ -79,7 +79,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
     bucket.trcFile   = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     bucket.motFile   = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.mot',subjectID,taskID));
-    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
+    [human_state_tmp, human_ddq_tmp, selectedJoints, groundBasePose] = IK(bucket.filenameOSIM, ...
         bucket.trcFile, ...
         bucket.setupFile, ...
         suit.properties.frameRate, ...
@@ -88,10 +88,12 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
+    save(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'),'groundBasePose');
 else
     load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
+    load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
 end
 
 %% Raw data handling
