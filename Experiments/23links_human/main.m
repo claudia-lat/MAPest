@@ -99,6 +99,13 @@ end
 %% Raw data handling
 rawDataHandling;
 
+%% Save synchroData with the kinematics infos
+if ~exist(fullfile(bucket.pathToProcessedData,'synchroKin.mat'), 'file')
+    fieldsToBeRemoved = {'RightShoe_SF','LeftShoe_SF','FP_SF'};
+    synchroKin = rmfield(synchroData,fieldsToBeRemoved);
+    save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
+end
+
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet
 % with the shoes or both feet with two force plates)

@@ -1,11 +1,5 @@
 
 %% Kinematics info extraction
-if ~exist(fullfile(bucket.pathToProcessedData,'synchroKin.mat'), 'file')
-    fieldsToBeRemoved = {'RightShoe_SF','LeftShoe_SF','FP_SF'};
-    synchroKin = rmfield(synchroData,fieldsToBeRemoved);
-    save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
-end
-
 pathToKinFolder = fullfile(bucket.datasetRoot,'kinInfo');
 if ~exist(pathToKinFolder,'dir')
     mkdir(pathToKinFolder);
