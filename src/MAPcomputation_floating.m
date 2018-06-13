@@ -133,7 +133,7 @@ end
 
 function [x] = CholSolve(A, b, P)
 % control if A is symmetric
-if (issymmetric(round(A,4)) == 1)
+if (issymmetric(round(A,3)) == 1)
     C              = P'*A*P;  % P is given as input
     [R]            = chol(C); % R is such that R'*R = P'*C*P
     
