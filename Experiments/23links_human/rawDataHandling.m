@@ -207,4 +207,4 @@ for blockIdx = 1 : block.nrOfBlocks
 end
 
 %% Cleaning up workspace
-clearvars tmp timestampTable;
+clearvars timestampTable;
