@@ -9,7 +9,7 @@ mu_dgiveny_berdy.resize(berdy.getNrOfDynamicVariables());
 q_berdy.resize(size(synchroData(1).q,1));
 tau_berdy.resize(size(synchroData(1).q,1));
 
-computedTauFromBerdy = struct;
+% estimatedTauFromBerdy = struct;
 for blockIdx = 1 : block.nrOfBlocks
     nrOfSamples  = size(data(blockIdx).y, 2);
     tau_vector = zeros(size(synchroData(blockIdx).q));
@@ -21,6 +21,6 @@ for blockIdx = 1 : block.nrOfBlocks
         berdy.extractJointTorquesFromDynamicVariables(mu_dgiveny_berdy,q_berdy, tau_berdy);
         tauFromBerdy(:,i) = tau_berdy.toMatlab();
     end
-    computedTauFromBerdy(blockIdx).label  = selectedJoints;
-    computedTauFromBerdy(blockIdx).values = tauFromBerdy;
+    estimatedVariables.tau(blockIdx).label  = selectedJoints;
+    estimatedVariables.tau(blockIdx).values = tauFromBerdy;
 end

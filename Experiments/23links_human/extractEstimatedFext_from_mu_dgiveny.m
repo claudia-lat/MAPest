@@ -1,18 +1,17 @@
-% % % Script to extract the estimated external wrenches by MAP.
 
+% Script to extract the estimated external wrenches by MAP.
 bucket.nrOfLinks = size(dVectorOrder,1);
-computedFext = struct;
 range = zeros(bucket.nrOfLinks,1);
 
 for blockIdx = 1 : block.nrOfBlocks
-    computedFext(blockIdx).label  = dVectorOrder;
+    estimatedVariables.Fext(blockIdx).label  = dVectorOrder;
     
     nrOfSamples  = size(data(blockIdx).y, 2);
-    computedFext(blockIdx).values = zeros(6*size(dVectorOrder,1), nrOfSamples);
+    estimatedVariables.Fext(blockIdx).values = zeros(6*size(dVectorOrder,1), nrOfSamples);
     for i = 1 : bucket.nrOfLinks
         range(i,1) = (rangeOfDynamicVariable(berdy, iDynTree.NET_EXT_WRENCH, dVectorOrder{i}));
         tmpRange = range(i,1) : range(i,1)+5;
-        computedFext(blockIdx).values(6*(i-1)+1:6*i,:) = ...
+        estimatedVariables.Fext(blockIdx).values(6*(i-1)+1:6*i,:) = ...
             estimation(blockIdx).mu_dgiveny(tmpRange,:);
     end
 end

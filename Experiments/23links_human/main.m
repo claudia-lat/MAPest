@@ -245,18 +245,14 @@ else
     load(fullfile(bucket.pathToProcessedData,'estimation.mat'));
 end
 
-%% Variables extraction
-% torques
-if ~exist(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'), 'file')
-    extractTauFromBerdy
-    save(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'),'computedTauFromBerdy');
+%% Variables extraction from MAP estimation
+% estimatedVariables = struct;
+if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
+    % torque extraction
+    extractEstimatedTau_from_mu_dgiveny   % extraction via Berdy
+    % fext extraction
+    extractEstimatedFext_from_mu_dgiveny  % manual (no Berdy) extraction
+    save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
-    load(fullfile(bucket.pathToProcessedData,'computedTauFromBerdy.mat'));
-end
-% external forces
-if ~exist(fullfile(bucket.pathToProcessedData,'computedFext.mat'), 'file')
-    extractFext
-    save(fullfile(bucket.pathToProcessedData,'computedFext.mat'),'computedFext');
-else
-    load(fullfile(bucket.pathToProcessedData,'computedFext.mat'));
+    load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
