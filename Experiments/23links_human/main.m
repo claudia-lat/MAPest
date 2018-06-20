@@ -256,3 +256,26 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
 else
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
+
+%% Simulated y
+% This section is useful to compare the measurements in the y vector and
+% the results of the MAP.  Note: you cannot compare directly the results of
+% the MAP (i.e., mu_dgiveny) with the measurements in the y vector but you
+% have to pass through the y_sim and only later to compare y and y_sim.
+if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
+    for blockIdx = 1 : block.nrOfBlocks
+        [estimation(blockIdx).y_sim] = sim_y_floating(berdy, ...
+            synchroData(blockIdx), ...
+            traversal, ...
+            bucket.baseAngVel, ...
+            estimation(blockIdx).mu_dgiveny);
+    end
+    save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
+else
+    load(fullfile(bucket.pathToProcessedData,'y_sim.mat'));
+end
+
+%% Variables extraction from y_sim
+if ~isfield(y_sim,'Fext_RightFoot')
+    extractFext_from_y_sim
+end
