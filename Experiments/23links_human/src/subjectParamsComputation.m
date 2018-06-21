@@ -64,7 +64,7 @@ subjectParams.L5BoxOrigin = 0.5 * [0, 0, L5_z] ;%wrt jL5S1
 subjectParams.L5Mass       = 0.102 * M;
 subjectParams.L5Ixx        = (subjectParams.L5Mass/12) * (L5_y^2 + L5_z^2);
 subjectParams.L5Iyy        = (subjectParams.L5Mass/12) * (L5_z^2 + L5_x^2);
-subjectParams.L5Izz        = (subjectParams.L5Mass/12) * (L5_x^2 * L5_y^2);
+subjectParams.L5Izz        = (subjectParams.L5Mass/12) * (L5_x^2 + L5_y^2);
 % markers
 [subjectParams.pL5SpinalProcess, ~] = pointsFromName(L5_struct.points, 'pL5SpinalProcess');
 %% L3
