@@ -200,17 +200,7 @@ sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 
 %% Angular velocity
-% related to the chosen current base and to use it into the MAP
-% computation.
-bucket.baseAngVel = [0 0 0]; % forced to be zero, acceptable hp for this task.
-% NOTE: we do not have this info anymore from sensors!
-
-% for i = 1 : length(suit_downsampled.sensors)
-%     if strcmp(suit_downsampled.sensors{i, 1}.label, currentBase)
-%         bucket.baseAngVel = suit_downsampled.sensors{i, 1}.meas.sensorAngularVelocity;
-%         break;
-%     end
-% end
+computeBaseAngularVelocity;
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
