@@ -65,9 +65,9 @@ for blockIdx = 1 : block.nrOfBlocks
         % know that the z component is pointing up.
         
         % RightHand
-        G_fext_y_sim_RH_tmp(:,blockLenIdx) = suit_test.links{11, 1}.meas(blockIdx).G_R_L{blockLenIdx} * L_R_S_RH * y_sim(blockIdx).Fext_RightHand(1:3,blockLenIdx);
+        G_fext_y_sim_RH_tmp(:,blockLenIdx) = suit_test.links{11, 1}.meas(blockIdx).G_R_L{blockLenIdx} * L_R_S_RH * y_sim(blockIdx).FextSim_RightHand(1:3,blockLenIdx);
         % Left Hand
-        G_fext_y_sim_LH_tmp(:,blockLenIdx) = suit_test.links{15, 1}.meas(blockIdx).G_R_L{blockLenIdx} * L_R_S_LH * y_sim(blockIdx).Fext_LeftHand(1:3,blockLenIdx);
+        G_fext_y_sim_LH_tmp(:,blockLenIdx) = suit_test.links{15, 1}.meas(blockIdx).G_R_L{blockLenIdx} * L_R_S_LH * y_sim(blockIdx).FextSim_LeftHand(1:3,blockLenIdx);
     end
     balance(blockIdx).G_fext_y_sim_RH = G_fext_y_sim_RH_tmp;
     balance(blockIdx).G_fext_y_sim_LH = G_fext_y_sim_LH_tmp;

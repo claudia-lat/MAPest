@@ -274,7 +274,8 @@ end
 % have to pass through the y_sim and only later to compare y and y_sim.
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
-        [estimation(blockIdx).y_sim] = sim_y_floating(berdy, ...
+        y_sim(blockIdx).block = block.labels(blockIdx);
+        [y_sim(blockIdx).y_sim] = sim_y_floating(berdy, ...
             synchroData(blockIdx), ...
             traversal, ...
             baseAngVel(blockIdx).baseAngVelocity, ...
@@ -286,6 +287,6 @@ else
 end
 
 %% Variables extraction from y_sim
-if ~isfield(y_sim,'Fext_RightFoot')
+if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
 end
