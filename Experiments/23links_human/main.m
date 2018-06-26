@@ -109,7 +109,7 @@ human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
-bucket.base = 'LeftFoot'; % floating base
+bucket.base = 'Pelvis'; % floating base
 
 %% Initialize berdy
 % Specify berdy options
@@ -199,8 +199,28 @@ sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % % bucket.temp.id = 'LeftFoot';
 % % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 
-%% Angular velocity
-computeBaseAngularVelocity;
+%% Angular velocity of the currentBase
+% Code to handle the info of the angular velocity of the base.
+% This value is mandatorily required in the floating-base formalism.
+% The new MVNX2018 does not provide the sensorAngularVelocity anymore.
+
+% Define the end effector frame.  In this frame the velocity is assumed to
+% be zero (e.g., a frame associated to a link that is in fixed contact with
+% the ground).
+endEffectorFrame = 'LeftFoot';
+
+if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
+    for blockIdx = 1 : block.nrOfBlocks
+        baseAngVel(blockIdx).block = block.labels(blockIdx);
+        [baseAngVel(blockIdx).baseAngVelocity, baseKinDynModel] = computeBaseAngularVelocity( human_kinDynComp, ...
+            currentBase, ...
+            synchroData(blockIdx), ...
+            endEffectorFrame);
+    end
+    save(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'),'baseAngVel');
+else
+    load(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'));
+end
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
@@ -213,7 +233,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 synchroData(blockIdx), ...
                 data(blockIdx).y, ...
                 priors, ...
-                bucket.baseAngVel, ...
+                baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
@@ -226,7 +246,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 synchroData(blockIdx), ...
                 data(blockIdx).y, ...
                 priors, ...
-                bucket.baseAngVel, ...
+                baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         end
     end
@@ -257,7 +277,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
         [estimation(blockIdx).y_sim] = sim_y_floating(berdy, ...
             synchroData(blockIdx), ...
             traversal, ...
-            bucket.baseAngVel, ...
+            baseAngVel(blockIdx).baseAngVelocity, ...
             estimation(blockIdx).mu_dgiveny);
     end
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');

@@ -74,16 +74,11 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 baseIndex = berdy.model().getFrameIndex(currentBase);
 base_angVel = iDynTree.Vector3();
-base_angVel.fromMatlab(baseAngVel);
-
-% % test ang vel == 0
-% angVel = [0 0 0];
-% base_angVel  = iDynTree.Vector3();
-% base_angVel.fromMatlab(angVel);
 
 for i = 1 : samples
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
+    base_angVel.fromMatlab(baseAngVel(:,i));
     
     berdy.updateKinematicsFromFloatingBase(q,dq,baseIndex,base_angVel);
     

@@ -1,4 +1,4 @@
-function [ y_simulated ] = sim_y_floating( berdy, human_state, traversal, baseAngVel, mu_dgiveny)
+ function [ y_simulated ] = sim_y_floating( berdy, human_state, traversal, baseAngVel, mu_dgiveny)
 
 % Set gravity
 gravity = [0 0 -9.81];
@@ -23,12 +23,12 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 baseIndex = berdy.model().getFrameIndex(currentBase);
 base_angVel = iDynTree.Vector3();
-base_angVel.fromMatlab(baseAngVel);
 
 for i = 1: length(human_state.q)
     
     q.fromMatlab(human_state.q(:,i));
     dq.fromMatlab(human_state.q(:,i));
+    base_angVel.fromMatlab(baseAngVel(:,i));
     
     berdy.updateKinematicsFromFloatingBase(q,dq,baseIndex,base_angVel);
     
