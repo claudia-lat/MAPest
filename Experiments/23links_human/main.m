@@ -149,6 +149,14 @@ end
 % ---------------------------------------------------
 
 %% Measurements wrapping
+% Set the sensor covariance priors
+priors = struct;
+priors.acc_IMU     = 0.001111 * ones(3,1);           %[m^2/s^2], from datasheet
+%priors.gyro_IMU    = 5*1e-5 * ones(3,1);             %[rad^2/s^2], from datasheet
+priors.ddq         = 6.66e-6;                        %[rad^2/s^4], from worst case covariance
+priors.foot_fext   = [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2], from worst case covariance
+priors.noSens_fext = 1e-6 * ones(6,1);               %[N^2,(Nm)^2]
+
 for blockIdx = 1 : block.nrOfBlocks
     fext.rightHuman = shoes(blockIdx).Right_HF;
     fext.leftHuman  = shoes(blockIdx).Left_HF;
@@ -160,7 +168,8 @@ for blockIdx = 1 : block.nrOfBlocks
         suit_runtime,...
         fext,...
         synchroData(blockIdx).ddq,...
-        bucket.contactLink);
+        bucket.contactLink, ...
+        priors);
     % y vector as input for MAP
     [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
         data(blockIdx).data);
@@ -172,8 +181,7 @@ end
 % ---------------------------------------------------
 
 %% ------------------------------- MAP ------------------------------------
-%% Set priors
-priors        = struct;
+%% Set MAP priors
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
 priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables());
 priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
