@@ -32,7 +32,10 @@ end
 % from this change.
 
 %% Extract subject parameters from SUIT
-subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
+if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'), 'file')
+    subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
+    save(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
+end
 
 %% Create URDF model
 bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
