@@ -35,6 +35,8 @@ end
 if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'), 'file')
     subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
     save(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
+else
+    load(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
 end
 
 %% Create URDF model
