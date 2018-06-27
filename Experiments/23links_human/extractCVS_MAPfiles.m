@@ -70,5 +70,23 @@ for subjIdx = 1 : length(subjectID)
                 delete(tmp_csvName);
             end
         end
+
+        %% CSV conversion of the estimated torques
+        load(fullfile(pathToProcessedData,'estimatedVariables.mat'));
+
+        if ~exist(fullfile(pathToTaskFolder,'estimatedTorque_S01_Task1_Block1.csv'), 'file')
+            estimatedTorque = struct;
+            for blockIdx = 1 : block.nrOfBlocks
+                for labelIdx = 1 : size(selectedJoints,1)
+                    for sampleIdx = 1 :size(estimatedVariables.tau(blockIdx).values,2)
+                        estimatedTorque(sampleIdx).(selectedJoints{labelIdx}) = estimatedVariables.tau(blockIdx).values(labelIdx, sampleIdx);
+                    end
+                end
+                tmp_csvName = sprintf('estimatedTorque_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+                writetable(struct2table(estimatedTorque), tmp_csvName);
+                copyfile(tmp_csvName,pathToTaskFolder)
+                delete(tmp_csvName);
+            end
+        end
     end
 end
