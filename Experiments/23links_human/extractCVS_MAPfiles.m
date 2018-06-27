@@ -51,26 +51,24 @@ for subjIdx = 1 : length(subjectID)
             selectedJointsList_ddq{i,1} = strcat(selectedJoints{i},'_ddq');
         end
         
-        jointKin = struct;
-        % Concatenate labels
-        jointKinLabel  = [selectedJointsList_q', selectedJointsList_dq', selectedJointsList_ddq'];
-        for blockIdx = 1 : block.nrOfBlocks
-            % Concatenate values
-            jointKinValues = [synchroKin(blockIdx).q', synchroKin(blockIdx).dq', synchroKin(blockIdx).ddq' ];
-            for labelIdx = 1 : size(jointKinLabel,2)
-                for sampleIdx = 1 : size(synchroKin(blockIdx).masterTime,2)
-                    jointKin(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
-                    jointKin(sampleIdx).(jointKinLabel{labelIdx}) = jointKinValues(sampleIdx,labelIdx);
+        if ~exist(fullfile(pathToTaskFolder,'jointKin_S01_Task1_Block1.csv'), 'file')
+            jointKin = struct;
+            % Concatenate labels
+            jointKinLabel  = [selectedJointsList_q', selectedJointsList_dq', selectedJointsList_ddq'];
+            for blockIdx = 1 : block.nrOfBlocks
+                % Concatenate values
+                jointKinValues       = [synchroKin(blockIdx).q', synchroKin(blockIdx).dq', synchroKin(blockIdx).ddq'];
+                for labelIdx = 1 : size(jointKinLabel,2)
+                    for sampleIdx = 1 : size(synchroKin(blockIdx).masterTime,2)
+                        jointKin(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
+                        jointKin(sampleIdx).(jointKinLabel{labelIdx}) = jointKinValues(sampleIdx,labelIdx);
+                    end
                 end
+                tmp_csvName = sprintf('jointKin_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+                writetable(struct2table(jointKin), tmp_csvName);
+                copyfile(tmp_csvName,pathToTaskFolder)
+                delete(tmp_csvName);
             end
-            tmp_csvName = sprintf('jointKin_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
-            writetable(struct2table(jointKin), tmp_csvName);
-            copyfile(tmp_csvName,pathToTaskFolder)
-            delete(tmp_csvName);
         end
-        
-        %% CSV conversion of the estimation
-        % to be done     
-        
     end
 end
