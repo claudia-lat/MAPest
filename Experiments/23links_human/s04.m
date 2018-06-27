@@ -16,7 +16,7 @@ addpath(genpath('../../external'));
 
 %% Configure
 % Root folder of the dataset
-bucket.datasetRoot = fullfile('D:\Datasets\2018_Feb_JSI');
+datasetRoot = fullfile('D:\Datasets\2018_Feb_JSI');
 
 % Subjects and tasks to be processed
 subjectList = [4];
