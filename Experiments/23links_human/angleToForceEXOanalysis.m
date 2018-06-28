@@ -28,3 +28,4 @@ end
 
 writetable(struct2table(exoHumanInfo), 'exoHumanInfo.csv')
 copyfile('exoHumanInfo.csv',pathToExoHumanInfo);
+delete 'exoHumanInfo.csv';
