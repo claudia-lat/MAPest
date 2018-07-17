@@ -77,6 +77,8 @@ else
 %     load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
 end
 
+disp('Note: the IK is expressed in current frame and not in fixed frame!');
+
 %% Raw data handling
 rawDataHandling;
 
@@ -97,6 +99,11 @@ bucket.contactLink{1} = 'RightFoot'; % human link in contact with RightShoe
 bucket.contactLink{2} = 'LeftFoot';  % human link in contact with LeftShoe
 for blockIdx = 1 : block.nrOfBlocks
     shoes(blockIdx) = transformShoesWrenches(synchroData(blockIdx), subjectParamsFromData);
+end
+
+%% Extraction data from EXO analysis
+if opts.EXO
+    extractDataFromEXO;
 end
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
