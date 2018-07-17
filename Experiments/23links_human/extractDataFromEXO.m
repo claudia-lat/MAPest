@@ -41,7 +41,7 @@ end
 
 for blockIdx = 1 : block.nrOfBlocks
     EXO.jRightShoulder_rotx_grad = synchroKin(blockIdx).q(EXO.jRshoRotx_idx,:) * 180/pi; %deg
-    EXO.jRightShoulder_roty_grad = synchroKin(blockIdx).q(jRshoRoty_idx,:) * 180/pi; %deg
+    EXO.jRightShoulder_roty_grad = synchroKin(blockIdx).q(EXO.jRshoRoty_idx,:) * 180/pi; %deg
     EXO.jRightShoulder_rotz_grad = synchroKin(blockIdx).q(EXO.jRshoRotz_idx,:) * 180/pi; %deg
     
     EXO.rpy_deg = zeros (3,size(EXO.jRightShoulder_rotx_grad,2));
