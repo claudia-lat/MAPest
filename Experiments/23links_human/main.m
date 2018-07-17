@@ -101,11 +101,6 @@ for blockIdx = 1 : block.nrOfBlocks
     shoes(blockIdx) = transformShoesWrenches(synchroData(blockIdx), subjectParamsFromData);
 end
 
-%% Extraction data from EXO analysis
-if opts.EXO
-    extractDataFromEXO;
-end
-
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
@@ -309,4 +304,10 @@ end
 %% Variables extraction from y_sim
 if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
+end
+
+%% ------------------------------- EXO ------------------------------------
+%% Extraction data from EXO analysis
+if opts.EXO
+    extractDataFromEXO;
 end
