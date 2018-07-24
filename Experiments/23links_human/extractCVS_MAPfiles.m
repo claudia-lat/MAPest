@@ -79,6 +79,7 @@ for subjIdx = 1 : length(subjectID)
             for blockIdx = 1 : block.nrOfBlocks
                 for labelIdx = 1 : size(selectedJoints,1)
                     for sampleIdx = 1 :size(estimatedVariables.tau(blockIdx).values,2)
+                        estimatedTorque(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
                         estimatedTorque(sampleIdx).(selectedJoints{labelIdx}) = estimatedVariables.tau(blockIdx).values(labelIdx, sampleIdx);
                     end
                 end
