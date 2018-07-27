@@ -60,7 +60,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
     bucket.trcFile   = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     bucket.motFile   = fullfile(bucket.pathToProcessedData,sprintf('S%02d_%02d.mot',subjectID,taskID));
-    [human_state_tmp, human_ddq_tmp, selectedJoints, groundBasePose] = IK(bucket.filenameOSIM, ...
+    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
         bucket.trcFile, ...
         bucket.setupFile, ...
         suit.properties.frameRate, ...
@@ -69,13 +69,15 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
-    save(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'),'groundBasePose');
+%     save(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'),'groundBasePose');
 else
     load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
-    load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
+%     load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
 end
+
+disp('Note: the IK is expressed in current frame and not in fixed frame!');
 
 %% Raw data handling
 rawDataHandling;
@@ -114,6 +116,7 @@ human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
+humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
 bucket.base = 'Pelvis'; % floating base
 
 %% Initialize berdy
@@ -280,6 +283,11 @@ else
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
 
+% if ~opts.EXO
+%     % test (via plots) angles VS torques for the shoulders
+%     plotShouldersAnglesVStorques;
+% end
+
 %% Simulated y
 % This section is useful to compare the measurements in the y vector and
 % the results of the MAP.  Note: you cannot compare directly the results of
@@ -302,4 +310,15 @@ end
 %% Variables extraction from y_sim
 if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
+end
+
+%% ------------------------------- EXO ------------------------------------
+%% Extraction data from EXO analysis
+if opts.EXO
+    if ~exist(fullfile(bucket.pathToProcessedData,'exo.mat'), 'file')
+        extractDataFromEXO;
+        save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
+    else
+        load(fullfile(bucket.pathToProcessedData,'exo.mat'));
+    end
 end

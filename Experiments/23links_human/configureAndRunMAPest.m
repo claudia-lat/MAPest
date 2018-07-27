@@ -30,5 +30,8 @@ bucket.datasetRoot = fullfile(pwd, 'dataJSI');
 subjectID = 1;
 taskID = 1;
 
+% Check the EXO option
+opts.EXO = true;
+
 %% Run MAPest main.m
 main;
