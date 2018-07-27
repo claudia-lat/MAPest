@@ -282,6 +282,11 @@ else
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
 
+% if ~opts.EXO
+%     % test (via plots) angles VS torques for the shoulders
+%     plotShouldersAnglesVStorques;
+% end
+
 %% Simulated y
 % This section is useful to compare the measurements in the y vector and
 % the results of the MAP.  Note: you cannot compare directly the results of
