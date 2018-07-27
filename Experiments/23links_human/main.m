@@ -104,12 +104,10 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
-%     save(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'),'groundBasePose');
 else
     load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
-%     load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
 end
 
 disp('Note: the IK is expressed in current frame and not in fixed frame!');
@@ -307,7 +305,6 @@ else
 end
 
 %% Variables extraction from MAP estimation
-% estimatedVariables = struct;
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % torque extraction
     extractEstimatedTau_from_mu_dgiveny   % extraction via Berdy
