@@ -39,6 +39,23 @@ else
     load(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
 end
 
+if opts.EXO
+    if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'), 'file')
+        % Add manually the mass of the exo when used
+        subjectParamsFromDataEXO = subjectParamsFromData;
+        subjectParamsFromDataEXO.pelvisMass = subjectParamsFromData.pelvisMass + 1.6;
+        subjectParamsFromDataEXO.pelvisIxx  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
+            ((subjectParamsFromData.pelvisBox(2))^2 + (subjectParamsFromData.pelvisBox(3))^2);
+        subjectParamsFromDataEXO.pelvisIyy  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
+            ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(1))^2);
+        subjectParamsFromDataEXO.pelvisIzz  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
+            ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(2))^2);
+        save(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
+    else
+        load(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
+    end
+end
+
 %% Create URDF model
 bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
 if ~exist(bucket.filenameURDF, 'file')
@@ -48,11 +65,29 @@ if ~exist(bucket.filenameURDF, 'file')
         'GazeboModel',false);
 end
 
+if opts.EXO
+    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
+    if ~exist(bucket.filenameURDF, 'file')
+        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+            suit.sensors,...
+            'filename',bucket.filenameURDF,...
+            'GazeboModel',false);
+    end
+end
+
 %% Create OSIM model
 bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
 if ~exist(bucket.filenameOSIM, 'file')
     bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
         bucket.filenameOSIM);
+end
+
+if opts.EXO
+    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
+    if ~exist(bucket.filenameOSIM, 'file')
+        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
+            bucket.filenameOSIM);
+    end
 end
 
 %% Inverse Kinematic computation
@@ -69,12 +104,10 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
-%     save(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'),'groundBasePose');
 else
     load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
-%     load(fullfile(bucket.pathToProcessedData,'groundBasePose.mat'));
 end
 
 disp('Note: the IK is expressed in current frame and not in fixed frame!');
@@ -272,7 +305,6 @@ else
 end
 
 %% Variables extraction from MAP estimation
-% estimatedVariables = struct;
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % torque extraction
     extractEstimatedTau_from_mu_dgiveny   % extraction via Berdy
