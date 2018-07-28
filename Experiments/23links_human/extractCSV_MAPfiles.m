@@ -47,9 +47,11 @@ for subjIdx = 1 : length(subjectID)
         end
         pathToTaskFolder = fullfile(pathToSubjectFolder,sprintf('Task%d',taskID(taskIdx)));
         
-        %% Copy URDF model
+        %% Copy URDF model (both with and without EXO)
         filenameURDF = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID(subjIdx)));
         copyfile(filenameURDF,pathToSubjectFolder);
+        filenameURDFexo = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID(subjIdx)));
+        copyfile(filenameURDFexo,pathToSubjectFolder);
 
         %% CSV conversion of the joint kinematics
         load(fullfile(pathToProcessedData,'selectedJoints.mat'));
