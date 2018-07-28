@@ -1,5 +1,5 @@
 
-%% CSV file converstion
+%% CSV file conversion
 % This script has to be launched after the overall analasys for all the
 % dataset subjects!
 
@@ -21,8 +21,16 @@ end
 if group2
     % GROUP 2
     subjectID = [2,4,6,8,10,12];
-    taskID = [0, 1, 2];
+    taskID = [0,1,2];
 end
+
+% Blocks
+block.labels = {'block1'; ...
+    'block2'; ...
+    'block3'; ...
+    'block4'; ...
+    'block5'};
+block.nrOfBlocks = size(block.labels,1);
 
 for subjIdx = 1 : length(subjectID)
     pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID(subjIdx)));
