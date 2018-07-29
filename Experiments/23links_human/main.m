@@ -348,7 +348,8 @@ end
 %% Extraction data from EXO analysis
 if opts.EXO
     if ~exist(fullfile(bucket.pathToProcessedData,'exo.mat'), 'file')
-        extractDataFromEXO;
+%         extractDataFromEXO;
+        comparisonMAPvsEXOtorques;
         save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
     else
         load(fullfile(bucket.pathToProcessedData,'exo.mat'));

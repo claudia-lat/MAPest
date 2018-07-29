@@ -12,20 +12,20 @@ if EXO.opts.plots
 
     for blockIdx = 1 : block.nrOfBlocks
         subplot (5,1,blockIdx)
-        % tau MAPest without any exo consideration --> tau_MAPest
-        plot1 = plot(estimatedVariables.tau(blockIdx).values(EXO.jRshoRotx_idx,:),'lineWidth',1.5);
+        % tau MAPest without any exo consideration --> tauFirst_MAPest
+        plot1 = plot(exo(blockIdx).Rsho_tauFirst(1,:),'lineWidth',1.5);
         hold on;
         % tau from EXO tab --> tau_EXO
         plot2 = plot(exo(blockIdx).torqueFromTable_right,'lineWidth',1.5);
         hold on;
-        % tau_diff --> tau_MAPest - tau_EXO
+        % tau_diff --> tauFirst_MAPest - tau_EXO
         plot3 = plot(exo(blockIdx).torqueDiff_right,'lineWidth',1.5);
         title(sprintf('Right Shoulder, Block %s', num2str(blockIdx)));
         ylabel('torque [Nm]');
         set(gca,'FontSize',15)
         grid on;
         %legend
-        leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$','$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+        leg = legend([plot1,plot2,plot3],{'$\tau\prime_{MAPest}$','$\tau_{EXO}$','$\tau\prime_{MAPest}-\tau_{EXO}$'},'Location','northeast');
         set(leg,'Interpreter','latex');
     end
     % ------------Final torque, Left Shoulder------------------------------
@@ -37,20 +37,20 @@ if EXO.opts.plots
     
     for blockIdx = 1 : block.nrOfBlocks
         subplot (5,1,blockIdx)
-        % tau MAPest without any exo consideration
-        plot1 = plot(estimatedVariables.tau(blockIdx).values(EXO.jLshoRotx_idx,:),'lineWidth',1.5);
+        % tau MAPest without any exo consideration --> tauFirst_MAPest
+        plot1 = plot(exo(blockIdx).Lsho_tauFirst(1,:),'lineWidth',1.5);
         hold on;
-        % tau from EXO tab
+        % tau from EXO tab --> tau_EXO
         plot2 = plot(exo(blockIdx).torqueFromTable_left,'lineWidth',1.5);
         hold on;
-        % tau_diff
+        % tau_diff --> tauFirst_MAPest - tau_EXO
         plot3 = plot(exo(blockIdx).torqueDiff_left,'lineWidth',1.5);
         title(sprintf('Left Shoulder, Block %s', num2str(blockIdx)));
         ylabel('torque [Nm]');
         set(gca,'FontSize',15)
         grid on;
         %legend
-        leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$','$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+        leg = legend([plot1,plot2,plot3],{'$\tau\prime_{MAPest}$','$\tau\prime_{EXO}$','$\tau\prime_{MAPest}-\tau_{EXO}$'},'Location','northeast');
         set(leg,'Interpreter','latex');
     end
 end

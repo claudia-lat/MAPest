@@ -119,10 +119,27 @@ for subjIdx = 1 : length(subjectID)
             if ~exist(fullfile(pathToTaskFolder,sprintf('estimatedTorqueEXO_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
                 estimatedTorqueEXO = struct;
                 for blockIdx = 1 : block.nrOfBlocks
-                    for sampleIdx = 1 :size(estimatedVariables.tau(blockIdx).values,2)
-                        estimatedTorqueEXO(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
-                        estimatedTorqueEXO(sampleIdx).jRightShoulder_rotx = exo(blockIdx).torqueDiff_right(sampleIdx);
-                        estimatedTorqueEXO(sampleIdx).jLeftShoulder_rotx  = exo(blockIdx).torqueDiff_left(sampleIdx);
+                    for sampleIdx = 1 :size(exo(blockIdx).masterTime,2)
+                        estimatedTorqueEXO(sampleIdx).masterTime  = exo(blockIdx).masterTime(sampleIdx);
+                        % --------- RightShoulder data (after change coordinates)
+                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+                        estimatedTorqueEXO(sampleIdx).Rsho_qFirst = exo(blockIdx).Rsho_qFirst(1,sampleIdx);
+                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.tau fro rotx!!
+                        estimatedTorqueEXO(sampleIdx).Rsho_tauFirst = exo(blockIdx).Rsho_tauFirst(1,sampleIdx);
+                        % Exo torque extracted from table
+                        estimatedTorqueEXO(sampleIdx).Rsho_tauFromTable = exo(blockIdx).torqueFromTable_right(sampleIdx);
+                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
+                        estimatedTorqueEXO(sampleIdx).Rsho_torqueDiff = exo(blockIdx).torqueDiff_right(sampleIdx);
+
+                        % --------- LeftShoulder data (after change coordinates)
+                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+                        estimatedTorqueEXO(sampleIdx).Lsho_qFirst = exo(blockIdx).Lsho_qFirst(1,sampleIdx);
+                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.taufor rotx!!
+                        estimatedTorqueEXO(sampleIdx).Lsho_tauFirst = exo(blockIdx).Lsho_tauFirst(1,sampleIdx);
+                        % Exo torque extracted from table
+                        estimatedTorqueEXO(sampleIdx).Lsho_tauFromTable = exo(blockIdx).torqueFromTable_left(sampleIdx);
+                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
+                        estimatedTorqueEXO(sampleIdx).Lsho_torqueDiff = exo(blockIdx).torqueDiff_left(sampleIdx);
                     end
                     tmp_csvName = sprintf('estimatedTorqueEXO_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
                     writetable(struct2table(estimatedTorqueEXO), tmp_csvName);
