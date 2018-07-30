@@ -99,9 +99,9 @@ for blockIdx = 1 : block.nrOfBlocks
         R_q_rightSho = R_qx_rightSho * R_qy_rightSho * R_qz_rightSho;
         
         % Compute angles(qFirst) with the coordinates change
-        qxFirst_rightSho = atan(R_q_rightSho(3,2)/sqrt(R_q_rightSho(1,2)^2 + R_q_rightSho(2,2)^2));
-        qyFirst_rightSho = atan(-R_q_rightSho(3,1)/R_q_rightSho(3,3));
-        qzFirst_rightSho = atan(-R_q_rightSho(1,2)/R_q_rightSho(2,2));
+        qxFirst_rightSho = atan2(R_q_rightSho(3,2),sqrt(R_q_rightSho(1,2)^2 + R_q_rightSho(2,2)^2));
+        qyFirst_rightSho = atan2(-R_q_rightSho(3,1),R_q_rightSho(3,3));
+        qzFirst_rightSho = atan2(-R_q_rightSho(1,2),R_q_rightSho(2,2));
         qFirst_rightSho(:,i) = [qxFirst_rightSho; qyFirst_rightSho; qzFirst_rightSho] * 180/pi; %deg;
         
         % Compute the Jacobian J_q
@@ -194,9 +194,9 @@ for blockIdx = 1 : block.nrOfBlocks
         R_q_leftSho = R_qx_leftSho * R_qy_leftSho * R_qz_leftSho;
         
         % Compute angles(qFirst) with the coordinates change
-        qxFirst_leftSho = atan(R_q_leftSho(3,2)/sqrt(R_q_leftSho(1,2)^2 + R_q_leftSho(2,2)^2));
-        qyFirst_leftSho = atan(-R_q_leftSho(3,1)/R_q_leftSho(3,3));
-        qzFirst_leftSho = atan(-R_q_leftSho(1,2)/R_q_leftSho(2,2));
+        qxFirst_leftSho = atan2(R_q_leftSho(3,2),sqrt(R_q_leftSho(1,2)^2 + R_q_leftSho(2,2)^2));
+        qyFirst_leftSho = atan2(-R_q_leftSho(3,1),R_q_leftSho(3,3));
+        qzFirst_leftSho = atan2(-R_q_leftSho(1,2),R_q_leftSho(2,2));
         qFirst_leftSho(:,i) = [qxFirst_leftSho; qyFirst_leftSho; qzFirst_leftSho] * 180/pi; %deg;
         
         % Compute the Jacobian J_q
