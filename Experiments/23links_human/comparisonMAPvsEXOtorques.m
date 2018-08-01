@@ -105,17 +105,36 @@ for blockIdx = 1 : block.nrOfBlocks
         qFirst_rightSho(:,i) = [qxFirst_rightSho; qyFirst_rightSho; qzFirst_rightSho] * 180/pi; %deg;
         
         % Compute the Jacobian J_q
-        a = 1/(1 + (R_q_rightSho(3,2)/sqrt(R_q_rightSho(1,2)^2 + R_q_rightSho(2,2)^2))^2);
-        b = 1/(1 + (-R_q_rightSho(3,1)/R_q_rightSho(3,3))^2);
-        c = 1/(1 + (-R_q_rightSho(1,2)/R_q_rightSho(2,2))^2);
+        % considering equations (417),(291) in
+        % 'Representing Attitude: Euler Angles, Unit Quaternions and Rotation Vectors', James Diebel, Staford 2006.
+        xR = q_rightSho(1);%rad
+        yR = q_rightSho(2);%rad
+        zR = q_rightSho(3);%rad
         
-        jacobian_q_rightSho{i} = [ a, 0, 0;
-            0, b, 0;
-            0, 0, c];
-        
+        % the following relation comes from:
+        % E_{xyz}(q)*qDot = E_{zxy}(qFirst)*qDotFirst
+        % thus
+        % J(q) = inv(E_{zxy}(qFirst)) * (E_{xyz}(q)*qDot)
+
+        rS11 = -sin(yR)*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2) + sin(zR)*cos(yR)*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS12 = sin(zR)^2/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS13 = -cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+
+        rS21 = -sin(yR)*sin(zR)*cos(yR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2) - cos(yR)^2*cos(zR)^2/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS22 = -sin(zR)*cos(yR)*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS23 = -sin(zR)*cos(yR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+
+        rS31 = -sin(zR)*cos(yR) + sin(yR)^2*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2) - sin(yR)*sin(zR)*cos(yR)*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS32 = cos(zR) - sin(yR)*sin(zR)^2/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+        rS33 = sin(yR)*cos(zR)/(-sin(zR)^2*cos(yR) - cos(yR)*cos(zR)^2);
+
+        jacobian_q_rightSho{i} = [rS11, rS12, rS13;
+                                  rS21, rS22, rS23;
+                                  rS31, rS32, rS33];
+
         % Compute the new torque (tauFirst) associated to the angle qFirst
         % (procedure obtained by applying D'Alambert principle)
-        tauFirst_rightSho(:,i) = inv(jacobian_q_rightSho{i}') * tau_rightSho(:,i);
+        tauFirst_rightSho(:,i) = inv(jacobian_q_rightSho{i})' * tau_rightSho(:,i);
     end
     
     subplot (425) %angles qFirst
@@ -198,19 +217,39 @@ for blockIdx = 1 : block.nrOfBlocks
         qyFirst_leftSho = atan2(-R_q_leftSho(3,1),R_q_leftSho(3,3));
         qzFirst_leftSho = atan2(-R_q_leftSho(1,2),R_q_leftSho(2,2));
         qFirst_leftSho(:,i) = [qxFirst_leftSho; qyFirst_leftSho; qzFirst_leftSho] * 180/pi; %deg;
-        
+
         % Compute the Jacobian J_q
-        a = 1/(1 + (R_q_leftSho(3,2)/sqrt(R_q_leftSho(1,2)^2 + R_q_leftSho(2,2)^2))^2);
-        b = 1/(1 + (-R_q_leftSho(3,1)/R_q_leftSho(3,3))^2);
-        c = 1/(1 + (-R_q_leftSho(1,2)/R_q_leftSho(2,2))^2);
+        % considering equations (417),(291) in
+        % 'Representing Attitude: Euler Angles, Unit Quaternions and Rotation Vectors', James Diebel, Staford 2006.
+        xL = q_leftSho(1);%rad
+        yL = q_leftSho(2);%rad
+        zL = q_leftSho(3);%rad
+
+        % the following relation comes from:
+        % E_{xyz}(q)*qDot = E_{zxy}(qFirst)*qDotFirst
+        % thus
+        % J(q) = inv(E_{zxy}(qFirst)) * (E_{xyz}(q)*qDot)
         
-        jacobian_q_leftSho{i} = [ a, 0, 0;
-            0, b, 0;
-            0, 0, c];
-        
+        lS11 = -sin(yL)*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2) + sin(zL)*cos(yL)*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS12 = sin(zL)^2/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS13 = -cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+
+        lS21 = -sin(yL)*sin(zL)*cos(yL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2) - cos(yL)^2*cos(zL)^2/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS22 = -sin(zL)*cos(yL)*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS23 = -sin(zL)*cos(yL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+
+        lS31 = -sin(zL)*cos(yL) + sin(yL)^2*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2) - sin(yL)*sin(zL)*cos(yL)*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS32 = cos(zL) - sin(yL)*sin(zL)^2/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+        lS33 = sin(yL)*cos(zL)/(-sin(zL)^2*cos(yL) - cos(yL)*cos(zL)^2);
+
+        jacobian_q_leftSho{i} = [lS11, lS12, lS13;
+                                 lS21, lS22, lS23;
+                                 lS31, lS32, lS33];
+
         % Compute the new torque (tauFirst) associated to the angle qFirst
         % (procedure obtained by applying D'Alambert principle)
         tauFirst_leftSho(:,i) = inv(jacobian_q_leftSho{i}') * tau_leftSho(:,i);
+
     end
     
     subplot (426) %angles qFirst
@@ -244,13 +283,58 @@ for blockIdx = 1 : block.nrOfBlocks
     % right shoulder
     exo(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho];
     exo(blockIdx).Rsho_tau = tau_rightSho;
+    exo(blockIdx).J_right = jacobian_q_rightSho;
     exo(blockIdx).Rsho_qFirst = qFirst_rightSho;
     exo(blockIdx).Rsho_tauFirst = tauFirst_rightSho;
     % left shoulder
     exo(blockIdx).Lsho_q =[qx_leftSho; qy_leftSho; qz_leftSho];
     exo(blockIdx).Lsho_tau = tau_leftSho;
+    exo(blockIdx).J_left = jacobian_q_leftSho;
     exo(blockIdx).Lsho_qFirst = qFirst_leftSho;
     exo(blockIdx).Lsho_tauFirst = tauFirst_leftSho;
+
+end
+
+%% Power test
+% test if qDot'*tau = qDotFirst'*tauFirst
+% LHS = qDot'*tau
+% RHS = qDotFirst'*tauFirst = (qDot'*J') *tauFirst
+
+clearvars powerTest;
+
+for blockIdx = 1 : block.nrOfBlocks
+    len = size(synchroKin(blockIdx).masterTime ,2);
+
+    % right
+    qDot_rightSho = [synchroKin(blockIdx).dq(jRshoRotx_idx,:); ...
+        synchroKin(blockIdx).dq(jRshoRoty_idx,:); ...
+        synchroKin(blockIdx).dq(jRshoRotz_idx,:)]; % rad
+    %left
+    qDot_leftSho = [synchroKin(blockIdx).dq(jLshoRotx_idx,:); ...
+        synchroKin(blockIdx).dq(jLshoRoty_idx,:); ...
+        synchroKin(blockIdx).dq(jLshoRotz_idx,:)]; % rad
+
+    LHS_right_tmp = zeros(len,1);
+    RHS_right_tmp = zeros(len,1);
+    LHS_left_tmp  = zeros(len,1);
+    RHS_left_tmp  = zeros(len,1);
+
+    for i = 1 : len
+        %rightSho
+        LHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * (exo(blockIdx).Rsho_tau(:,i));
+        RHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * exo(blockIdx).J_right{i, 1}'*(exo(blockIdx).Rsho_tauFirst(:,i));
+        %leftSho
+        LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (exo(blockIdx).Lsho_tau(:,i));
+        RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * exo(blockIdx).J_left{i, 1}'*(exo(blockIdx).Lsho_tauFirst(:,i));
+    end
+    powerTest(blockIdx).block = block.labels(blockIdx);
+    powerTest(blockIdx).LHS_right = LHS_right_tmp;
+    powerTest(blockIdx).RHS_right = RHS_right_tmp;
+    powerTest(blockIdx).LHS_left  = LHS_left_tmp;
+    powerTest(blockIdx).RHS_left  = RHS_left_tmp;
+
+    powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
+    powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
 end
 
 %% =========================== EXO ANALYSIS ===============================
