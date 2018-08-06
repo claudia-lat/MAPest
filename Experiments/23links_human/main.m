@@ -7,6 +7,9 @@ bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
+disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(subjectID)'));
+
+
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
 
@@ -109,8 +112,7 @@ else
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
 end
-
-disp('Note: the IK is expressed in current frame and not in fixed frame!');
+% disp('[Warning]: The IK is expressed in current frame and not in fixed frame!');
 
 %% Raw data handling
 rawDataHandling;
@@ -199,6 +201,8 @@ priors.ddq         = 6.66e-6;                        %[rad^2/s^4], from worst ca
 priors.foot_fext   = [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2], from worst case covariance
 priors.noSens_fext = 1e-6 * ones(6,1);               %[N^2,(Nm)^2]
 
+disp('-------------------------------------------------------------------');
+disp('[Start] Wrapping measurements...');
 for blockIdx = 1 : block.nrOfBlocks
     fext.rightHuman = shoes(blockIdx).Right_HF;
     fext.leftHuman  = shoes(blockIdx).Left_HF;
@@ -216,7 +220,7 @@ for blockIdx = 1 : block.nrOfBlocks
     [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
         data(blockIdx).data);
 end
-
+disp('[End] Wrapping measurements');
 % ---------------------------------------------------
 % CHECK: print the order of measurement in y
 % printBerdySensorOrder(berdy);
@@ -259,6 +263,8 @@ sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % the ground).
 endEffectorFrame = 'LeftFoot';
 
+disp('-------------------------------------------------------------------');
+disp(strcat('[Start] Computing the <',currentBase,'> angular velocity...'));
 if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
         baseAngVel(blockIdx).block = block.labels(blockIdx);
@@ -271,6 +277,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
 else
     load(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'));
 end
+disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
@@ -278,6 +285,8 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
         priors.Sigmay = data(blockIdx).Sigmay;
         estimation(blockIdx).block = block.labels(blockIdx);
         if opts.Sigma_dgiveny
+            disp('-------------------------------------------------------------------');
+            disp(strcat('[Start] Complete MAP computation for Block ',num2str(blockIdx),'...'));
             [estimation(blockIdx).mu_dgiveny, estimation(blockIdx).Sigma_dgiveny] = MAPcomputation_floating(berdy, ...
                 traversal, ...
                 synchroKin(blockIdx),...
@@ -285,12 +294,15 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 priors, ...
                 baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+             disp(strcat('[End] Complete MAP computation for Block ',num2str(blockIdx)));
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
             % cannot be saved! therefore once computed it is necessary to extract data
             % related to tau and save that one!
             % TODO: extractSigmaOfEstimatedVariables
         else
+            disp('-------------------------------------------------------------------');
+            disp(strcat('[Start] mu_dgiveny MAP computation for Block ',num2str(blockIdx),'...'));
             [estimation(blockIdx).mu_dgiveny] = MAPcomputation_floating(berdy, ...
                 traversal, ...
                 synchroKin(blockIdx),...
@@ -298,6 +310,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 priors, ...
                 baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+             disp(strcat('[End] mu_dgiveny MAP computation for Block ',num2str(blockIdx)));
         end
     end
     save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');
@@ -309,19 +322,25 @@ end
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % torque extraction via Berdy
     for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] Torque extraction for Block ',num2str(blockIdx),'...'));
         estimatedVariables.tau(blockIdx).block  = block.labels(blockIdx);
         estimatedVariables.tau(blockIdx).label  = selectedJoints;
         estimatedVariables.tau(blockIdx).values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
             estimation(blockIdx).mu_dgiveny, ...
             synchroKin(blockIdx).q);
+        disp(strcat('[End] Torque extraction for Block ',num2str(blockIdx)));
     end
     % fext extraction, manual (no Berdy)
     for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] External force extraction for Block ',num2str(blockIdx),'...'));
         estimatedVariables.Fext(blockIdx).block  = block.labels(blockIdx);
         estimatedVariables.Fext(blockIdx).label  = dVectorOrder;
         estimatedVariables.Fext(blockIdx).values = extractEstimatedFext_from_mu_dgiveny(berdy, ...
             dVectorOrder, ...
             estimation(blockIdx).mu_dgiveny);
+        disp(strcat('[End] External force extraction for Block ',num2str(blockIdx)));
     end
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
@@ -340,12 +359,15 @@ end
 % have to pass through the y_sim and only later to compare y and y_sim.
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] Simulated y computation for Block ',num2str(blockIdx),'...'));
         y_sim(blockIdx).block = block.labels(blockIdx);
         [y_sim(blockIdx).y_sim] = sim_y_floating(berdy, ...
             synchroKin(blockIdx),...
             traversal, ...
             baseAngVel(blockIdx).baseAngVelocity, ...
             estimation(blockIdx).mu_dgiveny);
+        disp(strcat('[End] Simulated y computation for Block ',num2str(blockIdx)));
     end
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
 else
