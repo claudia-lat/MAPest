@@ -121,6 +121,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'synchroKin.mat'), 'file')
     synchroKin = rmfield(synchroData,fieldsToBeRemoved);
     save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
 end
+load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
 
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet
@@ -306,10 +307,22 @@ end
 
 %% Variables extraction from MAP estimation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
-    % torque extraction
-    extractEstimatedTau_from_mu_dgiveny   % extraction via Berdy
-    % fext extraction
-    extractEstimatedFext_from_mu_dgiveny  % manual (no Berdy) extraction
+    % torque extraction via Berdy
+    for blockIdx = 1 : block.nrOfBlocks
+        estimatedVariables.tau(blockIdx).block  = block.labels(blockIdx);
+        estimatedVariables.tau(blockIdx).label  = selectedJoints;
+        estimatedVariables.tau(blockIdx).values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
+            estimation(blockIdx).mu_dgiveny, ...
+            synchroKin(blockIdx).q);
+    end
+    % fext extraction, manual (no Berdy)
+    for blockIdx = 1 : block.nrOfBlocks
+        estimatedVariables.Fext(blockIdx).block  = block.labels(blockIdx);
+        estimatedVariables.Fext(blockIdx).label  = dVectorOrder;
+        estimatedVariables.Fext(blockIdx).values = extractEstimatedFext_from_mu_dgiveny(berdy, ...
+            dVectorOrder, ...
+            estimation(blockIdx).mu_dgiveny);
+    end
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
