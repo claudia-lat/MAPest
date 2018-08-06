@@ -16,6 +16,16 @@ masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subje
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
 
+% Define the template to be used
+if opts.noC7joints
+    addpath(genpath('templatesNoC7'));
+    rmpath('templates'); %if exists
+    disp('[Warning]: The following analysis will be done with C7joints locked/fixed in the models!');
+else
+    addpath(genpath('templates'));
+    rmpath('templatesNoC7'); %if exists
+end
+
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
@@ -60,39 +70,78 @@ if opts.EXO
 end
 
 %% Create URDF model
-bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
-if ~exist(bucket.filenameURDF, 'file')
-    bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-        suit.sensors,...
-        'filename',bucket.filenameURDF,...
-        'GazeboModel',false);
-end
-
-if opts.EXO
-    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
+if opts.noC7joints
+    % model NO exo, with C7 joints FIXED
+    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_noC7.urdf', subjectID));
     if ~exist(bucket.filenameURDF, 'file')
-        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
             suit.sensors,...
             'filename',bucket.filenameURDF,...
             'GazeboModel',false);
     end
-end
-
-%% Create OSIM model
-bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
-if ~exist(bucket.filenameOSIM, 'file')
-    bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
-        bucket.filenameOSIM);
-end
-
-if opts.EXO
-    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
-    if ~exist(bucket.filenameOSIM, 'file')
-        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
-            bucket.filenameOSIM);
+    % model WITH exo, with C7 joints FIXED
+    if opts.EXO
+        bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO_noC7.urdf', subjectID));
+        if ~exist(bucket.filenameURDF, 'file')
+            bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+                suit.sensors,...
+                'filename',bucket.filenameURDF,...
+                'GazeboModel',false);
+        end
+    end
+else
+    % model NO exo, with C7 joints (complete) REVOLUTE
+    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
+    if ~exist(bucket.filenameURDF, 'file')
+        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
+            suit.sensors,...
+            'filename',bucket.filenameURDF,...
+            'GazeboModel',false);
+    end
+    % model WITH exo, with C7 joints (complete) REVOLUTE
+    if opts.EXO
+        bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
+        if ~exist(bucket.filenameURDF, 'file')
+            bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+                suit.sensors,...
+                'filename',bucket.filenameURDF,...
+                'GazeboModel',false);
+        end
     end
 end
 
+%% Create OSIM model
+if opts.noC7joints
+    % model NO exo, with C7 joints LOCKED
+    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_noC7.osim', subjectID));
+    if ~exist(bucket.filenameOSIM, 'file')
+        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+            bucket.filenameOSIM);
+    end
+    % model WITH exo, with C7 joints LOCKED
+    if opts.EXO
+        bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO_noC7.osim', subjectID));
+        if ~exist(bucket.filenameOSIM, 'file')
+            bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
+                bucket.filenameOSIM);
+        end
+    end
+else
+    % model NO exo, with C7 joints (complete) UNLOCKED
+    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
+    if ~exist(bucket.filenameOSIM, 'file')
+        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+            bucket.filenameOSIM);
+    end
+    % model WITH exo, with C7 joints (complete) UNLOCKED
+    if opts.EXO
+        bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
+        if ~exist(bucket.filenameOSIM, 'file')
+            bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
+                bucket.filenameOSIM);
+        end
+    end
+end
 %% Inverse Kinematic computation
 if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
@@ -135,6 +184,53 @@ bucket.contactLink{1} = 'RightFoot'; % human link in contact with RightShoe
 bucket.contactLink{2} = 'LeftFoot';  % human link in contact with LeftShoe
 for blockIdx = 1 : block.nrOfBlocks
     shoes(blockIdx) = transformShoesWrenches(synchroData(blockIdx), subjectParamsFromData);
+end
+
+%% Removal of C7 joints kinematics quantities
+if opts.noC7joints
+    if ~exist(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'), 'file')
+        load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
+        synchroKinReduced = synchroKin;
+        % Get the indices to be removed
+        for sjIdx = 1 : size(selectedJoints,1)
+            if (strcmp(selectedJoints{sjIdx,1},'jRightC7Shoulder_rotx'))
+                jRshoC7Rotx_idx = sjIdx;
+            end
+        end
+        selectedJoints(jRshoC7Rotx_idx,:) = [];
+        
+        for sjIdx = 1 : size(selectedJoints,1)
+            if (strcmp(selectedJoints{sjIdx,1},'jLeftC7Shoulder_rotx'))
+                jLshoC7Rotx_idx = sjIdx;
+            end
+        end
+        selectedJoints(jLshoC7Rotx_idx,:) = [];
+        
+        selectedJointsReduced = selectedJoints;
+        for blockIdx = 1 : block.nrOfBlocks
+            synchroKinReduced(blockIdx).q(jRshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).dq(jRshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).ddq(jRshoC7Rotx_idx,:) = [];
+        end
+        for blockIdx = 1 : block.nrOfBlocks
+            synchroKinReduced(blockIdx).q(jLshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).dq(jLshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).ddq(jLshoC7Rotx_idx,:) = [];
+        end
+        save(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'),'selectedJointsReduced');
+        save(fullfile(bucket.pathToProcessedData,'synchroKinReduced.mat'),'synchroKinReduced');
+    else
+        load(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'));
+        load(fullfile(bucket.pathToProcessedData,'synchroKinReduced.mat'));
+    end
+
+    % Overwrite old variables with the new reduced variables
+    selectedJoints = selectedJointsReduced;
+    save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
+    synchroKin = synchroKinReduced;
+    save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
+    % Remove useless quantities
+    clearvars selectedJointsReduced synchroKinReduced;
 end
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
