@@ -3,6 +3,7 @@
 
 %% Preliminaries
 close all;
+powerTest = false;
 
 % Load variables
 load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
@@ -38,6 +39,13 @@ for sjIdx = 1 : size(selectedJoints,1)
     if (strcmp(selectedJoints{sjIdx,1},'jLeftShoulder_rotz'))
         jLshoRotz_idx = sjIdx;
     end
+%     % C7shoulders
+%     if (strcmp(selectedJoints{sjIdx,1},'jRightC7Shoulder_rotx'))
+%         jRshoC7Rotx_idx = sjIdx;
+%     end
+%     if (strcmp(selectedJoints{sjIdx,1},'jLeftC7Shoulder_rotx'))
+%         jLshoC7Rotx_idx = sjIdx;
+%     end
 end
 
 %% ======================= CHANGE OF COORDINATES ==========================
@@ -55,11 +63,13 @@ for blockIdx = 1 : block.nrOfBlocks
     qx_rightSho = synchroKin(blockIdx).q(jRshoRotx_idx,:) * 180/pi; %deg
     qy_rightSho = synchroKin(blockIdx).q(jRshoRoty_idx,:) * 180/pi; %deg
     qz_rightSho = synchroKin(blockIdx).q(jRshoRotz_idx,:) * 180/pi; %deg
+%     qx_rightC7Sho = synchroKin(blockIdx).q(jRshoC7Rotx_idx,:) * 180/pi; %deg
     
     % Torques estimated by MAP with angles q
     tau_rightSho = [estimatedVariables.tau(blockIdx).values(jRshoRotx_idx,:); ...
         estimatedVariables.tau(blockIdx).values(jRshoRoty_idx,:); ...
         estimatedVariables.tau(blockIdx).values(jRshoRotz_idx,:)];
+%     tau_rightC7Sho = estimatedVariables.tau(blockIdx).values(jRshoC7Rotx_idx,:);
     
     subplot (421) % angles q
     plot(qx_rightSho,'r','Linewidth',1.5)
@@ -67,10 +77,14 @@ for blockIdx = 1 : block.nrOfBlocks
     plot(qy_rightSho,'g','Linewidth',1.5)
     hold on
     plot(qz_rightSho,'b','Linewidth',1.5)
+%     hold on
+%     plot(qx_rightC7Sho,'m','Linewidth',1.5)
+%     hold on
+%     plot(qx_rightC7Sho + qx_rightSho,'k','Linewidth',1.5)
     ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
     xlabel('samples','FontSize',15);
     title(sprintf('jRightShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('$q_x$','$q_y$','$q_z$');
+    leg = legend('$q_x$','$q_y$','$q_z$'); %    leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$','$qTot_x$');
     set(leg,'FontSize',17)
     set(leg,'Interpreter','latex');
     
@@ -80,9 +94,11 @@ for blockIdx = 1 : block.nrOfBlocks
     plot(tau_rightSho(2,:),'g','Linewidth',1.5)
     hold on
     plot(tau_rightSho(3,:),'b','Linewidth',1.5)
+%     hold on
+%     plot(tau_rightC7Sho,'m','Linewidth',1.5)
     ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
     xlabel('samples','FontSize',15);
-    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$');
+    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
     set(leg,'FontSize',17)
     set(leg,'Interpreter','latex');
     
@@ -161,30 +177,35 @@ for blockIdx = 1 : block.nrOfBlocks
     leg = legend('${\tau_x}\prime$','${\tau_y}\prime$','${\tau_z}\prime$');
     set(leg,'FontSize',17)
     set(leg,'Interpreter','latex');
-    
-    
+
     %% -------Left shoulder angles/torques analysis
     
     % Original angles from Opensim IK (q) in deg
     qx_leftSho = synchroKin(blockIdx).q(jLshoRotx_idx,:) * 180/pi; %deg
     qy_leftSho = synchroKin(blockIdx).q(jLshoRoty_idx,:) * 180/pi; %deg
     qz_leftSho = synchroKin(blockIdx).q(jLshoRotz_idx,:) * 180/pi; %deg
+%     qx_leftC7Sho = synchroKin(blockIdx).q(jLshoC7Rotx_idx,:) * 180/pi; %deg
     
     % Torques estimated by MAP with angles q
     tau_leftSho = [estimatedVariables.tau(blockIdx).values(jLshoRotx_idx,:); ...
         estimatedVariables.tau(blockIdx).values(jLshoRoty_idx,:); ...
         estimatedVariables.tau(blockIdx).values(jLshoRotz_idx,:)];
-    
+%     tau_leftC7Sho = estimatedVariables.tau(blockIdx).values(jLshoC7Rotx_idx,:);
+
     subplot (422) % angles q
     plot(qx_leftSho,'r','Linewidth',1.5)
     hold on
     plot(qy_leftSho,'g','Linewidth',1.5)
     hold on
     plot(qz_leftSho,'b','Linewidth',1.5)
+%     hold on
+%     plot(qx_leftC7Sho,'m','Linewidth',1.5)
+%     hold on
+%     plot(qx_leftC7Sho + qx_leftSho,'k','Linewidth',1.5)
     ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
     xlabel('samples','FontSize',15);
     title(sprintf('jLeftShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('$q_x$','$q_y$','$q_z$');
+    leg = legend('$q_x$','$q_y$','$q_z$'); %leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$', '$qTot_x$');
     set(leg,'FontSize',17)
     set(leg,'Interpreter','latex');
     
@@ -194,9 +215,11 @@ for blockIdx = 1 : block.nrOfBlocks
     plot(tau_leftSho(2,:),'g','Linewidth',1.5)
     hold on
     plot(tau_leftSho(3,:),'b','Linewidth',1.5)
+%     hold on
+%     plot(tau_leftC7Sho,'m','Linewidth',1.5)
     ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
     xlabel('samples','FontSize',15);
-    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$');
+    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
     set(leg,'FontSize',17)
     set(leg,'Interpreter','latex');
     
@@ -248,7 +271,7 @@ for blockIdx = 1 : block.nrOfBlocks
 
         % Compute the new torque (tauFirst) associated to the angle qFirst
         % (procedure obtained by applying D'Alambert principle)
-        tauFirst_leftSho(:,i) = inv(jacobian_q_leftSho{i}') * tau_leftSho(:,i);
+        tauFirst_leftSho(:,i) = inv(jacobian_q_leftSho{i})' * tau_leftSho(:,i);
 
     end
     
@@ -279,7 +302,7 @@ for blockIdx = 1 : block.nrOfBlocks
     
     %% Save comparison data in a struct
     exo(blockIdx).block = block.labels(blockIdx);
-    exo(blockIdx).masterTime = synchroData(blockIdx).masterTime;
+    exo(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
     % right shoulder
     exo(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho];
     exo(blockIdx).Rsho_tau = tau_rightSho;
@@ -299,42 +322,43 @@ end
 % test if qDot'*tau = qDotFirst'*tauFirst
 % LHS = qDot'*tau
 % RHS = qDotFirst'*tauFirst = (qDot'*J') *tauFirst
+if powerTest
+    clearvars powerTest;
 
-clearvars powerTest;
+    for blockIdx = 1 : block.nrOfBlocks
+        len = size(synchroKin(blockIdx).masterTime ,2);
+        
+        % right
+        qDot_rightSho = [synchroKin(blockIdx).dq(jRshoRotx_idx,:); ...
+            synchroKin(blockIdx).dq(jRshoRoty_idx,:); ...
+            synchroKin(blockIdx).dq(jRshoRotz_idx,:)]; % rad
+        %left
+        qDot_leftSho = [synchroKin(blockIdx).dq(jLshoRotx_idx,:); ...
+            synchroKin(blockIdx).dq(jLshoRoty_idx,:); ...
+            synchroKin(blockIdx).dq(jLshoRotz_idx,:)]; % rad
 
-for blockIdx = 1 : block.nrOfBlocks
-    len = size(synchroKin(blockIdx).masterTime ,2);
+        LHS_right_tmp = zeros(len,1);
+        RHS_right_tmp = zeros(len,1);
+        LHS_left_tmp  = zeros(len,1);
+        RHS_left_tmp  = zeros(len,1);
 
-    % right
-    qDot_rightSho = [synchroKin(blockIdx).dq(jRshoRotx_idx,:); ...
-        synchroKin(blockIdx).dq(jRshoRoty_idx,:); ...
-        synchroKin(blockIdx).dq(jRshoRotz_idx,:)]; % rad
-    %left
-    qDot_leftSho = [synchroKin(blockIdx).dq(jLshoRotx_idx,:); ...
-        synchroKin(blockIdx).dq(jLshoRoty_idx,:); ...
-        synchroKin(blockIdx).dq(jLshoRotz_idx,:)]; % rad
+        for i = 1 : len
+            %rightSho
+            LHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * (exo(blockIdx).Rsho_tau(:,i));
+            RHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * exo(blockIdx).J_right{i, 1}'*(exo(blockIdx).Rsho_tauFirst(:,i));
+            %leftSho
+            LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (exo(blockIdx).Lsho_tau(:,i));
+            RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * exo(blockIdx).J_left{i, 1}'*(exo(blockIdx).Lsho_tauFirst(:,i));
+        end
+        powerTest(blockIdx).block = block.labels(blockIdx);
+        powerTest(blockIdx).LHS_right = LHS_right_tmp;
+        powerTest(blockIdx).RHS_right = RHS_right_tmp;
+        powerTest(blockIdx).LHS_left  = LHS_left_tmp;
+        powerTest(blockIdx).RHS_left  = RHS_left_tmp;
 
-    LHS_right_tmp = zeros(len,1);
-    RHS_right_tmp = zeros(len,1);
-    LHS_left_tmp  = zeros(len,1);
-    RHS_left_tmp  = zeros(len,1);
-
-    for i = 1 : len
-        %rightSho
-        LHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * (exo(blockIdx).Rsho_tau(:,i));
-        RHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * exo(blockIdx).J_right{i, 1}'*(exo(blockIdx).Rsho_tauFirst(:,i));
-        %leftSho
-        LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (exo(blockIdx).Lsho_tau(:,i));
-        RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * exo(blockIdx).J_left{i, 1}'*(exo(blockIdx).Lsho_tauFirst(:,i));
+        powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
+        powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
     end
-    powerTest(blockIdx).block = block.labels(blockIdx);
-    powerTest(blockIdx).LHS_right = LHS_right_tmp;
-    powerTest(blockIdx).RHS_right = RHS_right_tmp;
-    powerTest(blockIdx).LHS_left  = LHS_left_tmp;
-    powerTest(blockIdx).RHS_left  = RHS_left_tmp;
-
-    powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
-    powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
 end
 
 %% =========================== EXO ANALYSIS ===============================
