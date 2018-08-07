@@ -7,7 +7,7 @@ bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
-disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(subjectID)'));
+disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
 
 
 % Extraction of the masterFile
