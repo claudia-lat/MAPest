@@ -384,7 +384,7 @@ for blockIdx = 1 : block.nrOfBlocks
     for qIdx = 1 : size(EXO.qToCompare_right_round,1)
         for tableIdx = 1 : size(EXO.extractedData_noHeader,1)
             if (EXO.qToCompare_right_round(qIdx) == EXO.extractedData_noHeader(tableIdx,1))
-                EXO.tau_EXO_right(qIdx) = EXO.extractedData_noHeader(tableIdx,EXO.subjTorqueID(subjectID));
+                EXO.tau_EXO_right(qIdx) = - EXO.extractedData_noHeader(tableIdx,EXO.subjTorqueID(subjectID));
             end
         end
     end
