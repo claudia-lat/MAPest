@@ -53,16 +53,37 @@ else
 end
 
 if opts.EXO
+    % Add manually the mass of the exo (1.6 kg) in the following way:
+    % 1 kg on Pelvis
+    % 0.3 kg on LeftShoulder
+    % 0.3 kg on RightShoulder
     if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'), 'file')
-        % Add manually the mass of the exo when used
         subjectParamsFromDataEXO = subjectParamsFromData;
-        subjectParamsFromDataEXO.pelvisMass = subjectParamsFromData.pelvisMass + 1.6;
+        % Pelvis
+        subjectParamsFromDataEXO.pelvisMass = subjectParamsFromData.pelvisMass + 1;
         subjectParamsFromDataEXO.pelvisIxx  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(2))^2 + (subjectParamsFromData.pelvisBox(3))^2);
         subjectParamsFromDataEXO.pelvisIyy  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(1))^2);
         subjectParamsFromDataEXO.pelvisIzz  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(2))^2);
+        % Left Shoulder
+        subjectParamsFromDataEXO.leftShoulderMass = subjectParamsFromData.leftShoulderMass + 0.3;
+        subjectParamsFromDataEXO.leftShoulderIxx  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
+        subjectParamsFromDataEXO.leftShoulderIyy  = (subjectParamsFromDataEXO.leftShoulderMass/2) * ...
+            ((subjectParamsFromData.leftSho_z/2)^2);
+        subjectParamsFromDataEXO.leftShoulderIzz  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
+        % Right Shoulder
+        subjectParamsFromDataEXO.rightShoulderMass = subjectParamsFromData.rightShoulderMass + 0.3;
+        subjectParamsFromDataEXO.rightShoulderIxx  = (subjectParamsFromDataEXO.rightShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.rightSho_z/2)^2 + subjectParamsFromData.rightSho_y^2);
+        subjectParamsFromDataEXO.rightShoulderIyy  = (subjectParamsFromDataEXO.rightShoulderMass/2) * ...
+            ((subjectParamsFromData.rightSho_z/2)^2);
+        subjectParamsFromDataEXO.rightShoulderIzz  = (subjectParamsFromDataEXO.rightShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.rightSho_z/2)^2 + subjectParamsFromData.rightSho_y^2);
+
         save(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
     else
         load(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
