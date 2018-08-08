@@ -53,10 +53,10 @@ else
 end
 
 if opts.EXO
-    % Add manually the mass of the exo (1.6 kg) in the following way:
+    % Add manually the mass of the exo (1.8 kg) in the following way:
     % 1 kg on Pelvis
-    % 0.3 kg on LeftShoulder
-    % 0.3 kg on RightShoulder
+    % 0.4 kg on LeftShoulder
+    % 0.4 kg on RightShoulder
     if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'), 'file')
         subjectParamsFromDataEXO = subjectParamsFromData;
         % Pelvis
@@ -68,7 +68,7 @@ if opts.EXO
         subjectParamsFromDataEXO.pelvisIzz  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(2))^2);
         % Left Shoulder
-        subjectParamsFromDataEXO.leftShoulderMass = subjectParamsFromData.leftShoulderMass + 0.3;
+        subjectParamsFromDataEXO.leftShoulderMass = subjectParamsFromData.leftShoulderMass + 0.4;
         subjectParamsFromDataEXO.leftShoulderIxx  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
             (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
         subjectParamsFromDataEXO.leftShoulderIyy  = (subjectParamsFromDataEXO.leftShoulderMass/2) * ...
@@ -76,7 +76,7 @@ if opts.EXO
         subjectParamsFromDataEXO.leftShoulderIzz  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
             (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
         % Right Shoulder
-        subjectParamsFromDataEXO.rightShoulderMass = subjectParamsFromData.rightShoulderMass + 0.3;
+        subjectParamsFromDataEXO.rightShoulderMass = subjectParamsFromData.rightShoulderMass + 0.4;
         subjectParamsFromDataEXO.rightShoulderIxx  = (subjectParamsFromDataEXO.rightShoulderMass/12) * ...
             (3 * (subjectParamsFromData.rightSho_z/2)^2 + subjectParamsFromData.rightSho_y^2);
         subjectParamsFromDataEXO.rightShoulderIyy  = (subjectParamsFromDataEXO.rightShoulderMass/2) * ...
