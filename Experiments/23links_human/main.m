@@ -496,14 +496,20 @@ if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
 end
 
-%% ------------------------------- EXO ------------------------------------
-%% Extraction data from EXO analysis
+%% Change of coordinates (CoC) analysis
+% Important note:
+% ---------------
+% This change of coordinates is related only to:
+% q_leftShoulder & tau_leftShoulder
+% q_rightShoulder & tau_rightShoulder
+% ---------------
+changeOfCoordinates;
+save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
+
 if opts.EXO
-    if ~exist(fullfile(bucket.pathToProcessedData,'exo.mat'), 'file')
-%         extractDataFromEXO;
-        comparisonMAPvsEXOtorques;
-        save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
-    else
-        load(fullfile(bucket.pathToProcessedData,'exo.mat'));
-    end
+   EXOdataExtraction;
+   save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
 end
+
+%% Final plots
+finalPlots;

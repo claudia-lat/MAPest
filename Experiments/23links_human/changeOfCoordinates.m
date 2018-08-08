@@ -1,22 +1,8 @@
 
-% Comparison MAPest torques with EXO torques
-
 %% Preliminaries
 close all;
 powerTest = false;
-
-% Load variables
-load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
-load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
-load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
-
-% Blocks
-block.labels = {'block1'; ...
-    'block2'; ...
-    'block3'; ...
-    'block4'; ...
-    'block5'};
-block.nrOfBlocks = size(block.labels,1);
+CoC_analysisPlot = false;
 
 for sjIdx = 1 : size(selectedJoints,1)
     % Right shoulder
@@ -48,17 +34,15 @@ for sjIdx = 1 : size(selectedJoints,1)
 %     end
 end
 
-%% ======================= CHANGE OF COORDINATES ==========================
+%% Change of coordinates
+% This step was useful to match the torques given by the Exo.
+% To be consistent, the change has been done also for the trials with NO
+% Exo.
+
 for blockIdx = 1 : block.nrOfBlocks
     len = size(synchroKin(blockIdx).masterTime ,2);
     
     %% -------Right shoulder angles/torques analysis
-    fig = figure();
-    axes1 = axes('Parent',fig,'FontSize',16);
-    box(axes1,'on');
-    hold(axes1,'on');
-    grid on;
-    
     % Original angles from Opensim IK (q) in deg
     qx_rightSho = synchroKin(blockIdx).q(jRshoRotx_idx,:) * 180/pi; %deg
     qy_rightSho = synchroKin(blockIdx).q(jRshoRoty_idx,:) * 180/pi; %deg
@@ -71,36 +55,44 @@ for blockIdx = 1 : block.nrOfBlocks
         estimatedVariables.tau(blockIdx).values(jRshoRotz_idx,:)];
 %     tau_rightC7Sho = estimatedVariables.tau(blockIdx).values(jRshoC7Rotx_idx,:);
     
-    subplot (421) % angles q
-    plot(qx_rightSho,'r','Linewidth',1.5)
-    hold on
-    plot(qy_rightSho,'g','Linewidth',1.5)
-    hold on
-    plot(qz_rightSho,'b','Linewidth',1.5)
-%     hold on
-%     plot(qx_rightC7Sho,'m','Linewidth',1.5)
-%     hold on
-%     plot(qx_rightC7Sho + qx_rightSho,'k','Linewidth',1.5)
-    ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    title(sprintf('jRightShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('$q_x$','$q_y$','$q_z$'); %    leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$','$qTot_x$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
-    
-    subplot (423) %torques tau
-    plot(tau_rightSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(tau_rightSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(tau_rightSho(3,:),'b','Linewidth',1.5)
-%     hold on
-%     plot(tau_rightC7Sho,'m','Linewidth',1.5)
-    ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
+    if CoC_analysisPlot
+        fig = figure();
+        axes1 = axes('Parent',fig,'FontSize',16);
+        box(axes1,'on');
+        hold(axes1,'on');
+        grid on;
+        
+        subplot (421) % angles q
+        plot(qx_rightSho,'r','Linewidth',1.5)
+        hold on
+        plot(qy_rightSho,'g','Linewidth',1.5)
+        hold on
+        plot(qz_rightSho,'b','Linewidth',1.5)
+    %     hold on
+    %     plot(qx_rightC7Sho,'m','Linewidth',1.5)
+    %     hold on
+    %     plot(qx_rightC7Sho + qx_rightSho,'k','Linewidth',1.5)
+        ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        title(sprintf('jRightShoulder, Block %s', num2str(blockIdx)))
+        leg = legend('$q_x$','$q_y$','$q_z$'); %    leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$','$qTot_x$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+
+        subplot (423) %torques tau
+        plot(tau_rightSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(tau_rightSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(tau_rightSho(3,:),'b','Linewidth',1.5)
+    %     hold on
+    %     plot(tau_rightC7Sho,'m','Linewidth',1.5)
+        ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+    end
     
     qFirst_rightSho = zeros(3,len);
     jacobian_q_rightSho = cell(len,1);
@@ -153,31 +145,32 @@ for blockIdx = 1 : block.nrOfBlocks
         tauFirst_rightSho(:,i) = inv(jacobian_q_rightSho{i})' * tau_rightSho(:,i);
     end
     
-    subplot (425) %angles qFirst
-    plot(qFirst_rightSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(qFirst_rightSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(qFirst_rightSho(3,:),'b','Linewidth',1.5)
-    ylabel('$q\prime$ [deg]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-%     title(sprintf('jRightShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('${q_x}\prime$','${q_y}\prime$','${q_z}\prime$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
-    
-    subplot (427) %torques tauFirst
-    plot(tauFirst_rightSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(tauFirst_rightSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(tauFirst_rightSho(3,:),'b','Linewidth',1.5)
-    ylabel('$\tau\prime$ [Nm]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    leg = legend('${\tau_x}\prime$','${\tau_y}\prime$','${\tau_z}\prime$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
+    if CoC_analysisPlot
+        subplot (425) %angles qFirst
+        plot(qFirst_rightSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(qFirst_rightSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(qFirst_rightSho(3,:),'b','Linewidth',1.5)
+        ylabel('$q\prime$ [deg]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+    %     title(sprintf('jRightShoulder, Block %s', num2str(blockIdx)))
+        leg = legend('${q_x}\prime$','${q_y}\prime$','${q_z}\prime$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
 
+        subplot (427) %torques tauFirst
+        plot(tauFirst_rightSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(tauFirst_rightSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(tauFirst_rightSho(3,:),'b','Linewidth',1.5)
+        ylabel('$\tau\prime$ [Nm]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        leg = legend('${\tau_x}\prime$','${\tau_y}\prime$','${\tau_z}\prime$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+    end
     %% -------Left shoulder angles/torques analysis
     
     % Original angles from Opensim IK (q) in deg
@@ -191,38 +184,40 @@ for blockIdx = 1 : block.nrOfBlocks
         estimatedVariables.tau(blockIdx).values(jLshoRoty_idx,:); ...
         estimatedVariables.tau(blockIdx).values(jLshoRotz_idx,:)];
 %     tau_leftC7Sho = estimatedVariables.tau(blockIdx).values(jLshoC7Rotx_idx,:);
+    
+    if CoC_analysisPlot
+        subplot (422) % angles q
+        plot(qx_leftSho,'r','Linewidth',1.5)
+        hold on
+        plot(qy_leftSho,'g','Linewidth',1.5)
+        hold on
+        plot(qz_leftSho,'b','Linewidth',1.5)
+    %     hold on
+    %     plot(qx_leftC7Sho,'m','Linewidth',1.5)
+    %     hold on
+    %     plot(qx_leftC7Sho + qx_leftSho,'k','Linewidth',1.5)
+        ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        title(sprintf('jLeftShoulder, Block %s', num2str(blockIdx)))
+        leg = legend('$q_x$','$q_y$','$q_z$'); %leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$', '$qTot_x$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
 
-    subplot (422) % angles q
-    plot(qx_leftSho,'r','Linewidth',1.5)
-    hold on
-    plot(qy_leftSho,'g','Linewidth',1.5)
-    hold on
-    plot(qz_leftSho,'b','Linewidth',1.5)
-%     hold on
-%     plot(qx_leftC7Sho,'m','Linewidth',1.5)
-%     hold on
-%     plot(qx_leftC7Sho + qx_leftSho,'k','Linewidth',1.5)
-    ylabel('$q$ [deg]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    title(sprintf('jLeftShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('$q_x$','$q_y$','$q_z$'); %leg = legend('$q_x$','$q_y$','$q_z$','$qC7_x$', '$qTot_x$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
-    
-    subplot (424) %torques tau
-    plot(tau_leftSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(tau_leftSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(tau_leftSho(3,:),'b','Linewidth',1.5)
-%     hold on
-%     plot(tau_leftC7Sho,'m','Linewidth',1.5)
-    ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
-    
+        subplot (424) %torques tau
+        plot(tau_leftSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(tau_leftSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(tau_leftSho(3,:),'b','Linewidth',1.5)
+    %     hold on
+    %     plot(tau_leftC7Sho,'m','Linewidth',1.5)
+        ylabel('$\tau$ [Nm]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        leg = legend('$\tau_x$','$\tau_y$','$\tau_z$'); %leg = legend('$\tau_x$','$\tau_y$','$\tau_z$','${\tau}C7_x$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+     end
+ 
     qFirst_leftSho = zeros(3,len);
     jacobian_q_leftSho = cell(len,1);
     tauFirst_leftSho = zeros(3,len);
@@ -275,46 +270,48 @@ for blockIdx = 1 : block.nrOfBlocks
 
     end
     
-    subplot (426) %angles qFirst
-    plot(qFirst_leftSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(qFirst_leftSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(qFirst_leftSho(3,:),'b','Linewidth',1.5)
-    ylabel('$q\prime$ [deg]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-%     title(sprintf('jLeftShoulder, Block %s', num2str(blockIdx)))
-    leg = legend('${q_x}\prime$','${q_y}\prime$','${q_z}\prime$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
+    if CoC_analysisPlot
+        subplot (426) %angles qFirst
+        plot(qFirst_leftSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(qFirst_leftSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(qFirst_leftSho(3,:),'b','Linewidth',1.5)
+        ylabel('$q\prime$ [deg]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+    %     title(sprintf('jLeftShoulder, Block %s', num2str(blockIdx)))
+        leg = legend('${q_x}\prime$','${q_y}\prime$','${q_z}\prime$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+
+        subplot (428) %torques tauFirst
+        plot(tauFirst_leftSho(1,:),'r','Linewidth',1.5)
+        hold on
+        plot(tauFirst_leftSho(2,:),'g','Linewidth',1.5)
+        hold on
+        plot(tauFirst_leftSho(3,:),'b','Linewidth',1.5)
+        ylabel('$\tau\prime$ [Nm]','FontSize',15,'Interpreter','latex');
+        xlabel('samples','FontSize',15);
+        leg = legend('${\tau_x}\prime$','${\tau_y}\prime$','${\tau_z}\prime$');
+        set(leg,'FontSize',17)
+        set(leg,'Interpreter','latex');
+    end
     
-    subplot (428) %torques tauFirst
-    plot(tauFirst_leftSho(1,:),'r','Linewidth',1.5)
-    hold on
-    plot(tauFirst_leftSho(2,:),'g','Linewidth',1.5)
-    hold on
-    plot(tauFirst_leftSho(3,:),'b','Linewidth',1.5)
-    ylabel('$\tau\prime$ [Nm]','FontSize',15,'Interpreter','latex');
-    xlabel('samples','FontSize',15);
-    leg = legend('${\tau_x}\prime$','${\tau_y}\prime$','${\tau_z}\prime$');
-    set(leg,'FontSize',17)
-    set(leg,'Interpreter','latex');
-    
-    %% Save comparison data in a struct
-    exo(blockIdx).block = block.labels(blockIdx);
-    exo(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
+    %% Save CoC data in a struct
+    CoC(blockIdx).block = block.labels(blockIdx);
+    CoC(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
     % right shoulder
-    exo(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho];
-    exo(blockIdx).Rsho_tau = tau_rightSho;
-    exo(blockIdx).J_right = jacobian_q_rightSho;
-    exo(blockIdx).Rsho_qFirst = qFirst_rightSho;
-    exo(blockIdx).Rsho_tauFirst = tauFirst_rightSho;
+    CoC(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho];
+    CoC(blockIdx).Rsho_tau = tau_rightSho;
+    CoC(blockIdx).J_right = jacobian_q_rightSho;
+    CoC(blockIdx).Rsho_qFirst = qFirst_rightSho;
+    CoC(blockIdx).Rsho_tauFirst = tauFirst_rightSho;
     % left shoulder
-    exo(blockIdx).Lsho_q =[qx_leftSho; qy_leftSho; qz_leftSho];
-    exo(blockIdx).Lsho_tau = tau_leftSho;
-    exo(blockIdx).J_left = jacobian_q_leftSho;
-    exo(blockIdx).Lsho_qFirst = qFirst_leftSho;
-    exo(blockIdx).Lsho_tauFirst = tauFirst_leftSho;
+    CoC(blockIdx).Lsho_q =[qx_leftSho; qy_leftSho; qz_leftSho];
+    CoC(blockIdx).Lsho_tau = tau_leftSho;
+    CoC(blockIdx).J_left = jacobian_q_leftSho;
+    CoC(blockIdx).Lsho_qFirst = qFirst_leftSho;
+    CoC(blockIdx).Lsho_tauFirst = tauFirst_leftSho;
 
 end
 
@@ -344,11 +341,11 @@ if powerTest
 
         for i = 1 : len
             %rightSho
-            LHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * (exo(blockIdx).Rsho_tau(:,i));
-            RHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * exo(blockIdx).J_right{i, 1}'*(exo(blockIdx).Rsho_tauFirst(:,i));
+            LHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * (CoC(blockIdx).Rsho_tau(:,i));
+            RHS_right_tmp(i,1) = (qDot_rightSho(:,i))' * CoC(blockIdx).J_right{i, 1}'*(CoC(blockIdx).Rsho_tauFirst(:,i));
             %leftSho
-            LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (exo(blockIdx).Lsho_tau(:,i));
-            RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * exo(blockIdx).J_left{i, 1}'*(exo(blockIdx).Lsho_tauFirst(:,i));
+            LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (CoC(blockIdx).Lsho_tau(:,i));
+            RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * CoC(blockIdx).J_left{i, 1}'*(CoC(blockIdx).Lsho_tauFirst(:,i));
         end
         powerTest(blockIdx).block = block.labels(blockIdx);
         powerTest(blockIdx).LHS_right = LHS_right_tmp;
@@ -361,59 +358,7 @@ if powerTest
     end
 end
 
-%% =========================== EXO ANALYSIS ===============================
-% Extract data from EXO table and compare with the tauFirst(1,:).
-% Note: the exo angles has to be compared with the tauFirst x and not 
-% from tau_MAP anymore.
-EXO.opts.plots = true;
 
-% Load EXO data
-EXO.dataFilename = fullfile(bucket.datasetRoot, 'EXOforceData.csv');
-
-% Extract EXO data
-EXO.extractedData = table2array(readtable(EXO.dataFilename,'Delimiter',';'));
-EXO.extractedData_noHeader = str2double(EXO.extractedData(2:end,:));
-EXO.subjTorqueID = (4:3:37);
-
-for blockIdx = 1 : block.nrOfBlocks
-    %% -------Right shoulder
-    EXO.qToCompare_right = (- exo(blockIdx).Rsho_qFirst(1,:) + 90)'; % operation to compare the angles: change sign and then +90 deg
-    EXO.qToCompare_right_round = round(EXO.qToCompare_right);
-    
-    EXO.tau_EXO_right = zeros(1,size(EXO.qToCompare_right_round,1));
-    for qIdx = 1 : size(EXO.qToCompare_right_round,1)
-        for tableIdx = 1 : size(EXO.extractedData_noHeader,1)
-            if (EXO.qToCompare_right_round(qIdx) == EXO.extractedData_noHeader(tableIdx,1))
-                EXO.tau_EXO_right(qIdx) = - EXO.extractedData_noHeader(tableIdx,EXO.subjTorqueID(subjectID));
-            end
-        end
-    end
-    
-    %% -------Left shoulder
-    EXO.qToCompare_left = (exo(blockIdx).Lsho_qFirst(1,:) + 90)'; % operation to compare the angles: +90 deg
-    EXO.qToCompare_left_round = round(EXO.qToCompare_left);
-    
-    EXO.tau_EXO_left = zeros(1,size(EXO.qToCompare_left_round,1));
-    for qIdx = 1 : size(EXO.qToCompare_left_round,1)
-        for tableIdx = 1 : size(EXO.extractedData_noHeader,1)
-            if (EXO.qToCompare_left_round(qIdx) == EXO.extractedData_noHeader(tableIdx,1))
-                EXO.tau_EXO_left(qIdx) = EXO.extractedData_noHeader(tableIdx,EXO.subjTorqueID(subjectID));
-            end
-        end
-    end
-    
-    %% Save EXO torques in a struct  
-    exo(blockIdx).torqueFromTable_right = EXO.tau_EXO_right;
-    exo(blockIdx).torqueFromTable_left  = EXO.tau_EXO_left;
-    % tauFirst_MAPest - tau_EXOfromTable
-    exo(blockIdx).torqueDiff_right = exo(blockIdx).Rsho_tauFirst(1,:) - EXO.tau_EXO_right;
-    exo(blockIdx).torqueDiff_left  = exo(blockIdx).Lsho_tauFirst(1,:) - EXO.tau_EXO_left;
-end
-
-%% Plots of (tauFirst_MAPest - tau_EXOfromTable)
-if EXO.opts.plots
-    EXOplots;
-end
 
 %% Utility
 function [Rx, Ry, Rz] = angle2rots(x)
@@ -436,3 +381,6 @@ Rz = [ cos(x(3)) -sin(x(3)) 0;
        sin(x(3))  cos(x(3)) 0;
            0          0     1];
 end
+
+
+
