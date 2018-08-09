@@ -1,8 +1,14 @@
 
-%% CSV file conversion
+%% ======================= CSV file conversion ============================
 % This script has to be launched after the overall analasys for all the
 % dataset subjects!
 
+%% Preliminaries
+
+% Reset EXO option
+EXOopts = false;
+
+% New dir for CSV files
 pathCSVfiles = fullfile(bucket.datasetRoot,'CSVfile');
 if ~exist(pathCSVfiles,'dir')
     mkdir(pathCSVfiles);
@@ -45,7 +51,7 @@ for subjIdx = 1 : length(subjectID)
     pathToSubjectFolder = fullfile(pathCSVfiles,sprintf('S%02d',subjectID(subjIdx)));
     for taskIdx = 1 : length(taskID)
 
-        % exo options
+        % set exo options
         if (group1 && taskID(taskIdx) == 0) || (group2 && taskID(taskIdx) == 1)
             EXOopts = true;
         end
@@ -71,7 +77,7 @@ for subjIdx = 1 : length(subjectID)
             copyfile(filenameURDFexo,pathToSubjectFolder);
         end
 
-        %% CSV conversion of the joint kinematics
+        %% CSV conversion of the (whole-body) joint kinematics (no CoC)
         load(fullfile(pathToProcessedData,'selectedJoints.mat'));
         load(fullfile(pathToProcessedData,'synchroKin.mat'));
         
@@ -101,64 +107,120 @@ for subjIdx = 1 : length(subjectID)
             end
         end
 
-        %% CSV conversion of the estimated torques
+        %% CSV conversion of the shoulders comparison (CoC)
+        load(fullfile(pathToProcessedData,'CoC.mat'));
+
+        shouldersData = struct;
+        % Concatenate labels
+        shouldersLabel  = {'Rsho_CoC_qx','Lsho_CoC_qx','Rsho_CoC_taux','Lsho_CoC_taux'};
+
+        if EXOopts
+            if ~exist(fullfile(pathToTaskFolder,sprintf('shouldersDataCoC_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
+                load(fullfile(pathToProcessedData,'exo.mat'));
+                % struct shouldersDataCoC contains:
+                % - qFirst  , right/left --> from CoC.mat
+                % - tauDiff , right/left --> from exo.mat
+
+                for blockIdx = 1 : block.nrOfBlocks
+                    % Concatenate values
+                    shouldersValues = [CoC(blockIdx).Rsho_qFirst(1,:)', CoC(blockIdx).Lsho_qFirst(1,:)', ...
+                        exo(blockIdx).torqueDiff_right', exo(blockIdx).torqueDiff_left'];
+                    for labelIdx = 1 : size(shouldersLabel,2)
+                        for sampleIdx = 1 : size(CoC(blockIdx).masterTime,2)
+                            shouldersData(sampleIdx).masterTime = CoC(blockIdx).masterTime(sampleIdx);
+                            shouldersData(sampleIdx).(shouldersLabel{labelIdx}) = shouldersValues(sampleIdx,labelIdx);
+                        end
+                    end
+                    tmp_csvName = sprintf('shouldersDataCoC_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+                    writetable(struct2table(shouldersData), tmp_csvName);
+                    copyfile(tmp_csvName,pathToTaskFolder)
+                    delete(tmp_csvName);
+                end
+            end
+        else
+            if ~exist(fullfile(pathToTaskFolder,sprintf('shouldersDataCoC_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
+                % struct shouldersDataCoC contains:
+                % - qFirst   , right/left --> from CoC.mat
+                % - taufirst , right/left --> from CoC.mat
+
+                for blockIdx = 1 : block.nrOfBlocks
+                    % Concatenate values
+                    shouldersValues = [CoC(blockIdx).Rsho_qFirst(1,:)', CoC(blockIdx).Lsho_qFirst(1,:)', ...
+                        CoC(blockIdx).Rsho_tauFirst(1,:)', CoC(blockIdx).Lsho_tauFirst(1,:)'];
+                    for labelIdx = 1 : size(shouldersLabel,2)
+                        for sampleIdx = 1 : size(CoC(blockIdx).masterTime,2)
+                            shouldersData(sampleIdx).masterTime = CoC(blockIdx).masterTime(sampleIdx);
+                            shouldersData(sampleIdx).(shouldersLabel{labelIdx}) = shouldersValues(sampleIdx,labelIdx);
+                        end
+                    end
+                    tmp_csvName = sprintf('shouldersDataCoC_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+                    writetable(struct2table(shouldersData), tmp_csvName);
+                    copyfile(tmp_csvName,pathToTaskFolder)
+                    delete(tmp_csvName);
+                end
+            end
+        end
+
+        %% CSV conversion of the (whole-body) estimated torques (no CoC)
         load(fullfile(pathToProcessedData,'estimatedVariables.mat'));
 
-        % Estimation of the torques for ALL THE TASKS without considering
-        % the contribution of the EXO
-        if ~exist(fullfile(pathToTaskFolder,sprintf('estimatedTorque_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
+        if ~exist(fullfile(pathToTaskFolder,sprintf('jointTorque_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
             estimatedTorque = struct;
             for blockIdx = 1 : block.nrOfBlocks
                 for labelIdx = 1 : size(selectedJoints,1)
                     for sampleIdx = 1 :size(estimatedVariables.tau(blockIdx).values,2)
                         estimatedTorque(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
+                        % whole-body torques before CoC
+                        estimatedTorque(sampleIdx).(selectedJoints{labelIdx}) = estimatedVariables.tau(blockIdx).values(labelIdx, sampleIdx);
+                        % shoulders torques before CoC
                         estimatedTorque(sampleIdx).(selectedJoints{labelIdx}) = estimatedVariables.tau(blockIdx).values(labelIdx, sampleIdx);
                     end
                 end
-                tmp_csvName = sprintf('estimatedTorque_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+                tmp_csvName = sprintf('jointTorque_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
                 writetable(struct2table(estimatedTorque), tmp_csvName);
                 copyfile(tmp_csvName,pathToTaskFolder)
                 delete(tmp_csvName);
             end
         end
 
-        % Estimation of the shoulders torques for the EXO TASKS by considering
-        % the contribution of the EXO itself
-        if EXOopts
-            load(fullfile(pathToProcessedData,'exo.mat'))
-            if ~exist(fullfile(pathToTaskFolder,sprintf('estimatedTorqueEXO_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
-                estimatedTorqueEXO = struct;
-                for blockIdx = 1 : block.nrOfBlocks
-                    for sampleIdx = 1 :size(exo(blockIdx).masterTime,2)
-                        estimatedTorqueEXO(sampleIdx).masterTime  = exo(blockIdx).masterTime(sampleIdx);
-                        % --------- RightShoulder data (after change coordinates)
-                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
-                        estimatedTorqueEXO(sampleIdx).Rsho_qFirst = exo(blockIdx).Rsho_qFirst(1,sampleIdx);
-                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.tau fro rotx!!
-                        estimatedTorqueEXO(sampleIdx).Rsho_tauFirst = exo(blockIdx).Rsho_tauFirst(1,sampleIdx);
-                        % Exo torque extracted from table
-                        estimatedTorqueEXO(sampleIdx).Rsho_tauFromTable = exo(blockIdx).torqueFromTable_right(sampleIdx);
-                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
-                        estimatedTorqueEXO(sampleIdx).Rsho_torqueDiff = exo(blockIdx).torqueDiff_right(sampleIdx);
+%         % Estimation of the shoulders torques for the EXO TASKS by considering
+%         % the contribution of the EXO itself
+%         if EXOopts
+%             load(fullfile(pathToProcessedData,'exo.mat'))
+%             if ~exist(fullfile(pathToTaskFolder,sprintf('estimatedTorqueEXO_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
+%                 estimatedTorqueEXO = struct;
+%                 for blockIdx = 1 : block.nrOfBlocks
+%                     for sampleIdx = 1 :size(exo(blockIdx).masterTime,2)
+%                         estimatedTorqueEXO(sampleIdx).masterTime  = exo(blockIdx).masterTime(sampleIdx);
+%                         % --------- RightShoulder data (after change coordinates)
+%                         % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+%                         estimatedTorqueEXO(sampleIdx).Rsho_qFirst = exo(blockIdx).Rsho_qFirst(1,sampleIdx);
+%                         % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.tau fro rotx!!
+%                         estimatedTorqueEXO(sampleIdx).Rsho_tauFirst = exo(blockIdx).Rsho_tauFirst(1,sampleIdx);
+%                         % Exo torque extracted from table
+%                         estimatedTorqueEXO(sampleIdx).Rsho_tauFromTable = exo(blockIdx).torqueFromTable_right(sampleIdx);
+%                         % Diff (tauFirst_MAPest - tau_EXOfromTable)
+%                         estimatedTorqueEXO(sampleIdx).Rsho_torqueDiff = exo(blockIdx).torqueDiff_right(sampleIdx);
+%
+%                         % --------- LeftShoulder data (after change coordinates)
+%                         % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+%                         estimatedTorqueEXO(sampleIdx).Lsho_qFirst = exo(blockIdx).Lsho_qFirst(1,sampleIdx);
+%                         % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.taufor rotx!!
+%                         estimatedTorqueEXO(sampleIdx).Lsho_tauFirst = exo(blockIdx).Lsho_tauFirst(1,sampleIdx);
+%                         % Exo torque extracted from table
+%                         estimatedTorqueEXO(sampleIdx).Lsho_tauFromTable = exo(blockIdx).torqueFromTable_left(sampleIdx);
+%                         % Diff (tauFirst_MAPest - tau_EXOfromTable)
+%                         estimatedTorqueEXO(sampleIdx).Lsho_torqueDiff = exo(blockIdx).torqueDiff_left(sampleIdx);
+%                     end
+%                     tmp_csvName = sprintf('estimatedTorqueEXO_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
+%                     writetable(struct2table(estimatedTorqueEXO), tmp_csvName);
+%                     copyfile(tmp_csvName,pathToTaskFolder)
+%                     delete(tmp_csvName);
+%                 end
+%             end
+%         end
 
-                        % --------- LeftShoulder data (after change coordinates)
-                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
-                        estimatedTorqueEXO(sampleIdx).Lsho_qFirst = exo(blockIdx).Lsho_qFirst(1,sampleIdx);
-                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.taufor rotx!!
-                        estimatedTorqueEXO(sampleIdx).Lsho_tauFirst = exo(blockIdx).Lsho_tauFirst(1,sampleIdx);
-                        % Exo torque extracted from table
-                        estimatedTorqueEXO(sampleIdx).Lsho_tauFromTable = exo(blockIdx).torqueFromTable_left(sampleIdx);
-                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
-                        estimatedTorqueEXO(sampleIdx).Lsho_torqueDiff = exo(blockIdx).torqueDiff_left(sampleIdx);
-                    end
-                    tmp_csvName = sprintf('estimatedTorqueEXO_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
-                    writetable(struct2table(estimatedTorqueEXO), tmp_csvName);
-                    copyfile(tmp_csvName,pathToTaskFolder)
-                    delete(tmp_csvName);
-                end
-            end
-        end
-        % Reset exo option
+        %% Reset exo option
         EXOopts = false;
     end
 end
