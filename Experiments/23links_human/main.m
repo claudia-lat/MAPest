@@ -29,11 +29,14 @@ end
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
+    disp('-------------------------------------------------------------------');
+    disp(strcat('[Start] Suit extraction ...'));
     % 1) extract data from C++ parsed files
     extractSuitDataFromParsing;
     % 2) compute sensor position
     suit = computeSuitSensorPosition(suit);
     save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
+    disp(strcat('[End] Suit extraction'));
 else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
@@ -165,6 +168,8 @@ else
 end
 %% Inverse Kinematic computation
 if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
+    disp('-------------------------------------------------------------------');
+    disp(strcat('[Start] IK computation ...'));
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
     bucket.trcFile   = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
     bucket.motFile   = fullfile(bucket.pathToProcessedData,sprintf('S%02d_%02d.mot',subjectID,taskID));
@@ -177,6 +182,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
     save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
+    disp(strcat('[End] IK computation'));
 else
     load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
@@ -513,3 +519,5 @@ end
 
 %% Final plots
 finalPlots;
+
+disp('-------------------------------------------------------------------');
