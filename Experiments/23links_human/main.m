@@ -7,11 +7,24 @@ bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
+disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
+
+
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
 
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
+
+% Define the template to be used
+if opts.noC7joints
+    addpath(genpath('templatesNoC7'));
+    rmpath('templates'); %if exists
+    disp('[Warning]: The following analysis will be done with C7joints locked/fixed in the models!');
+else
+    addpath(genpath('templates'));
+    rmpath('templatesNoC7'); %if exists
+end
 
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
@@ -40,16 +53,37 @@ else
 end
 
 if opts.EXO
+    % Add manually the mass of the exo (1.8 kg) in the following way:
+    % 1 kg on Pelvis
+    % 0.4 kg on LeftShoulder
+    % 0.4 kg on RightShoulder
     if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'), 'file')
-        % Add manually the mass of the exo when used
         subjectParamsFromDataEXO = subjectParamsFromData;
-        subjectParamsFromDataEXO.pelvisMass = subjectParamsFromData.pelvisMass + 1.6;
+        % Pelvis
+        subjectParamsFromDataEXO.pelvisMass = subjectParamsFromData.pelvisMass + 1;
         subjectParamsFromDataEXO.pelvisIxx  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(2))^2 + (subjectParamsFromData.pelvisBox(3))^2);
         subjectParamsFromDataEXO.pelvisIyy  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(1))^2);
         subjectParamsFromDataEXO.pelvisIzz  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(2))^2);
+        % Left Shoulder
+        subjectParamsFromDataEXO.leftShoulderMass = subjectParamsFromData.leftShoulderMass + 0.4;
+        subjectParamsFromDataEXO.leftShoulderIxx  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
+        subjectParamsFromDataEXO.leftShoulderIyy  = (subjectParamsFromDataEXO.leftShoulderMass/2) * ...
+            ((subjectParamsFromData.leftSho_z/2)^2);
+        subjectParamsFromDataEXO.leftShoulderIzz  = (subjectParamsFromDataEXO.leftShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.leftSho_z/2)^2 + subjectParamsFromData.leftSho_y^2);
+        % Right Shoulder
+        subjectParamsFromDataEXO.rightShoulderMass = subjectParamsFromData.rightShoulderMass + 0.4;
+        subjectParamsFromDataEXO.rightShoulderIxx  = (subjectParamsFromDataEXO.rightShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.rightSho_z/2)^2 + subjectParamsFromData.rightSho_y^2);
+        subjectParamsFromDataEXO.rightShoulderIyy  = (subjectParamsFromDataEXO.rightShoulderMass/2) * ...
+            ((subjectParamsFromData.rightSho_z/2)^2);
+        subjectParamsFromDataEXO.rightShoulderIzz  = (subjectParamsFromDataEXO.rightShoulderMass/12) * ...
+            (3 * (subjectParamsFromData.rightSho_z/2)^2 + subjectParamsFromData.rightSho_y^2);
+
         save(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
     else
         load(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
@@ -57,39 +91,78 @@ if opts.EXO
 end
 
 %% Create URDF model
-bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
-if ~exist(bucket.filenameURDF, 'file')
-    bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-        suit.sensors,...
-        'filename',bucket.filenameURDF,...
-        'GazeboModel',false);
-end
-
-if opts.EXO
-    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
+if opts.noC7joints
+    % model NO exo, with C7 joints FIXED
+    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_noC7.urdf', subjectID));
     if ~exist(bucket.filenameURDF, 'file')
-        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
             suit.sensors,...
             'filename',bucket.filenameURDF,...
             'GazeboModel',false);
     end
-end
-
-%% Create OSIM model
-bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
-if ~exist(bucket.filenameOSIM, 'file')
-    bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
-        bucket.filenameOSIM);
-end
-
-if opts.EXO
-    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
-    if ~exist(bucket.filenameOSIM, 'file')
-        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
-            bucket.filenameOSIM);
+    % model WITH exo, with C7 joints FIXED
+    if opts.EXO
+        bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO_noC7.urdf', subjectID));
+        if ~exist(bucket.filenameURDF, 'file')
+            bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+                suit.sensors,...
+                'filename',bucket.filenameURDF,...
+                'GazeboModel',false);
+        end
+    end
+else
+    % model NO exo, with C7 joints (complete) REVOLUTE
+    bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
+    if ~exist(bucket.filenameURDF, 'file')
+        bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
+            suit.sensors,...
+            'filename',bucket.filenameURDF,...
+            'GazeboModel',false);
+    end
+    % model WITH exo, with C7 joints (complete) REVOLUTE
+    if opts.EXO
+        bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
+        if ~exist(bucket.filenameURDF, 'file')
+            bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
+                suit.sensors,...
+                'filename',bucket.filenameURDF,...
+                'GazeboModel',false);
+        end
     end
 end
 
+%% Create OSIM model
+if opts.noC7joints
+    % model NO exo, with C7 joints LOCKED
+    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_noC7.osim', subjectID));
+    if ~exist(bucket.filenameOSIM, 'file')
+        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+            bucket.filenameOSIM);
+    end
+    % model WITH exo, with C7 joints LOCKED
+    if opts.EXO
+        bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO_noC7.osim', subjectID));
+        if ~exist(bucket.filenameOSIM, 'file')
+            bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
+                bucket.filenameOSIM);
+        end
+    end
+else
+    % model NO exo, with C7 joints (complete) UNLOCKED
+    bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
+    if ~exist(bucket.filenameOSIM, 'file')
+        bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
+            bucket.filenameOSIM);
+    end
+    % model WITH exo, with C7 joints (complete) UNLOCKED
+    if opts.EXO
+        bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
+        if ~exist(bucket.filenameOSIM, 'file')
+            bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
+                bucket.filenameOSIM);
+        end
+    end
+end
 %% Inverse Kinematic computation
 if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
     bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
@@ -109,8 +182,7 @@ else
     load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
     load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
 end
-
-disp('Note: the IK is expressed in current frame and not in fixed frame!');
+% disp('[Warning]: The IK is expressed in current frame and not in fixed frame!');
 
 %% Raw data handling
 rawDataHandling;
@@ -121,6 +193,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'synchroKin.mat'), 'file')
     synchroKin = rmfield(synchroData,fieldsToBeRemoved);
     save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
 end
+load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
 
 %% Transform forces into human forces
 % Preliminary assumption on contact links: 2 contacts only (or both feet
@@ -132,6 +205,53 @@ bucket.contactLink{1} = 'RightFoot'; % human link in contact with RightShoe
 bucket.contactLink{2} = 'LeftFoot';  % human link in contact with LeftShoe
 for blockIdx = 1 : block.nrOfBlocks
     shoes(blockIdx) = transformShoesWrenches(synchroData(blockIdx), subjectParamsFromData);
+end
+
+%% Removal of C7 joints kinematics quantities
+if opts.noC7joints
+    if ~exist(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'), 'file')
+        load(fullfile(bucket.pathToProcessedData,'synchroKin.mat'));
+        synchroKinReduced = synchroKin;
+        % Get the indices to be removed
+        for sjIdx = 1 : size(selectedJoints,1)
+            if (strcmp(selectedJoints{sjIdx,1},'jRightC7Shoulder_rotx'))
+                jRshoC7Rotx_idx = sjIdx;
+            end
+        end
+        selectedJoints(jRshoC7Rotx_idx,:) = [];
+        
+        for sjIdx = 1 : size(selectedJoints,1)
+            if (strcmp(selectedJoints{sjIdx,1},'jLeftC7Shoulder_rotx'))
+                jLshoC7Rotx_idx = sjIdx;
+            end
+        end
+        selectedJoints(jLshoC7Rotx_idx,:) = [];
+        
+        selectedJointsReduced = selectedJoints;
+        for blockIdx = 1 : block.nrOfBlocks
+            synchroKinReduced(blockIdx).q(jRshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).dq(jRshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).ddq(jRshoC7Rotx_idx,:) = [];
+        end
+        for blockIdx = 1 : block.nrOfBlocks
+            synchroKinReduced(blockIdx).q(jLshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).dq(jLshoC7Rotx_idx,:) = [];
+            synchroKinReduced(blockIdx).ddq(jLshoC7Rotx_idx,:) = [];
+        end
+        save(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'),'selectedJointsReduced');
+        save(fullfile(bucket.pathToProcessedData,'synchroKinReduced.mat'),'synchroKinReduced');
+    else
+        load(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'));
+        load(fullfile(bucket.pathToProcessedData,'synchroKinReduced.mat'));
+    end
+
+    % Overwrite old variables with the new reduced variables
+    selectedJoints = selectedJointsReduced;
+    save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
+    synchroKin = synchroKinReduced;
+    save(fullfile(bucket.pathToProcessedData,'synchroKin.mat'),'synchroKin');
+    % Remove useless quantities
+    clearvars selectedJointsReduced synchroKinReduced;
 end
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
@@ -198,6 +318,8 @@ priors.ddq         = 6.66e-6;                        %[rad^2/s^4], from worst ca
 priors.foot_fext   = [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2], from worst case covariance
 priors.noSens_fext = 1e-6 * ones(6,1);               %[N^2,(Nm)^2]
 
+disp('-------------------------------------------------------------------');
+disp('[Start] Wrapping measurements...');
 for blockIdx = 1 : block.nrOfBlocks
     fext.rightHuman = shoes(blockIdx).Right_HF;
     fext.leftHuman  = shoes(blockIdx).Left_HF;
@@ -208,14 +330,14 @@ for blockIdx = 1 : block.nrOfBlocks
         humanSensors,...
         suit_runtime,...
         fext,...
-        synchroData(blockIdx).ddq,...
+        synchroKin(blockIdx).ddq,...
         bucket.contactLink, ...
         priors);
     % y vector as input for MAP
     [data(blockIdx).y, data(blockIdx).Sigmay] = berdyMeasurementsWrapping(berdy, ...
         data(blockIdx).data);
 end
-
+disp('[End] Wrapping measurements');
 % ---------------------------------------------------
 % CHECK: print the order of measurement in y
 % printBerdySensorOrder(berdy);
@@ -258,18 +380,21 @@ sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 % the ground).
 endEffectorFrame = 'LeftFoot';
 
+disp('-------------------------------------------------------------------');
+disp(strcat('[Start] Computing the <',currentBase,'> angular velocity...'));
 if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
         baseAngVel(blockIdx).block = block.labels(blockIdx);
         [baseAngVel(blockIdx).baseAngVelocity, baseKinDynModel] = computeBaseAngularVelocity( human_kinDynComp, ...
             currentBase, ...
-            synchroData(blockIdx), ...
+            synchroKin(blockIdx),...
             endEffectorFrame);
     end
     save(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'),'baseAngVel');
 else
     load(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'));
 end
+disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
@@ -277,26 +402,32 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
         priors.Sigmay = data(blockIdx).Sigmay;
         estimation(blockIdx).block = block.labels(blockIdx);
         if opts.Sigma_dgiveny
+            disp('-------------------------------------------------------------------');
+            disp(strcat('[Start] Complete MAP computation for Block ',num2str(blockIdx),'...'));
             [estimation(blockIdx).mu_dgiveny, estimation(blockIdx).Sigma_dgiveny] = MAPcomputation_floating(berdy, ...
                 traversal, ...
-                synchroData(blockIdx), ...
+                synchroKin(blockIdx),...
                 data(blockIdx).y, ...
                 priors, ...
                 baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+             disp(strcat('[End] Complete MAP computation for Block ',num2str(blockIdx)));
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
             % cannot be saved! therefore once computed it is necessary to extract data
             % related to tau and save that one!
             % TODO: extractSigmaOfEstimatedVariables
         else
+            disp('-------------------------------------------------------------------');
+            disp(strcat('[Start] mu_dgiveny MAP computation for Block ',num2str(blockIdx),'...'));
             [estimation(blockIdx).mu_dgiveny] = MAPcomputation_floating(berdy, ...
                 traversal, ...
-                synchroData(blockIdx), ...
+                synchroKin(blockIdx),...
                 data(blockIdx).y, ...
                 priors, ...
                 baseAngVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
+             disp(strcat('[End] mu_dgiveny MAP computation for Block ',num2str(blockIdx)));
         end
     end
     save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');
@@ -306,10 +437,28 @@ end
 
 %% Variables extraction from MAP estimation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
-    % torque extraction
-    extractEstimatedTau_from_mu_dgiveny   % extraction via Berdy
-    % fext extraction
-    extractEstimatedFext_from_mu_dgiveny  % manual (no Berdy) extraction
+    % torque extraction via Berdy
+    for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] Torque extraction for Block ',num2str(blockIdx),'...'));
+        estimatedVariables.tau(blockIdx).block  = block.labels(blockIdx);
+        estimatedVariables.tau(blockIdx).label  = selectedJoints;
+        estimatedVariables.tau(blockIdx).values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
+            estimation(blockIdx).mu_dgiveny, ...
+            synchroKin(blockIdx).q);
+        disp(strcat('[End] Torque extraction for Block ',num2str(blockIdx)));
+    end
+    % fext extraction, manual (no Berdy)
+    for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] External force extraction for Block ',num2str(blockIdx),'...'));
+        estimatedVariables.Fext(blockIdx).block  = block.labels(blockIdx);
+        estimatedVariables.Fext(blockIdx).label  = dVectorOrder;
+        estimatedVariables.Fext(blockIdx).values = extractEstimatedFext_from_mu_dgiveny(berdy, ...
+            dVectorOrder, ...
+            estimation(blockIdx).mu_dgiveny);
+        disp(strcat('[End] External force extraction for Block ',num2str(blockIdx)));
+    end
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
@@ -327,12 +476,15 @@ end
 % have to pass through the y_sim and only later to compare y and y_sim.
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] Simulated y computation for Block ',num2str(blockIdx),'...'));
         y_sim(blockIdx).block = block.labels(blockIdx);
         [y_sim(blockIdx).y_sim] = sim_y_floating(berdy, ...
-            synchroData(blockIdx), ...
+            synchroKin(blockIdx),...
             traversal, ...
             baseAngVel(blockIdx).baseAngVelocity, ...
             estimation(blockIdx).mu_dgiveny);
+        disp(strcat('[End] Simulated y computation for Block ',num2str(blockIdx)));
     end
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
 else
@@ -344,13 +496,20 @@ if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
 end
 
-%% ------------------------------- EXO ------------------------------------
-%% Extraction data from EXO analysis
+%% Change of coordinates (CoC) analysis
+% Important note:
+% ---------------
+% This change of coordinates is related only to:
+% q_leftShoulder & tau_leftShoulder
+% q_rightShoulder & tau_rightShoulder
+% ---------------
+changeOfCoordinates;
+save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
+
 if opts.EXO
-    if ~exist(fullfile(bucket.pathToProcessedData,'exo.mat'), 'file')
-        extractDataFromEXO;
-        save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
-    else
-        load(fullfile(bucket.pathToProcessedData,'exo.mat'));
-    end
+   EXOdataExtraction;
+   save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
 end
+
+%% Final plots
+finalPlots;

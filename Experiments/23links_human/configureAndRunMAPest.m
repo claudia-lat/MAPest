@@ -5,7 +5,6 @@ format long;
 
 %% Add src to the path
 addpath(genpath('src'));
-addpath(genpath('templates'));
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
 
@@ -32,6 +31,11 @@ taskID = 1;
 
 % Check the EXO option
 opts.EXO = true;
+
+% Option to put the C7 joints as follows:
+% - fixed in the URDF model
+% - locked on the Osim model
+opts.noC7joints = true;
 
 %% Run MAPest main.m
 main;

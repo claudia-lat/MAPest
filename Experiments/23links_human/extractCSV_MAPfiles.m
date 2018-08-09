@@ -1,5 +1,5 @@
 
-%% CSV file converstion
+%% CSV file conversion
 % This script has to be launched after the overall analasys for all the
 % dataset subjects!
 
@@ -12,6 +12,9 @@ end
 group1 = true;
 group2 = false;
 
+% Models option
+opts.noC7joints = true;
+
 if group1
     % GROUP 1
     subjectID = [1,3,5,7,9,11];
@@ -21,8 +24,16 @@ end
 if group2
     % GROUP 2
     subjectID = [2,4,6,8,10,12];
-    taskID = [0, 1, 2];
+    taskID = [0,1,2];
 end
+
+% Blocks
+block.labels = {'block1'; ...
+    'block2'; ...
+    'block3'; ...
+    'block4'; ...
+    'block5'};
+block.nrOfBlocks = size(block.labels,1);
 
 for subjIdx = 1 : length(subjectID)
     pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID(subjIdx)));
@@ -47,9 +58,18 @@ for subjIdx = 1 : length(subjectID)
         end
         pathToTaskFolder = fullfile(pathToSubjectFolder,sprintf('Task%d',taskID(taskIdx)));
         
-        %% Copy URDF model
-        filenameURDF = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID(subjIdx)));
-        copyfile(filenameURDF,pathToSubjectFolder);
+        %% Copy URDF model (with and without EXO)
+        if opts.noC7joints
+            filenameURDF = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof_noC7.urdf', subjectID(subjIdx)));
+            copyfile(filenameURDF,pathToSubjectFolder);
+            filenameURDFexo = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO_noC7.urdf', subjectID(subjIdx)));
+            copyfile(filenameURDFexo,pathToSubjectFolder);
+        else
+            filenameURDF = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID(subjIdx)));
+            copyfile(filenameURDF,pathToSubjectFolder);
+            filenameURDFexo = fullfile(pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID(subjIdx)));
+            copyfile(filenameURDFexo,pathToSubjectFolder);
+        end
 
         %% CSV conversion of the joint kinematics
         load(fullfile(pathToProcessedData,'selectedJoints.mat'));
@@ -109,10 +129,27 @@ for subjIdx = 1 : length(subjectID)
             if ~exist(fullfile(pathToTaskFolder,sprintf('estimatedTorqueEXO_S%02d_Task%d_Block1.csv',subjectID(subjIdx),taskID(taskIdx))), 'file')
                 estimatedTorqueEXO = struct;
                 for blockIdx = 1 : block.nrOfBlocks
-                    for sampleIdx = 1 :size(estimatedVariables.tau(blockIdx).values,2)
-                        estimatedTorqueEXO(sampleIdx).masterTime = synchroKin(blockIdx).masterTime(sampleIdx);
-                        estimatedTorqueEXO(sampleIdx).jRightShoulder_rotx = exo(blockIdx).torqueDiff_right(sampleIdx);
-                        estimatedTorqueEXO(sampleIdx).jLeftShoulder_rotx  = exo(blockIdx).torqueDiff_left(sampleIdx);
+                    for sampleIdx = 1 :size(exo(blockIdx).masterTime,2)
+                        estimatedTorqueEXO(sampleIdx).masterTime  = exo(blockIdx).masterTime(sampleIdx);
+                        % --------- RightShoulder data (after change coordinates)
+                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+                        estimatedTorqueEXO(sampleIdx).Rsho_qFirst = exo(blockIdx).Rsho_qFirst(1,sampleIdx);
+                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.tau fro rotx!!
+                        estimatedTorqueEXO(sampleIdx).Rsho_tauFirst = exo(blockIdx).Rsho_tauFirst(1,sampleIdx);
+                        % Exo torque extracted from table
+                        estimatedTorqueEXO(sampleIdx).Rsho_tauFromTable = exo(blockIdx).torqueFromTable_right(sampleIdx);
+                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
+                        estimatedTorqueEXO(sampleIdx).Rsho_torqueDiff = exo(blockIdx).torqueDiff_right(sampleIdx);
+
+                        % --------- LeftShoulder data (after change coordinates)
+                        % angle qFirst --> it is not the q contained in synchroKin for rotx!!
+                        estimatedTorqueEXO(sampleIdx).Lsho_qFirst = exo(blockIdx).Lsho_qFirst(1,sampleIdx);
+                        % torque tauFirst --> it is not the MAPest tau contained in estimatedVariables.taufor rotx!!
+                        estimatedTorqueEXO(sampleIdx).Lsho_tauFirst = exo(blockIdx).Lsho_tauFirst(1,sampleIdx);
+                        % Exo torque extracted from table
+                        estimatedTorqueEXO(sampleIdx).Lsho_tauFromTable = exo(blockIdx).torqueFromTable_left(sampleIdx);
+                        % Diff (tauFirst_MAPest - tau_EXOfromTable)
+                        estimatedTorqueEXO(sampleIdx).Lsho_torqueDiff = exo(blockIdx).torqueDiff_left(sampleIdx);
                     end
                     tmp_csvName = sprintf('estimatedTorqueEXO_S%02d_Task%d_Block%d.csv',subjectID(subjIdx),taskID(taskIdx), blockIdx);
                     writetable(struct2table(estimatedTorqueEXO), tmp_csvName);
