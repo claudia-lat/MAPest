@@ -301,16 +301,16 @@ for blockIdx = 1 : block.nrOfBlocks
     CoC(blockIdx).block = block.labels(blockIdx);
     CoC(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
     % right shoulder
-    CoC(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho];
+    CoC(blockIdx).Rsho_q =[qx_rightSho; qy_rightSho; qz_rightSho]; %deg
     CoC(blockIdx).Rsho_tau = tau_rightSho;
     CoC(blockIdx).J_right = jacobian_q_rightSho;
-    CoC(blockIdx).Rsho_qFirst = qFirst_rightSho;
+    CoC(blockIdx).Rsho_qFirst = qFirst_rightSho; %deg
     CoC(blockIdx).Rsho_tauFirst = tauFirst_rightSho;
     % left shoulder
-    CoC(blockIdx).Lsho_q =[qx_leftSho; qy_leftSho; qz_leftSho];
+    CoC(blockIdx).Lsho_q =[qx_leftSho; qy_leftSho; qz_leftSho]; %deg
     CoC(blockIdx).Lsho_tau = tau_leftSho;
     CoC(blockIdx).J_left = jacobian_q_leftSho;
-    CoC(blockIdx).Lsho_qFirst = qFirst_leftSho;
+    CoC(blockIdx).Lsho_qFirst = qFirst_leftSho; %deg
     CoC(blockIdx).Lsho_tauFirst = tauFirst_leftSho;
 
 end
