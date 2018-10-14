@@ -3,15 +3,14 @@ function [subjectParams] = subjectParamsComputation(suit, M)
 % directly from suit data. The convention for the reference frame is that
 % one in Figure 60 of MVN user manual. 
 %
-% Important note1: 
+% Important notes:
 % - for pelvis link (the base) the reference frame is located in the point
 %   pHipOrigin. This is also the point of the location of the bounding
 %   box (so, the point wrt the COM is expressed).
 % - for all the other links, the location of the joint reference frame
-%   coincides with the bounding box origi (so, the point wrt the COM is 
+%   coincides with the bounding box origin (so, the point wrt the COM is
 %   expressed).
 %
-% Important note: 
 % For those links which are defined with a parallelepiped bounding box, the
 % convention for the size vector is: [DIM ALONG x, DIM ALONG y, DIM ALONG z].
 % For cylinder bounding boxes x dimension is the diameter.
@@ -64,8 +63,8 @@ subjectParams.L5BoxOrigin = 0.5 * [0, 0, L5_z] ;%wrt jL5S1
 subjectParams.L5Mass       = 0.102 * M;
 subjectParams.L5Ixx        = (subjectParams.L5Mass/12) * (L5_y^2 + L5_z^2);
 subjectParams.L5Iyy        = (subjectParams.L5Mass/12) * (L5_z^2 + L5_x^2);
-subjectParams.L5Izz        = (subjectParams.L5Mass/12) * (L5_x^2 * L5_y^2);
-% markers 
+subjectParams.L5Izz        = (subjectParams.L5Mass/12) * (L5_x^2 + L5_y^2);
+% markers
 [subjectParams.pL5SpinalProcess, ~] = pointsFromName(L5_struct.points, 'pL5SpinalProcess');
 %% L3 
 % joints
@@ -107,13 +106,13 @@ subjectParams.T12Izz        = (subjectParams.T12Mass/12) * (T12_x^2 + T12_y^2);
 % joints
 [T8_struct, ~] = linksFromName(suit.links, 'T8');
 [subjectParams.jT1C7, ~] = pointsFromName(T8_struct.points, 'jT1C7');
-[subjectParams.jRightC7Shoulder, ~] = pointsFromName(T8_struct.points, 'jRightC7Shoulder');
-[subjectParams.jLeftC7Shoulder, ~] = pointsFromName(T8_struct.points, 'jLeftC7Shoulder');
+[subjectParams.jRightT4Shoulder, ~] = pointsFromName(T8_struct.points, 'jRightT4Shoulder');
+[subjectParams.jLeftT4Shoulder, ~] = pointsFromName(T8_struct.points, 'jLeftT4Shoulder');
 % box sizes
 [pC7SpinalProcess, ~] = pointsFromName(T8_struct.points, 'pC7SpinalProcess');
 [pPX, ~] = pointsFromName(T8_struct.points, 'pPX');
 T8_x = pPX(1) - pC7SpinalProcess(1);
-T8_y = subjectParams.jLeftC7Shoulder(2) - subjectParams.jRightC7Shoulder(2) ;
+T8_y = subjectParams.jLeftT4Shoulder(2) - subjectParams.jRightT4Shoulder(2) ;
 T8_z = subjectParams.jT1C7(3);
 subjectParams.T8Box = [T8_x, T8_y, T8_z];
 % box origin
