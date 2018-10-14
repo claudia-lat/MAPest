@@ -28,18 +28,16 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors, v
 %
 %                    D(q,dq) d + b_D(q, dq) = 0               (2)
 %
-% again represented as a sparse matrix. 
-% MEASUREMENTS EQUATIONS (1) and CONSTRAINTS EQUATIONS (2) stacked
-% together represent the system that MAP solves.
-% 
-% For d it computes only the mean and not the variance.
-%
+% again represented as a sparse matrix.
+% By stacking together the MEASUREMENTS EQUATIONS (1) and CONSTRAINTS
+% EQUATIONS (2)the system that MAP solves is obtained.
+
 % -------------------------------------------------------------------------
-% Important note: 
-% the function provides an option for removing from the
-% analysis a sensor.  By default, if it is not specified anything, MAP is
+% NOTE:
+% The function provides an option to remove a specified sensor from the
+% analysis.  By default,  MAP is
 % computed by using all the sensors (i.e. the full vector of y
-% measurements). If it is specified in the option the sensor to remove, MAP
+% measurements). If the sensor to remove is specified in the option , MAP
 % loads the full y and then remove automatically values related to that
 % sensor and the related block variance from the Sigmay.
 % -------------------------------------------------------------------------
