@@ -1,14 +1,14 @@
 function [osimModelTemplate] = createXsensLikeOSIMmodel(subjectParams, filename)
-%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. Joints of 
-% the OSIM model are spherical joints.  The base of the model (pelvis) is 
+%CREATEXSENSLIKEOSIMMODEL generates an OSIM model of the subject. Joints of
+% the OSIM model are spherical joints.  The base of the model (pelvis) is
 % defined as floating base.
 %
-% Inputs : 
+% Inputs :
 % -  subjectParams  : anthropometric parameters;
-% -  filename       : (optional) allows to save the file.osim in a folder 
-%                      called 'Models'.  
-    
-osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate.osim');
+% -  filename       : (optional) allows to save the file.osim in a folder
+%                      called 'Models'.
+
+osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate48.osim');
 %% -- LINK BASE
 %% PELVIS (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'PELVIS_BOX_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));
@@ -108,7 +108,7 @@ osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDER_BOX_ORIGIN',num2str(
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDER_COM_ORIGIN',num2str(subjectParams.rightShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERHEIGHT',num2str(subjectParams.rightSho_y));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERRADIUS',num2str(subjectParams.rightSho_z/2));
-osimModelTemplate = strrep(osimModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightC7Shoulder'));
+osimModelTemplate = strrep(osimModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightT4Shoulder'));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERMASS',num2str(subjectParams.rightShoulderMass));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERINERTIAIXX',num2str(subjectParams.rightShoulderIxx));
 osimModelTemplate = strrep(osimModelTemplate,'RIGHTSHOULDERINERTIAIYY',num2str(subjectParams.rightShoulderIyy));
@@ -161,7 +161,7 @@ osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDER_BOX_ORIGIN',num2str(s
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDER_COM_ORIGIN',num2str(subjectParams.leftShoulderBoxOrigin));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERHEIGHT',num2str(subjectParams.leftSho_y));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERRADIUS',num2str(subjectParams.leftSho_z/2));
-osimModelTemplate = strrep(osimModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftC7Shoulder'));
+osimModelTemplate = strrep(osimModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftT4Shoulder'));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERMASS',num2str(subjectParams.leftShoulderMass));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERINERTIAIXX',num2str(subjectParams.leftShoulderIxx));
 osimModelTemplate = strrep(osimModelTemplate,'LEFTSHOULDERINERTIAIYY',num2str(subjectParams.leftShoulderIyy));
@@ -327,8 +327,8 @@ if nargin == 2
     if ~exist(dir,'dir')
         mkdir(dir);
     end
-fileID = fopen(filename,'w');
-fprintf(fileID,'%s', osimModelTemplate);
-fclose(fileID);
+    fileID = fopen(filename,'w');
+    fprintf(fileID,'%s', osimModelTemplate);
+    fclose(fileID);
 end
 end
