@@ -112,12 +112,6 @@ end
 % meas
 data.fext.meas = cell(size(linkNameFromModel));
 
-% % get the contactLink
-% contactLink = cell(2,1);
-% contactLink{1} = bucket.contactLink{1};
-% contactLink{2} = bucket.contactLink{2};
-%
-
 index = cell(size(contactLink));
 for i = 1: size(contactLink,1)
     for indx = 1 : nOfSensor.fext
