@@ -1,4 +1,4 @@
-function [ dataPacked ] = dataPackaging(model, sensors, suit, forceplate, ddq, robot)
+function [ dataPacked ] = dataPackaging(model, sensors, suit, fext, ddq, contactLink, priors)
 %DATAPACKAGING creates a data struct organised in the following way:
 % - data.time (a unified time for all type of sensors)
 % Each substructure is identified by:
@@ -39,7 +39,7 @@ for i = 1 :  nOfSensor.acc
     end
 end
 % variance
-data.acc.var     = 0.001111 * ones(3,1); %from datasheet
+data.acc.var = priors.acc_IMU;
 
 % % % SENSOR: <GYROSCOPE>
 % % % type
@@ -66,8 +66,8 @@ data.acc.var     = 0.001111 * ones(3,1); %from datasheet
 % %     end
 % % end
 % % % variance
-% % data.gyro.var = 0.001111 * ones(3,1); %from datasheet
-%
+% % data.gyro.var = priors.gyro_IMU;
+
 %% FROM ddq
 nOfSensor.DOFacc = size(ddq,1);
 jointNameFromModel = cell(nOfSensor.DOFacc,1);
@@ -86,7 +86,7 @@ for i = 1 : nOfSensor.DOFacc
     data.ddq.meas{i} = ddq(i,:); 
 end
 % variance
-data.ddq.var = 6.66e-6; %from datasheet
+data.ddq.var = priors.ddq;
 
 %% FROM FORCEPLATE & ROBOT
 % ---------------------------------------------------------------
@@ -145,7 +145,8 @@ for i =  1 : nOfSensor.fext
     end
 end
 % variance
- data.fext.var = 1e-6 * ones(6,1); % variance for f ext 
+data.fext.var = priors.noSens_fext;
+
 %% Final Packaging
 dataPacked = struct;
 for i = 1 : nOfSensor.acc
@@ -175,7 +176,7 @@ for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).meas         = data.fext.meas{i};
     dataPacked(i + (indx)).var          = data.fext.var;
     if i == index{1}
-         dataPacked(i + (indx)).var     = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var     = priors.foot_fext;
     elseif i == index{2}
         dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     % <FOR ROBOT>
