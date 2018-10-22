@@ -31,9 +31,9 @@ nOfSensorsFromSuit = size(suit.sensors,1);
 for i = 1 :  nOfSensor.acc
     tempData(i,:) = strsplit(data.acc.id{i}, '_');
     sensorsLabelToCmp{i}= tempData(i,1);
-    for j = 1 : nOfSensorsFromSuit 
+    for j = 1 : nOfSensorsFromSuit
         if  strcmp(sensorsLabelToCmp{i},suit.sensors{j, 1}.label)
-            data.acc.meas{i} = suit.sensors{i, 1}.meas.sensorAcceleration;
+            data.acc.meas{i} = suit.sensors{i, 1}.meas.sensorOldAcceleration;
             break;
         end
     end
@@ -88,13 +88,11 @@ end
 % variance
 data.ddq.var = priors.ddq;
 
-%% FROM FORCEPLATE & ROBOT
+%% FROM FORCE SOURCE (it could be forceplates OR shoes)
 % ---------------------------------------------------------------
-% Both sensors are considered as external force acting as follow:
-% - on human rightFoot --> force platform1;
-% - on human leftFoot  --> force platform2;
-% - on human rightHand --> robot left arm;
-% - on human leftHand  --> robot right arm;
+% Both sensors are considered as external forces acting as follow:
+% - on human rightFoot --> FP1 or ftShoe_Right
+% - on human leftFoot  --> FP2 or ftShoe_Left
 % - null meas for all the others.
 % ---------------------------------------------------------------
 nOfSensor.fext = model.getNrOfLinks;
@@ -113,12 +111,13 @@ for i = 1 : nOfSensor.fext
 end
 % meas
 data.fext.meas = cell(size(linkNameFromModel));
-% get the contactLink
-contactLink = cell(2,1);
-contactLink{1} = forceplate.data.plateforms.plateform1.contactLink;
-contactLink{2} = forceplate.data.plateforms.plateform2.contactLink;
-contactLink{3} = robot.data.links.rightarm.contactLink;
-contactLink{4} = robot.data.links.leftarm.contactLink;
+
+% % get the contactLink
+% contactLink = cell(2,1);
+% contactLink{1} = bucket.contactLink{1};
+% contactLink{2} = bucket.contactLink{2};
+%
+
 index = cell(size(contactLink));
 for i = 1: size(contactLink,1)
     for indx = 1 : nOfSensor.fext
@@ -128,20 +127,19 @@ for i = 1: size(contactLink,1)
     end
 end
 % fill the all meas with null fext
-wrench = zeros(6,size(forceplate.processedData.humanLeftFootWrench,2));
+wrench = zeros(size(fext.rightHuman));
 for i =  1 : nOfSensor.fext
     data.fext.meas{i} = wrench;
     % fill with the 4 fext that are not null
     % <FOR FORCEPLATE>
     if i == index{1}
-        data.fext.meas{i} = forceplate.processedData.humanRightFootWrench;
+        data.fext.meas{i} = fext.rightHuman;
     elseif i == index{2}
-        data.fext.meas{i} = forceplate.processedData.humanLeftFootWrench;
-    % <FOR ROBOT>
-    elseif i == index{3}
-        data.fext.meas{i} = robot.processedData.humanLeftHandWrench;
-    elseif i == index{4}
-        data.fext.meas{i} = robot.processedData.humanRightHandWrench;
+        data.fext.meas{i} = fext.leftHuman;
+        %     elseif i == index{3}
+        %         data.fext.meas{i} = robot.processedData.humanLeftHandWrench;
+        %     elseif i == index{4}
+        %         data.fext.meas{i} = robot.processedData.humanRightHandWrench;
     end
 end
 % variance
@@ -178,12 +176,12 @@ for i = 1 : nOfSensor.fext
     if i == index{1}
         dataPacked(i + (indx)).var     = priors.foot_fext;
     elseif i == index{2}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
-    % <FOR ROBOT>
-    elseif i == index{3}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
-    elseif i == index{4}
-        dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        dataPacked(i + (indx)).var     = priors.foot_fext;
+        %     % <FOR ROBOT>
+        %     elseif i == index{3}
+        %         dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
+        %     elseif i == index{4}
+        %         dataPacked(i + (indx)).var      = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %from datasheet
     end
 end
 end
