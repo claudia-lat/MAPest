@@ -26,7 +26,7 @@ end
 
 for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     inpName = upper(pair{1}); % make case insensitive
-
+    
     if any(strcmp(inpName,optionNames))
         % overwrite options. If you want you can test for the right class here
         % Also, if you find out that there is an option you keep getting wrong,
@@ -38,11 +38,11 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
 end
 
 
-fileUrdfName = 'XSensModelStyle_URDFtemplate.urdf';
+fileUrdfName = 'XSensModelStyle_URDFtemplate48.urdf';
 urdfModelTemplate = fileread(fileUrdfName);
 %% Check sensor existence
 if exist('sensors', 'var')
-   fileID = fopen(fileUrdfName, 'w');
+    fileID = fopen(fileUrdfName, 'w');
     for i = 1 : size(sensors,1)
         fprintf(fileID,sprintf('<!-- Sensor % d-->\n',i));
         fprintf(fileID,sprintf('<sensor name="%s_gyro" type="gyroscope">\n',sensors{i, 1}.label));
@@ -52,7 +52,7 @@ if exist('sensors', 'var')
         fprintf(fileID,sprintf('<parent link="%s"/>\n',sensors{i, 1}.attachedLink));
         fprintf(fileID,sprintf('<origin xyz="%s" rpy="%s"/>\n</sensor>\n',num2str(sensors{i, 1}.position'),num2str(sensors{i, 1}.RPY)));
     end
-    sensorFile = fileread('XSensModelStyle_URDFtemplate.urdf');
+    sensorFile = fileread('XSensModelStyle_URDFtemplate48.urdf');
     fclose(fileID);
     delete(fullfile(pwd,fileUrdfName));
     sensorsInsertingPoint = '<!--Insert sensors here, if any.-->';
@@ -108,8 +108,8 @@ urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIXX',num2str(subjectParam
 urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIYY',num2str(subjectParams.T8Iyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'T8INERTIAIZZ',num2str(subjectParams.T8Izz));
 urdfModelTemplate = strrep(urdfModelTemplate,'jT1C7_ORIGIN',num2str(subjectParams.jT1C7'));
-urdfModelTemplate = strrep(urdfModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightC7Shoulder'));
-urdfModelTemplate = strrep(urdfModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftC7Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jRightC7Shoulder_ORIGIN',num2str(subjectParams.jRightT4Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jLeftC7Shoulder_ORIGIN',num2str(subjectParams.jLeftT4Shoulder'));
 %% NECK (solid: cylinder)
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_BOX_ORIGIN',num2str(subjectParams.neckBoxOrigin));
 urdfModelTemplate = strrep(urdfModelTemplate,'NECK_COM_ORIGIN',num2str(subjectParams.neckBoxOrigin));
@@ -158,7 +158,7 @@ urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMMASS',num2str(subjectP
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIXX',num2str(subjectParams.rightForeArmIxx));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIYY',num2str(subjectParams.rightForeArmIyy));
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTFOREARMINERTIAIZZ',num2str(subjectParams.rightForeArmIzz));
-urdfModelTemplate = strrep(urdfModelTemplate,'jRightElbow_ORIGIN',num2str(subjectParams.jRightC7Shoulder'));
+urdfModelTemplate = strrep(urdfModelTemplate,'jRightElbow_ORIGIN',num2str(subjectParams.jRightT4Shoulder'));
 urdfModelTemplate = strrep(urdfModelTemplate,'jRightWrist_ORIGIN',num2str(subjectParams.jRightWrist'));
 %% RIGHT HAND (solid: box)
 urdfModelTemplate = strrep(urdfModelTemplate,'RIGHTHAND_BOX_ORIGIN',num2str(subjectParams.rightHandBoxOrigin));
@@ -298,7 +298,6 @@ urdfModelTemplate = strrep(urdfModelTemplate,'FAKEIN',num2str(fakein));
 % Filename
 if ~isempty(options.FILENAME)
     [dir,~,~] = fileparts(options.FILENAME);
-    dir = fullfile(pwd, dir);
     if ~exist(dir,'dir')
         mkdir(dir);
     end
