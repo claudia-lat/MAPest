@@ -240,7 +240,7 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations()); % 1e-4 means high r
 
 sensorsToBeRemoved = [];
 
-% %-----HOW TO EXCLUDE FORCES AT THE HANDS
+% %-----HOW TO REMOVE WRENCH SENSORS FROM THE HANDS
 % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % bucket.temp.id = 'LeftHand';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
@@ -249,7 +249,7 @@ sensorsToBeRemoved = [];
 % bucket.temp.id = 'RightHand';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 
-% %-----HOW TO EXCLUDE FORCES AT THE FEET
+% %-----HOW TO REMOVE WRENCH SENSORS FROM THE FEET
 % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % bucket.temp.id = 'RightFoot';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
