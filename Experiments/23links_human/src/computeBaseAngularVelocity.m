@@ -1,6 +1,6 @@
 function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynDynComputation, currentBerdyBase, state, endEffectorFrame)
 %COMPUTEBASEANGULARVELOCITY computes the angular velocity of the model Base
-%via differential kinematic equation.
+%via differential kinematic equation in [rad/s].
 %
 % The velocity 6D of the base w.r.t. the inertial frame I is:
 %
@@ -17,7 +17,7 @@ function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynD
 %                       fixed contact with the ground).
 % Outputs: 
 %  - baseAngVelocity:   I_w_B, angular velocity of the base B w.r.t. the
-%                       inertail frame I.
+%                       inertail frame I, in [rad/s].
 
 iDynTreeJacobian = iDynTree.FrameFreeFloatingJacobian(kynDynComputation.model);
 iDynTreeJacobian.zero();
