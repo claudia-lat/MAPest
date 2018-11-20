@@ -1,4 +1,4 @@
-function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynDynComputation, currentBerdyBase, state, endEffectorFrame)
+function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kinDynComputation, currentBerdyBase, state, endEffectorFrame)
 %COMPUTEBASEANGULARVELOCITY computes the angular velocity of the model Base
 %via differential kinematic equation in [rad/s].
 %
@@ -9,7 +9,7 @@ function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynD
 % where I_v_B = [I_\dot(x)_B; I_w_B].
 
 % Inputs: 
-%  - kynDynComputation: berdy object
+%  - kinDynComputation: berdy object
 %  - currentBerdyBase:  base of the model you want to compute the angular velocity
 %  - state:             Matlab struct containing q and dq
 %  - endEffectorFrame:  frame of an end effector whose velocity is assumed to
@@ -19,21 +19,21 @@ function [ baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynD
 %  - baseAngVelocity:   I_w_B, angular velocity of the base B w.r.t. the
 %                       inertail frame I, in [rad/s].
 
-iDynTreeJacobian = iDynTree.FrameFreeFloatingJacobian(kynDynComputation.model);
+iDynTreeJacobian = iDynTree.FrameFreeFloatingJacobian(kinDynComputation.model);
 iDynTreeJacobian.zero();
 
-q  = iDynTree.JointPosDoubleArray(kynDynComputation.model);
-dq = iDynTree.JointDOFsDoubleArray(kynDynComputation.model);
+q  = iDynTree.JointPosDoubleArray(kinDynComputation.model);
+dq = iDynTree.JointDOFsDoubleArray(kinDynComputation.model);
 gravityZero = iDynTree.Vector3();
 gravityZero.zero();
 
 samples = size(state.q ,2);
 baseAngVelocity = zeros(3,samples);
 
-kynDynComputation.setFloatingBase(currentBerdyBase);
-baseKinDynModel = kynDynComputation.getFloatingBase();
+kinDynComputation.setFloatingBase(currentBerdyBase);
+baseKinDynModel = kinDynComputation.getFloatingBase();
 % Consistency check
-% berdy.model base and kynDynComputation.model have to be consistent!
+% berdy.model base and kinDynComputation.model have to be consistent!
 if currentBerdyBase ~= baseKinDynModel
     error(strcat('[ERROR] The berdy model base (',currentBerdyBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
 end
@@ -42,8 +42,8 @@ for i = 1 : samples
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
     % Compute the Jacobian J = [J(q)_B J(q)_S] from kin
-    kynDynComputation.setRobotState(q,dq,gravityZero);
-    kynDynComputation.getFrameFreeFloatingJacobian(endEffectorFrame, iDynTreeJacobian);
+    kinDynComputation.setRobotState(q,dq,gravityZero);
+    kinDynComputation.getFrameFreeFloatingJacobian(endEffectorFrame, iDynTreeJacobian);
     fullJacobian = iDynTreeJacobian.toMatlab();
     % Compute I_w_B
     I_v_B = - inv(fullJacobian(:,1:6))* fullJacobian(:,7:end)*state.dq(:,i);
