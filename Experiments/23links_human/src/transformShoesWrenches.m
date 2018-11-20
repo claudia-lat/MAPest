@@ -23,9 +23,6 @@ function [shoes] = transformShoesWrenches(synchroStruct, subjectParamsFromData)
 % locations.
 
 %% Build the transformations
-gravityZero = iDynTree.Vector3();
-gravityZero.zero();
-
 % LEFT---------------------------------------------------------------------
 leftHeel_T_leftFtShoeRot = iDynTree.Rotation();
 leftHeel_T_leftFtShoeRot.fromMatlab([ 1.0,  0.0,  0.0; ...
