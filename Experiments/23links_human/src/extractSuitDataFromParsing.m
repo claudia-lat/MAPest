@@ -16,7 +16,7 @@ tmp.dummyParsedMatrix = textscan(fileID, formatSpec,'MultipleDelimsAsOne', 1, 'D
 fclose(fileID);
 % -----
 % from .csv file:
-% index, msTime, xSensTime, each link (acceleration, orientation, angular
+% index, msTime, xSensTime, each link (position, acceleration, orientation, angular
 % velocity, angular acceleration), each sensor (orientation, free acceleration).
 % NOTE: This file is used for the MODEL CREATION and it is loaded and
 % processed once (i.e., one trial) per each subject!
@@ -50,7 +50,7 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.label = mvnxData.segments.segment(i).ATTRIBUTE.label;
     suit.links{i}.meas = struct;
     suit.links{i}.meas.orientation         = zeros(4, suit.properties.lenData);
-    %    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %uncomment if you want to use it
+    suit.links{i}.meas.position            = zeros(3, suit.properties.lenData);
     %    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %uncomment if you want to use it
     suit.links{i}.meas.acceleration        = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularVelocity     = zeros(3, suit.properties.lenData);
@@ -162,6 +162,9 @@ end
 %--------INTERMEDIATE STRUCT FROM CSV
 %--LINKS
 for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
+    if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'position:'))
+        tmp.lastIdxPos = i; %last index
+    end
     if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'acceleration:'))
         tmp.lastIdxAcc = i; %last index
     end
@@ -176,6 +179,9 @@ for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
     end
 end
 % (23x3 variables)
+tmp.link.position.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
+tmp.link.position.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
+
 tmp.link.acceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
 tmp.link.acceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
@@ -186,12 +192,15 @@ tmp.link.angularAcceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1
 tmp.link.angularAcceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
 for i = 1 : 3*(suit.properties.nrOfLinks)
+    tmp.link.position.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.position.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)));
+
     tmp.link.acceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)), 1};
     tmp.link.acceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)));
     
     tmp.link.angularVelocity.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)), 1};
     tmp.link.angularVelocity.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngVel - 3*(suit.properties.nrOfLinks)));
-    
+
     tmp.link.angularAcceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)), 1};
     tmp.link.angularAcceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAngAcc - 3*(suit.properties.nrOfLinks)));
 end
@@ -229,12 +238,13 @@ end
 %--------FROM TMP TO SUIT
 %--LINKS
 for suitLinkIdx = 1 : size(suit.links,1)
-    for j = 1:3*(suit.properties.nrOfLinks) % for link acc/angVel/angAcc
-        if (contains(tmp.link.acceleration.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
+    for j = 1:3*(suit.properties.nrOfLinks) % for link pos/acc/angVel/angAcc
+        if (contains(tmp.link.position.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
             tmpIndex = j;
             break;
         end
     end
+    suit.links{suitLinkIdx}.meas.position            = tmp.link.position.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.acceleration        = tmp.link.acceleration.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularVelocity     = tmp.link.angularVelocity.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularAcceleration = tmp.link.angularAcceleration.data(:,tmpIndex:tmpIndex+2)';
