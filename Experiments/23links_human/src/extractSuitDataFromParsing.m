@@ -21,8 +21,8 @@ fclose(fileID);
 % NOTE: This file is used for the MODEL CREATION and it is loaded and
 % processed once (i.e., one trial) per each subject!
 bucket.CSVfilename = fullfile(bucket.pathToSuitData, sprintf('S%02d_%02d.csv',subjectID,taskID));
-mvnxDataFromCSV.orderedLabel = (importCSVfile(bucket.CSVfilename,1,1))'; %list of strings
 mvnxDataFromCSV.data         = table2array(readtable(bucket.CSVfilename,'Delimiter',',')); %array
+mvnxDataFromCSV.orderedLabel = (getListFromCSV(bucket.CSVfilename,1,1,size(mvnxDataFromCSV.data,2)))'; %list of chars
 
 %% Create data struct
 suit =[];
