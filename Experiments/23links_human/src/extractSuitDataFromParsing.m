@@ -16,13 +16,13 @@ tmp.dummyParsedMatrix = textscan(fileID, formatSpec,'MultipleDelimsAsOne', 1, 'D
 fclose(fileID);
 % -----
 % from CSV file:
-% index, msTime, xSensTime, each link (acceleration, orientation, angular
+% index, msTime, xSensTime, each link (position, acceleration, orientation, angular
 % velocity, angular acceleration), each sensor (orientation, free acceleration).
 % NOTE: This file is used for the MODEL CREATION and it is loaded and
 % processed once (i.e., one trial) per each subject!
 bucket.CSVfilename = fullfile(bucket.pathToSuitData, sprintf('S%02d_%02d.csv',subjectID,taskID));
-mvnxDataFromCSV.orderedLabel = (importCSVfile(bucket.CSVfilename,1,1))'; %list of strings
 mvnxDataFromCSV.data         = table2array(readtable(bucket.CSVfilename,'Delimiter',',')); %array
+mvnxDataFromCSV.orderedLabel = (getListFromCSV(bucket.CSVfilename,1,1,size(mvnxDataFromCSV.data,2)))'; %list of char
 
 %% Create data struct
 suit =[];
@@ -50,8 +50,8 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.label = mvnxData.segments.segment(i).ATTRIBUTE.label;
     suit.links{i}.meas = struct;
     suit.links{i}.meas.orientation         = zeros(4, suit.properties.lenData);
-    %    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %not used in JSI analysis
-    %    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %not used in JSI analysis
+    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %not used in JSI analysis, not in the.csv
+    %    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %not used in JSI analysis, not in the.csv
     suit.links{i}.meas.acceleration        = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularVelocity     = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularAcceleration = zeros(3, suit.properties.lenData);
@@ -63,7 +63,7 @@ for i = 1 : suit.properties.nrOfLinks
         suit.links{i}.points.pointsValue(:,k) = mvnxData.segments.segment(i).points.point(k).pos_b;
     end
 end
-% --------JOINTS %not used in JSI analysis
+% --------JOINTS % not used in JSI analysis
 % suit.joints = cell(suit.properties.nrOfJoints,1);
 % for i = 1 : suit.properties.nrOfJoints
 %     suit.joints{i}.label              = mvnxData.joints.joint(i).ATTRIBUTE.label;
@@ -78,7 +78,7 @@ for i = 1 : suit.properties.nrOfSensors
     suit.sensors{i}.attachedLink               = suit.sensors{i}.label; % assumption: the label of the sensor is the same one of the link on which the sensor is attached
     suit.sensors{i}.meas.sensorOrientation     = zeros(4, suit.properties.lenData);
     suit.sensors{i}.meas.sensorFreeAcceleration = zeros(3, suit.properties.lenData);
-    %     suit.sensors{i}.meas.sensorMagneticField    = zeros(3, suit.properties.lenData); %not used in JSI analysis
+    %     suit.sensors{i}.meas.sensorMagneticField    = zeros(3, suit.properties.lenData); %not used in JSI analysis, not in the.csv
 end
 
 %% Fill the struct with recording data
@@ -162,6 +162,9 @@ end
 %--------INTERMEDIATE STRUCT FROM CSV
 %--LINKS
 for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
+    if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'position:'))
+        tmp.lastIdxPos = i; %last index
+    end
     if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'acceleration:'))
         tmp.lastIdxAcc = i; %last index
     end
@@ -176,6 +179,9 @@ for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
     end
 end
 % (23x3 variables)
+tmp.link.position.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
+tmp.link.position.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
+
 tmp.link.acceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
 tmp.link.acceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
@@ -186,6 +192,9 @@ tmp.link.angularAcceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1
 tmp.link.angularAcceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
 for i = 1 : 3*(suit.properties.nrOfLinks)
+    tmp.link.position.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.position.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)));
+    
     tmp.link.acceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)), 1};
     tmp.link.acceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)));
     
@@ -229,12 +238,19 @@ end
 %--------FROM TMP TO SUIT
 %--LINKS
 for suitLinkIdx = 1 : size(suit.links,1)
-    for j = 1:3*(suit.properties.nrOfLinks) % for link acc/angVel/angAcc
-        if (contains(tmp.link.acceleration.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
+%     for j = 1:3*(suit.properties.nrOfLinks) % for link acc/angVel/angAcc
+%         if (contains(tmp.link.acceleration.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
+%             tmpIndex = j;
+%             break;
+%         end
+%     end
+    for j = 1:3*(suit.properties.nrOfLinks) % for link pos/acc/angVel/angAcc
+        if (contains(tmp.link.position.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
             tmpIndex = j;
             break;
         end
     end
+    suit.links{suitLinkIdx}.meas.position           = tmp.link.position.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.acceleration        = tmp.link.acceleration.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularVelocity     = tmp.link.angularVelocity.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularAcceleration = tmp.link.angularAcceleration.data(:,tmpIndex:tmpIndex+2)';
