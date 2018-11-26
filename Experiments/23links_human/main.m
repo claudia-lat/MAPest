@@ -9,12 +9,15 @@ bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
 disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
 
-
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
 
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
+
+% Option for computing ID comparisons
+opts.iDynID = true;
+opts.OsimID = false;
 
 % Define the template to be used
 if opts.noC7joints
@@ -401,6 +404,13 @@ else
     load(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'));
 end
 disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
+
+%% --------------------------- ID comparisons -----------------------------
+% iDynTree ID
+if opts.iDynID
+    addpath(genpath('test'));
+    test_iDynTree_ID_comparison;
+end
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
