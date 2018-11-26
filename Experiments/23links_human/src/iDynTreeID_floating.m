@@ -9,7 +9,7 @@ function [tau] = iDynTreeID_floating(kinDynComputation, baseOrientation, basePos
 % - baseVel           : 6D velocity of the base (linear vel + angular vel)
 %                       expressed w.r.t. the inertial frame
 % - baseAcc           : 6D acceleration of the base (linear acc + angular acc)
-%                       expressed w.r.t. the inertial frame
+%                       expressed w.r.t. the inertial frame, without gravity
 % - jointsQty         : q,dq (for the kinDynComputation.setRobotState) + ddq
 % - fext              : 6D wrench in the body frame origin
 %                       expressed w.r.t. the inertial frame
