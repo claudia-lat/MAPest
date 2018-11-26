@@ -13,7 +13,7 @@ mass.equipmentFP = (staticWeightFP_mean/9.81) - masterFile.Subject.Info.Weight;
 % respiratory stuff(?kg)
 
 % Compute the 'weight' of the equipment from FtShoes data
-staticWeightFtShoes_mean = mean(data(blockIdx).data(84).meas(3,1:400)) + mean(data(blockIdx).data(76).meas(3,1:400)); % first 400 samples
+staticWeightFtShoes_mean = mean(data(blockIdx).data(82).meas(3,1:400)) + mean(data(blockIdx).data(74).meas(3,1:400)); % first 400 samples
 mass.equipmentFtShoes = (staticWeightFtShoes_mean/9.81) - masterFile.Subject.Info.Weight;
 % since equipmentMassFtShoes is computed from the ftShoes, it considers the
 % weight of: part of the shoe + suit(1kg) + drill(0.66kg) +
@@ -34,20 +34,18 @@ for linkIdx = 1: size(suit.links,1)
 end
 
 %% Comparison contact force f_z
-rot_RH = iDynTree.Rotation();
-rot_RH.RPY(suit.sensors{7, 1}.RPY(1), suit.sensors{7, 1}.RPY(2), suit.sensors{7, 1}.RPY(3));
+rot_RH = iDynTree.Rotation().RPY(suit.sensors{7, 1}.RPY(1), suit.sensors{7, 1}.RPY(2), suit.sensors{7, 1}.RPY(3));
 L_R_S_RH = rot_RH.toMatlab();
 
-rot_LH = iDynTree.Rotation();
-rot_LH.RPY(suit.sensors{11, 1}.RPY(1), suit.sensors{11, 1}.RPY(2), suit.sensors{11, 1}.RPY(3));
-L_R_S_LH = rot_RH.toMatlab();
+rot_LH = iDynTree.Rotation().RPY(suit.sensors{11, 1}.RPY(1), suit.sensors{11, 1}.RPY(2), suit.sensors{11, 1}.RPY(3));
+L_R_S_LH = rot_LH.toMatlab();
 
 for blockIdx = 1 : block.nrOfBlocks
     
     % WITH SHOES
     % contactFz = - (Fz_rightFoot) - (Fz_leftFoot) + (mass)*9.81
-    balance(blockIdx).contactFz_ftShoes = - data(blockIdx).data(84).meas(3,:) ...
-        - data(blockIdx).data(76).meas(3,:) ...
+    balance(blockIdx).contactFz_ftShoes = - data(blockIdx).data(82).meas(3,:) ...
+        - data(blockIdx).data(74).meas(3,:) ...
         + (masterFile.Subject.Info.Weight + mass.equipmentFtShoes)*9.81;
     
     % WITH FORCEPLATES
@@ -56,7 +54,7 @@ for blockIdx = 1 : block.nrOfBlocks
         + (masterFile.Subject.Info.Weight + mass.equipmentFP)*9.81;
     
     % FROM MAP --> tmp analysis to consider the z component for the balance.
-    % The external force is here retrieved NOT for the direct estimation of
+    % The external force is here retrieved NOT from the direct estimation of
     % the MAP, but from the y_sim analysis.
     G_fext_y_sim_RH_tmp = zeros(3,size(suit_test.links{11, 1}.meas(blockIdx).G_R_L,1));
     G_fext_y_sim_LH_tmp = zeros(3,size(suit_test.links{15, 1}.meas(blockIdx).G_R_L,1));
@@ -84,7 +82,8 @@ grid on;
 % list_axes = {'x';'y';'z'};
 for blockIdx = 1 : block.nrOfBlocks
     subplot (5,1,blockIdx)
-    % contact force estimated by MAP
+    % contact force estimated by MAP --> adesso non ha sensoooooo! dopo
+    % aver rimosso il REMOVAL
     plot1 = plot(balance(blockIdx).G_fext_y_sim_hands(3,:),'lineWidth',1.5);
     hold on;
     % contact force from balance check WITH SHOES
