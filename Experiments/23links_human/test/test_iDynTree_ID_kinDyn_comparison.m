@@ -116,30 +116,50 @@ end
 
 %% ======================= Base position w.r.t. G =========================
 % -------------------------------------------------------------------------
-% Note: Base sensor position used! Not the link one! Tappullo!!
 
-for blockIdx = 1 : block.nrOfBlocks
-    for suitSensIdx = 1 : size(suit.sensors,1)
-        if suit.sensors{suitSensIdx, 1}.label == currentBase
-            len = size(iDynIDparams.orientation(blockIdx).baseOrientation,2);
-            iDynIDparams.basePosition(blockIdx).basePos_wrtG = zeros(3,len);
-            for i = 1 : len
-                G_R_L = quat2Mat(iDynIDparams.orientation(blockIdx).baseOrientation(:,i));
-                iDynIDparams.basePosition(blockIdx).basePos_wrtG(:,i) = G_R_L * suit.sensors{suitSensIdx, 1}.position;
-            end
-            break
-        end
+% METODO1 (BAD):    G_pos_base = G_R_L * L_pos_base(from_suit.sensors)
+% % Note: Base sensor position used! Not the link one! Tappullo!!
+% 
+% for blockIdx = 1 : block.nrOfBlocks
+%     for suitSensIdx = 1 : size(suit.sensors,1)
+%         if suit.sensors{suitSensIdx, 1}.label == currentBase
+%             len = size(iDynIDparams.orientation(blockIdx).baseOrientation,2);
+%             iDynIDparams.basePosition(blockIdx).basePos_wrtG = zeros(3,len);
+%             for i = 1 : len
+%                 G_R_L = quat2Mat(iDynIDparams.orientation(blockIdx).baseOrientation(:,i));
+%                 iDynIDparams.basePosition(blockIdx).basePos_wrtG(:,i) = G_R_L * suit.sensors{suitSensIdx, 1}.position;
+%             end
+%             break
+%         end
+%     end
+% end
+
+% METODO 2:    G_pos_base directly from suit.links, already expressed w.r.t. G
+% 2.1) Extract total position vector
+for suitLinksIdx = 1 : size(suit.links,1)
+    if suit.links{suitLinksIdx, 1}.label == currentBase
+        basePos_tot  = suit.links{suitLinksIdx, 1}.meas.position;
+        break
     end
+    break
 end
+
+% 2.2) Subdivide vectors into 5 blocks
+for blockIdx = 1 : block.nrOfBlocks
+    tmp.cutRange{blockIdx} = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
+    iDynIDparams.basePosition(blockIdx).basePos_wrtG  = basePos_tot(:,tmp.cutRange{blockIdx});
+end
+clearvars basePos_tot;
 
 %% ===================== Base 6D velocity w.r.t. G ========================
 % -------------------------------------------------------------------------
 
-% ======= 3D base ang vel from Xsens suit.links already expressed in G
-% 1) extract total ang vel
+% ======= 3D base ang vel from Xsens suit.links already expressed w.r.t. G
+% 1) extract total ang vel + lin vel
 for suitLinksIdx = 1 : size(suit.links,1)
     if suit.links{suitLinksIdx, 1}.label == currentBase
-        baseAngVel_tot      = suit.links{suitLinksIdx, 1}.meas.angularVelocity;
+        baseAngVel_tot = suit.links{suitLinksIdx, 1}.meas.angularVelocity;
+        baseLinVel_tot = suit.links{suitLinksIdx, 1}.meas.velocity;
         break
     end
     break
@@ -149,14 +169,9 @@ end
 for blockIdx = 1 : block.nrOfBlocks
     tmp.cutRange{blockIdx} = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
     iDynIDparams.baseVel(blockIdx).baseAngVel_wrtG  = baseAngVel_tot(:,tmp.cutRange{blockIdx});
+    iDynIDparams.baseVel(blockIdx).baseLinVel_wrtG  = baseLinVel_tot(:,tmp.cutRange{blockIdx});
 end
-clearvars baseAngVel_tot;
-
-% ======= 3D base lin acc = 0 (tmp tappullo)
-for blockIdx = 1 : block.nrOfBlocks
-    iDynIDparams.baseVel(blockIdx).baseLinVel_wrtG = zeros(size(iDynIDparams.baseVel(blockIdx).baseAngVel_wrtG));
-    %TBD: extract from suit parser!!!!!!!!
-end
+clearvars baseAngVel_tot baseLinVel_tot;
 
 % ======= Compose the 6D base vel
 for blockIdx = 1 : block.nrOfBlocks
@@ -171,7 +186,7 @@ end
 for blockIdx = 1 : block.nrOfBlocks
     disp('-------------------------------------------------------------------');
     disp(strcat('[Start] iDynTree ID computation for Block ',num2str(blockIdx),'...'));
-    tau_iDynTree(blockIdx).tau = iDynTreeID_floating(human_kinDynComp, ...
+    tau_iDynTree(blockIdx).tau = iDynTreeID_kinDyn_floating(human_kinDynComp, ...
         iDynIDparams.orientation(blockIdx).baseOrientation, ...
         iDynIDparams.basePosition(blockIdx).basePos_wrtG, ...
         iDynIDparams.baseVel(blockIdx).baseVel_wrtG, ...

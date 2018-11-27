@@ -15,9 +15,9 @@ masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subje
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
 
-% Option for computing ID comparisons
-opts.iDynID = true;
-opts.OsimID = false;
+% Option for computing ID comaparisons
+opts.iDynID_kinDyn = true;
+opts.OsimID        = false;
 
 % Define the template to be used
 if opts.noC7joints
@@ -407,9 +407,9 @@ disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
 
 %% --------------------------- ID comparisons -----------------------------
 % iDynTree ID
-if opts.iDynID
+if opts.iDynID_kinDyn
     addpath(genpath('test'));
-    test_iDynTree_ID_comparison;
+    test_iDynTree_ID_kinDyn_comparison;
 end
 
 %% MAP computation
