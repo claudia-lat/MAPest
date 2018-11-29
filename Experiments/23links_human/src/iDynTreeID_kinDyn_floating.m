@@ -1,6 +1,7 @@
 function [tau] = iDynTreeID_kinDyn_floating(kinDynComputation, baseOrientation, basePosition, baseVel, baseAcc, jointsQty, fext)
-%IDYNTREEID_FLOATING computes the iDynTree Inverse Dynamics (ID)as implemented in
-% iDynTree C++ method inverseDynamics() of kinDynComputations.
+%IDYNTREEID_KINDYN_FLOATING computes the iDynTree Inverse Dynamics (ID) as
+% implemented in iDynTree C++ method inverseDynamics() of kinDynComputations
+% class.
 %
 % Input:
 % - kynDynComputation : kinDynComputation object initialized by berdy
