@@ -15,9 +15,10 @@ masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subje
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
 
-% Option for computing ID comaparisons
-opts.iDynID_kinDyn = true;
-opts.OsimID        = false;
+% Option for computing ID comparisons
+opts.iDynID_kinDynClass = false;
+opts.iDynID_estimClass  = true;
+opts.OsimID             = false;
 
 % Define the template to be used
 if opts.noC7joints
@@ -406,11 +407,57 @@ end
 disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
 
 %% --------------------------- ID comparisons -----------------------------
-% iDynTree ID
-if opts.iDynID_kinDyn
+% Compute or load comaparison params
+if opts.iDynID_kinDynClass || opts.iDynID_estimClass
     addpath(genpath('test'));
-    test_iDynTree_ID_kinDyn_comparison;
+    for blockIdx = 1 : block.nrOfBlocks
+        tau_iDyn(blockIdx).block = block.labels(blockIdx);
+    end
+    if ~exist(fullfile(bucket.pathToProcessedData,'IDcomparisonParams.mat'), 'file')
+        test_IDcomparisonParamsCollection;
+    else
+        load(fullfile(bucket.pathToProcessedData,'IDcomparisonParams.mat'))
+    end
 end
+
+% iDynTree ID via kinDynClass
+if opts.iDynID_kinDynClass
+    for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx),'...'));
+        tau_iDyn(blockIdx).tau_kinDyn = iDynTreeID_kinDyn_floating(human_kinDynComp, ...
+            IDcomparisonParams.orientation(blockIdx).baseOrientation, ...
+            IDcomparisonParams.basePosition(blockIdx).basePos_wrtG, ...
+            IDcomparisonParams.baseVel(blockIdx).baseVel_wrtG, ...
+            IDcomparisonParams.baseAcc(blockIdx).baseAcc_wrtG, ...
+            synchroKin(blockIdx), ...
+            IDcomparisonParams.fext(blockIdx));
+        disp(strcat('[End] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx)));
+    end
+    save(fullfile(bucket.pathToProcessedData,'tau_iDyn.mat'),'tau_iDyn');
+end
+
+% ID estimation via estimator class
+if opts.iDynID_estimClass
+   for blockIdx = 1 : block.nrOfBlocks
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] iDynTree tau estimation for Block ',num2str(blockIdx),'...'));
+        tau_iDyn(blockIdx).tau_estim = iDynTreeID_estimClass_floating(bucket.filenameURDF, ...
+            currentBase, ...
+            synchroKin(blockIdx), ...
+            IDcomparisonParams.baseVel(blockIdx).baseAngVel_wrtBase, ...
+            IDcomparisonParams.baseAcc(blockIdx), ...
+            shoes(blockIdx));
+        disp(strcat('[End] iDynTree torque and forces estimation for Block ',num2str(blockIdx)));
+   end
+   save(fullfile(bucket.pathToProcessedData,'tau_iDyn.mat'),'tau_iDyn');
+end
+
+% OpenSim ID --> TBD
+% if opts.OsimID
+%     addpath(genpath('test'));
+%     test_IDcomparisonParamsCollection;
+% end
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
