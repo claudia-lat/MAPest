@@ -1,4 +1,4 @@
-function [tau] = iDynTreeID_estimClass_floating(filenameURDF, currentBase, jointsQty, baseVel, baseAcc, fext)
+function [tau] = iDynTreeID_estimClass_floating(filenameURDF, selectedJoints, currentBase, jointsQty, baseVel, baseAcc, fext)
 %IDYNTREEID_ESTIMCLASS_FLOATING computes the iDynTree estimation of joint 
 % torques and external wrenches as implemented in iDynTree C++ 
 % ExtWrenchesAndJointTorquesEstimator class.
@@ -21,30 +21,10 @@ function [tau] = iDynTreeID_estimClass_floating(filenameURDF, currentBase, joint
 estimator = iDynTree.ExtWrenchesAndJointTorquesEstimator();
 
 % Load model and sensors from the URDF file
-estimator.loadModelAndSensorsFromFile(filenameURDF);
+estimator.loadModelAndSensorsFromFileWithSpecifiedDOFs(filenameURDF,selectedJoints,'urdf');
 
 % Check if the model was correctly created by printing the model
-% estimator.model().toString() % print model
-
-% estimatorLoader  = iDynTree.ModelLoader();
-% estimatorLoader.loadReducedModelFromFile(bucket.filenameURDF, ...
-%         cell2iDynTreeStringVector(selectedJoints))
-% estimatorModel = estimatorLoader.model();
-% estimatorModel.toString();
-% estimatorSensors = estimatorLoader.sensors();
-% estimator.setModelAndSensors(estimatorModel,estimatorSensors);
-
-%
-% % Create KinDynComputations class variable
-% kinDyn_test = iDynTree.KinDynComputations();
-% kinDyn_test.loadRobotModel(estimator.model);
-
-% nrOfFTSensors = estimator.sensors().getNrOfSensors(iDynTree.SIX_AXIS_FORCE_TORQUE);
-% nrOfAccSensors = estimator.sensors().getNrOfSensors(iDynTree.ACCELEROMETER_SENSOR);
-
-% Set kinematics information
-% gravity = iDynTree.Vector3();
-% gravity.fromMatlab([0; 0; -9.81]);
+estimator.model().toString() % print model
 
 %% Set joint information
 dofs = estimator.model().getNrOfDOFs();
@@ -79,12 +59,12 @@ unknownWrench_base.contactPoint.zero();
 unknownWrench_lFoot = iDynTree.UnknownWrenchContact();
 unknownWrench_lFoot.unknownType = iDynTree.NO_UNKNOWNS;
 % the position is the origin, so the conctact point wrt to LeftFoot is zero
-% unknownWrench_rFoot.contactPoint.zero();
+unknownWrench_lFoot.contactPoint.zero();
 
 % Right foot wrench init
 unknownWrench_rFoot = iDynTree.UnknownWrenchContact();
 unknownWrench_rFoot.unknownType = iDynTree.NO_UNKNOWNS;
-% unknownWrench_rFoot.contactPoint.zero();
+unknownWrench_rFoot.contactPoint.zero();
 
 % Storing wrenches in fullBodyUnknowns storage
 fullBodyUnknowns = iDynTree.LinkUnknownWrenchContacts(estimator.model());
@@ -126,32 +106,48 @@ for i = 1 : samples
     shoesWrench_rFoot = unknownWrench_rFoot.knownWrench;
     shoesWrench_rFoot.fromMatlab(fext.Right_HF(:,i));
     
-    fullBodyUnknowns.addNewContactInFrame(estimator.model(),base_index,unknownWrench_base);
+    fullBodyUnknowns.addNewUnknownFullWrenchInFrameOrigin(estimator.model(),base_index);
     fullBodyUnknowns.addNewContactInFrame(estimator.model(),l_foot_index,unknownWrench_lFoot);
     fullBodyUnknowns.addNewContactInFrame(estimator.model(),r_foot_index,unknownWrench_rFoot);
-    fullBodyUnknowns.toString(estimator.model()); %print the unknowns
-    
+    fullBodyUnknowns.toString(estimator.model()) %print the unknowns
+
     estimator.estimateExtWrenchesAndJointTorques(fullBodyUnknowns,...
         estFTmeasurements,...
         estContactForces,...
         estJointTorques);
-    
-% % %     % [Print] Wrenches values can easily be obtained as matlab vectors
-% % %     estContactForcesExtWrenchesEst.contactWrench(estimator.model().getLinkIndex('LeftFoot'),0).contactWrench().getLinearVec3().toMatlab();
-% % %     estContactForcesExtWrenchesEst.contactWrench(estimator.model().getLinkIndex('RightFoot'),0).contactWrench().getLinearVec3().toMatlab();
-% % %     
-% % %     % LinkContactWrenches is a structure that can contain multiple contact wrench for each link,
-% % %     % but usually is convenient to just deal with a collection of net wrenches for each link
-% % %     linkNetExtWrenches = iDynTree.LinkWrenches(estimator.model());
-% % %     estContactForcesExtWrenchesEst.computeNetWrenches(linkNetExtWrenches);
-% % %     
-% % %     % also net external wrenches can easily be obtained as matlab vectors
-% % %     wrench = linkNetExtWrenches(estimator.model().getLinkIndex('LeftFoot'));
-% % %     % 6d wrench (force/torques)
-% % %     wrench.toMatlab();
-% % %     % just the force
-% % %     wrench.getLinearVec3().toMatlab();
 
     tau(:,i) = estJointTorques.toMatlab();
+    
+    %% Print the estimated external forces
+    
+    fprintf('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n');
+    fprintf('External wrenches estimated');
+    fprintf('%s',estContactForces.toString(estimator.model()));
+    
+    % LinkContactWrenches is a structure that can contain multiple contact wrench for each link,
+    % but usually is convenient to just deal with a collection of net wrenches for each link
+    linkNetExtWrenches = iDynTree.LinkWrenches(estimator.model());
+    estContactForces.computeNetWrenches(linkNetExtWrenches);
+    
+    %PELVIS
+    wrench_Pelvis = linkNetExtWrenches(estimator.model().getLinkIndex('Pelvis'));
+    % 6d wrench (force/torques)
+    Pelvis_wrench = wrench_Pelvis.toMatlab()
+    % just the force
+    %     wrench_LF.getLinearVec3().toMatlab()
+    
+    %LEFT_FOOT
+    wrench_LF = linkNetExtWrenches(estimator.model().getLinkIndex('LeftFoot'));
+    % 6d wrench (force/torques)
+    LF_wrench = wrench_LF.toMatlab()
+    % just the force
+    %     wrench_LF.getLinearVec3().toMatlab()
+    
+    %RIGHT_FOOT
+    wrench_RF = linkNetExtWrenches(estimator.model().getLinkIndex('RightFoot'));
+    % 6d wrench (force/torques)
+    RF_wrench = wrench_RF.toMatlab()
+    % just the force
+    %     wrench_RF.getLinearVec3().toMatlab()
 end
 end
