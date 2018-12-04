@@ -68,7 +68,6 @@ unknownWrench_rFoot.contactPoint.zero();
 
 % Storing wrenches in fullBodyUnknowns storage
 fullBodyUnknowns = iDynTree.LinkUnknownWrenchContacts(estimator.model());
-fullBodyUnknowns.clear();
 
 % 2) INPUT 2: The estimated FT sensor measurements
 estFTmeasurements = iDynTree.SensorsMeasurements(estimator.sensors());
@@ -86,8 +85,8 @@ estJointTorques  = iDynTree.JointDOFsDoubleArray(dofs);
 tau = zeros(size(jointsQty.q));
 
 %% Estimation
-% samples = size(jointsQty.q,2);
-samples = 10; % tmp test number
+samples = size(jointsQty.q,2);
+% samples = 10; % tmp test number
 
 for i = 1 : samples
     q_idyn.fromMatlab(jointsQty.q(:,i));
@@ -106,48 +105,54 @@ for i = 1 : samples
     shoesWrench_rFoot = unknownWrench_rFoot.knownWrench;
     shoesWrench_rFoot.fromMatlab(fext.Right_HF(:,i));
     
+    fullBodyUnknowns.clear();
     fullBodyUnknowns.addNewUnknownFullWrenchInFrameOrigin(estimator.model(),base_index);
     fullBodyUnknowns.addNewContactInFrame(estimator.model(),l_foot_index,unknownWrench_lFoot);
     fullBodyUnknowns.addNewContactInFrame(estimator.model(),r_foot_index,unknownWrench_rFoot);
-    fullBodyUnknowns.toString(estimator.model()) %print the unknowns
+
+%     fprintf('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n');
+%     fprintf('FULL BODY UNKNOWNS:\n\n');
+%     fprintf('%s',fullBodyUnknowns.toString(estimator.model()));
 
     estimator.estimateExtWrenchesAndJointTorques(fullBodyUnknowns,...
         estFTmeasurements,...
         estContactForces,...
         estJointTorques);
-
+    
+    %% Estimated torques
+    
     tau(:,i) = estJointTorques.toMatlab();
-    
-    %% Print the estimated external forces
-    
-    fprintf('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n');
-    fprintf('External wrenches estimated');
-    fprintf('%s',estContactForces.toString(estimator.model()));
-    
+
+    %% Estimated external forces
+
     % LinkContactWrenches is a structure that can contain multiple contact wrench for each link,
     % but usually is convenient to just deal with a collection of net wrenches for each link
-    linkNetExtWrenches = iDynTree.LinkWrenches(estimator.model());
-    estContactForces.computeNetWrenches(linkNetExtWrenches);
+%     linkNetExtWrenches = iDynTree.LinkWrenches(estimator.model());
+%     estContactForces.computeNetWrenches(linkNetExtWrenches);
+%       
+%     fprintf('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n');
+%     fprintf('EXTERNAL WRENCHES ESTIMATED\n\n');
+%     fprintf('%s',estContactForces.toString(estimator.model()));
     
-    %PELVIS
-    wrench_Pelvis = linkNetExtWrenches(estimator.model().getLinkIndex('Pelvis'));
-    % 6d wrench (force/torques)
-    Pelvis_wrench = wrench_Pelvis.toMatlab()
-    % just the force
-    %     wrench_LF.getLinearVec3().toMatlab()
-    
-    %LEFT_FOOT
-    wrench_LF = linkNetExtWrenches(estimator.model().getLinkIndex('LeftFoot'));
-    % 6d wrench (force/torques)
-    LF_wrench = wrench_LF.toMatlab()
-    % just the force
-    %     wrench_LF.getLinearVec3().toMatlab()
-    
-    %RIGHT_FOOT
-    wrench_RF = linkNetExtWrenches(estimator.model().getLinkIndex('RightFoot'));
-    % 6d wrench (force/torques)
-    RF_wrench = wrench_RF.toMatlab()
-    % just the force
-    %     wrench_RF.getLinearVec3().toMatlab()
-end
+% % %     %PELVIS
+% % %     wrench_Pelvis = linkNetExtWrenches(estimator.model().getLinkIndex('Pelvis'));
+% % %     % 6d wrench (force/torques)
+% % %     Pelvis_wrench = wrench_Pelvis.toMatlab();
+% % %     % just the force
+% % %     %     wrench_LF.getLinearVec3().toMatlab()
+% % %     
+% % %     %LEFT_FOOT
+% % %     wrench_LF = linkNetExtWrenches(estimator.model().getLinkIndex('LeftFoot'));
+% % %     % 6d wrench (force/torques)
+% % %     LF_wrench = wrench_LF.toMatlab();
+% % %     % just the force
+% % %     %     wrench_LF.getLinearVec3().toMatlab()
+% % %     
+% % %     %RIGHT_FOOT
+% % %     wrench_RF = linkNetExtWrenches(estimator.model().getLinkIndex('RightFoot'));
+% % %     % 6d wrench (force/torques)
+% % %     RF_wrench = wrench_RF.toMatlab();
+% % %     % just the force
+% % %     %     wrench_RF.getLinearVec3().toMatlab()
+% % % end
 end
