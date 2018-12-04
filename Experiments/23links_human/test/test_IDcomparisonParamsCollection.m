@@ -4,6 +4,21 @@
 
 IDcomparisonParams.base = currentBase;
 
+% Extract suit_runtime of the currentBase
+for blockIdx = 1 : block.nrOfBlocks
+    for suitSensIdx = 1 : size(suit_runtime.sensors,1)
+        if suit_runtime.sensors{suitSensIdx, 1}.label == currentBase
+            IDcomparisonParams.sensorsFromBase.sensors{suitSensIdx, 1}.meas(blockIdx).sensorOrientation = ...
+                suit_runtime.sensors{suitSensIdx, 1}.meas(blockIdx).sensorOrientation;
+            IDcomparisonParams.sensorsFromBase.sensors{suitSensIdx, 1}.meas(blockIdx).sensorFreeAcceleration = ...
+                suit_runtime.sensors{suitSensIdx, 1}.meas(blockIdx).sensorFreeAcceleration;
+            IDcomparisonParams.sensorsFromBase.sensors{suitSensIdx, 1}.meas(blockIdx).sensorOldAcceleration = ...
+                suit_runtime.sensors{suitSensIdx, 1}.meas(blockIdx).sensorOldAcceleration;
+            break
+        end
+    end
+end
+
 %% =============== Base 6D acceleration expressed w.r.t. G ================
 % -------------------------------------------------------------------------
 
@@ -29,12 +44,8 @@ clearvars baseAngAcc_tot baseOrientation_tot;
 % ======= 3D base lin acc (free body acc) from Xsens suit.sensors already
 % expressed in G, without gravity
 for blockIdx = 1 : block.nrOfBlocks
-    for suitSensIdx = 1 : size(suit_runtime.sensors,1)
-        if suit_runtime.sensors{suitSensIdx, 1}.label == currentBase
-            IDcomparisonParams.baseAcc(blockIdx).baseLinAcc_wrtG = suit_runtime.sensors{suitSensIdx, 1}.meas(blockIdx).sensorFreeAcceleration;
-            break
-        end
-    end
+    IDcomparisonParams.baseAcc(blockIdx).baseLinAcc_wrtG = ...
+        IDcomparisonParams.sensorsFromBase.sensors{1, 1}.meas(blockIdx).sensorFreeAcceleration;
 end
 
 % ======= Compose the 6D base acc
@@ -120,7 +131,7 @@ end
 
 % METODO1 (BAD):    G_pos_base = G_R_L * L_pos_base(from_suit.sensors)
 % % Note: Base sensor position used! Not the link one! Tappullo!!
-% 
+%
 % for blockIdx = 1 : block.nrOfBlocks
 %     for suitSensIdx = 1 : size(suit.sensors,1)
 %         if suit.sensors{suitSensIdx, 1}.label == currentBase
@@ -185,16 +196,18 @@ end
 %% ========================= Params w.r.t. Base ===========================
 % -------------------------------------------------------------------------
 
+G_gravity = [0; 0; -9.81];
 for blockIdx = 1 : block.nrOfBlocks
-    len = size(IDcomparisonParams.orientation(blockIdx).LeftFootOrientation,2);
+    len = size(IDcomparisonParams.orientation(1).baseOrientation,2);
     for i = 1 : len
-        G_R_base = quat2Mat(IDcomparisonParams.orientation(blockIdx).baseOrientation(:,i));
+        G_R_base       = quat2Mat(IDcomparisonParams.orientation(blockIdx).baseOrientation(:,i));
+        G_R_baseSensor = quat2Mat(IDcomparisonParams.sensorsFromBase.sensors{1, 1}.meas(blockIdx).sensorOrientation(:,i));
         
-        % -----------Base 3D Proper Acc: base_properAcc = pelvis_R_G * (G_a_pelvis - G_g)
-        % Note that (G_a_pelvis - G_g) == Xsens freeBody acceleration
-        IDcomparisonParams.baseAcc(blockIdx).baseProperAcc_wrtBase = G_R_base' * ...
-            IDcomparisonParams.baseAcc(blockIdx).baseLinAcc_wrtG;
-        
+        % -----------Base 3D Proper Acc: base_properAcc = base_R_G * (G_a_base - G_g)
+        % where G_a_base == senor free body acc
+          IDcomparisonParams.baseAcc(blockIdx).baseProperAcc_wrtBase = G_R_base' * ...
+              (IDcomparisonParams.sensorsFromBase.sensors{1, 1}.meas(blockIdx).sensorFreeAcceleration - G_gravity);
+
         % -----------Base 3D Angular Acc: base_angAcc
         IDcomparisonParams.baseAcc(blockIdx).baseAngAcc_wrtBase = G_R_base' * ...
             IDcomparisonParams.baseAcc(blockIdx).baseAngAcc_wrtG;
