@@ -426,12 +426,14 @@ if opts.iDynID_kinDynClass
         disp('-------------------------------------------------------------------');
         disp(strcat('[Start] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx),'...'));
         tau_iDyn(blockIdx).tau_kinDyn = iDynTreeID_kinDyn_floating(human_kinDynComp, ...
+            currentBase, ...
             IDcomparisonParams.orientation(blockIdx).baseOrientation, ...
             IDcomparisonParams.basePosition(blockIdx).basePos_wrtG, ...
             IDcomparisonParams.baseVel(blockIdx).baseVel_wrtG, ...
             IDcomparisonParams.baseAcc(blockIdx).baseAcc_wrtG, ...
             synchroKin(blockIdx), ...
-            IDcomparisonParams.fext(blockIdx));
+            shoes(blockIdx));
+
         disp(strcat('[End] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx)));
     end
     save(fullfile(bucket.pathToProcessedData,'tau_iDyn.mat'),'tau_iDyn');
@@ -451,7 +453,7 @@ if opts.iDynID_estimClass
             shoes(blockIdx));
         disp(strcat('[End] iDynTree torque and forces estimation for Block ',num2str(blockIdx)));
    end
-   save(fullfile(bucket.pathToProcessedData,'tau_iDyn.mat'),'tau_iDyn');
+   save(fullfile(bucket.pathToProcessedData,'tau_iDyn_estim.mat'),'tau_iDyn');
 end
 
 % OpenSim ID --> TBD

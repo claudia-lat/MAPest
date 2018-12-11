@@ -1,10 +1,11 @@
-function [tau] = iDynTreeID_kinDyn_floating(kinDynComputation, baseOrientation, basePosition, baseVel, baseAcc, jointsQty, fext)
+function [tau] = iDynTreeID_kinDyn_floating(kinDynComputation, currentBase, baseOrientation, basePosition, baseVel, baseAcc, jointsQty, fext)
 %IDYNTREEID_KINDYN_FLOATING computes the iDynTree Inverse Dynamics (ID) as
 % implemented in iDynTree C++ method inverseDynamics() of kinDynComputations
 % class.
 %
 % Input:
 % - kynDynComputation : kinDynComputation object initialized by berdy
+% - currentBase     : current floating base
 % - baseOrientation   : orientation of the base
 % - basePosition      : position of the base w.r.t. the inertial frame
 % - baseVel           : 6D velocity of the base (linear vel + angular vel)
@@ -12,12 +13,14 @@ function [tau] = iDynTreeID_kinDyn_floating(kinDynComputation, baseOrientation, 
 % - baseAcc           : 6D acceleration of the base (linear acc + angular acc)
 %                       expressed w.r.t. the inertial frame, without gravity
 % - jointsQty         : q,dq (for the kinDynComputation.setRobotState) + ddq
-% - fext              : 6D wrench in the body frame origin
-%                       expressed w.r.t. the inertial frame
+% - fext            : 6D wrench expressed w.r.t. the link they are applied.
 %
 % Output:
 % - tau               : torque
 
+
+% Check if the model was correctly loaded by printing the model
+kinDynComputation.model().toString() % print model
 
 % Initialize state
 q = iDynTree.VectorDynSize();
@@ -25,21 +28,22 @@ q.resize(size(jointsQty.q,1));
 dq = iDynTree.VectorDynSize();
 dq.resize(size(jointsQty.dq,1));
 
-% Initialize base acceleration
+% Initialize input variables
 baseAcc_iDynTree = iDynTree.Vector6();
 
-% % Initialize base velocity
 baseVel_iDynTree = iDynTree.Twist();
 
-% Initialize state
 ddq = iDynTree.VectorDynSize();
 ddq.resize(size(jointsQty.ddq,1));
 
 % Initialize external wrenches at the feet.
 % Where not specified, by default wrench vector = zero
 fext_iDynTree = iDynTree.LinkWrenches(kinDynComputation.model);
+
+% Get model indices
 lFootIndex = kinDynComputation.model.getLinkIndex('LeftFoot');
 rFootIndex = kinDynComputation.model.getLinkIndex('RightFoot');
+baseIndex  = kinDynComputation.model.getLinkIndex(currentBase);
 
 % Define torque outputs
 tau_iDynTree = iDynTree.FreeFloatingGeneralizedTorques(kinDynComputation.model); %the output
@@ -65,7 +69,6 @@ for i = 1 : samples
     G_T_basePos.fromMatlab(basePosition(:,i));
     % transf
     G_T_base = iDynTree.Transform(G_T_baseRot,G_T_basePos);
-%     G_H_base = G_T_base.asHomogeneousTransform();
     
     baseVel_iDynTree.fromMatlab(baseVel(:,i));
     
@@ -75,11 +78,19 @@ for i = 1 : samples
     
     ddq.fromMatlab(jointsQty.ddq(:,i));
     
-    lFootWrench = fext_iDynTree(lFootIndex);
-    lFootWrench.fromMatlab(fext.leftShoe_wrtG(:,i));
+    % Right Foot transforms: G_f_rfoot = G_X_base * base_X_rfoot * rfoot_f
+    base_T_rfoot = kinDynComputation.getRelativeTransform(baseIndex,rFootIndex);
+    base_X_rfoot = base_T_rfoot.asAdjointTransform.toMatlab();
     rFootWrench = fext_iDynTree(rFootIndex);
-    rFootWrench.fromMatlab(fext.rightShoe_wrtG(:,i));
+    rFootWrench.fromMatlab(G_T_base.asAdjointTransform.toMatlab() * base_X_rfoot * fext.Right_HF(:,i));
+
+    % Left Foot transforms: G_f_lfoot = G_X_base * base_X_lfoot * lfoot_f
+    base_T_lfoot = kinDynComputation.getRelativeTransform(baseIndex, lFootIndex);
+    base_X_lfoot = base_T_lfoot.asAdjointTransform.toMatlab();
+    lFootWrench = fext_iDynTree(lFootIndex);
+    lFootWrench.fromMatlab(G_T_base.asAdjointTransform.toMatlab() * base_X_lfoot * fext.Left_HF(:,i));
     
+    % Inverse dynamics computation
     kinDynComputation.inverseDynamics(baseAcc_iDynTree,ddq,fext_iDynTree,tau_iDynTree);
     
     % Consider only the joint part of the computation
