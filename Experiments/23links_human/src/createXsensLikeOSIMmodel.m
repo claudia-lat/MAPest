@@ -8,7 +8,7 @@ function [osimModelTemplate] = createXsensLikeOSIMmodel(subjectParams, filename)
 % -  filename       : (optional) allows to save the file.osim in a folder
 %                      called 'Models'.
 
-osimModelTemplate = fileread('XSensModelStyle_OSIMtemplate.osim');
+osimModelTemplate = fileread('XSensModelStyle_48OSIMtemplate.osim');
 %% -- LINK BASE
 %% PELVIS (solid: box)
 osimModelTemplate = strrep(osimModelTemplate,'PELVIS_BOX_ORIGIN',num2str(subjectParams.pelvisBoxOrigin));

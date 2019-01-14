@@ -1,5 +1,5 @@
-<!---------------------URDF MODEL 48 DoFs----------------------->
-<!-------------------------------------------------------------->
+<!--URDF MODEL 66 DoFs-->
+
 <robot name="XSensStyleModel_template">
 <!--To open this model with Gazebo replace the null masses, inertias and dimensions of the 'fake links f1 and f2'-->
     <!--LINKS-->
@@ -37,6 +37,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="L5_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="L5">
         <inertial>
             <mass value="L5MASS"/>
@@ -68,6 +75,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="L3_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="L3">
         <inertial>
             <mass value="L3MASS"/>
@@ -93,6 +107,13 @@
         </collision>
     </link>
 	<link name="T12_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="T12_f2">
         <inertial>
             <mass value="FAKEMASS"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -207,6 +228,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="Head_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="Head">
         <inertial>
             <mass value="HEADMASS"/>
@@ -233,6 +261,20 @@
 
     </link>
 	<!--Chain from (8) to (11)-->
+	<link name="RightShoulder_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="RightShoulder_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="RightShoulder">
         <inertial>
             <mass value="RIGHTSHOULDERMASS"/>
@@ -304,6 +346,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="RightForeArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="RightForeArm">
         <inertial>
             <mass value="RIGHTFOREARMMASS"/>
@@ -336,6 +385,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="RightHand_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="RightHand">
         <inertial>
             <mass value="RIGHTHANDMASS"/>
@@ -362,6 +418,20 @@
 
     </link>
 	<!--Chain from (12) to (15)-->
+	<link name="LeftShoulder_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="LeftShoulder_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="LeftShoulder">
         <inertial>
             <mass value="LEFTSHOULDERMASS"/>
@@ -433,6 +503,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="LeftForeArm_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="LeftForeArm">
         <inertial>
             <mass value="LEFTFOREARMMASS"/>
@@ -459,6 +536,13 @@
 
     </link>
 	<link name="LeftHand_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="LeftHand_f2">
         <inertial>
             <mass value="FAKEMASS"/>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -537,6 +621,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="RightLowerLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
     <link name="RightLowerLeg">
         <inertial>
             <mass value="RIGHTLOWERLEGMASS"/>
@@ -600,6 +691,20 @@
 	            </geometry>
         </collision>
 
+    </link>
+	<link name="RightToe_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="RightToe_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
     </link>
     <link name="RightToe">
         <inertial>
@@ -672,6 +777,13 @@
             <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
         </inertial>
     </link>
+	<link name="LeftLowerLeg_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="LeftLowerLeg">
         <inertial>
             <mass value="LEFTLOWERLEGMASS"/>
@@ -736,6 +848,20 @@
         </collision>
 
     </link>
+	<link name="LeftToe_f1">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
+	<link name="LeftToe_f2">
+        <inertial>
+            <mass value="FAKEMASS"/>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="FAKEIN" iyy="FAKEIN" izz="FAKEIN" ixy="0" ixz="0" iyz="0"/>
+        </inertial>
+    </link>
 	<link name="LeftToe">
         <inertial>
             <mass value="LEFTTOEMASS"/>
@@ -769,55 +895,79 @@
         <parent link="Pelvis"/>
         <child link="L5_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jL5S1_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="L5_f1"/>
+        <child link="L5_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jL5S1_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L5_f2"/>
         <child link="L5"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="1.309" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<joint name="jL4L3_rotx" type="revolute">
         <origin xyz="jL4L3_ORIGIN" rpy="0 0 0"/>
         <parent link="L5"/>
         <child link="L3_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jL4L3_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="L3_f1"/>
+        <child link="L3_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jL4L3_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="L3_f2"/>
         <child link="L3"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="1.309" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<joint name="jL1T12_rotx" type="revolute">
         <origin xyz="jL1T12_ORIGIN" rpy="0 0 0"/>
         <parent link="L3"/>
         <child link="T12_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jL1T12_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="T12_f1"/>
+        <child link="T12_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jL1T12_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="T12_f2"/>
         <child link="T12"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="1.309" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<joint name="jT9T8_rotx" type="revolute">
         <origin xyz="jT9T8_ORIGIN" rpy="0 0 0"/>
         <parent link="T12"/>
         <child link="T8_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.349066" upper="0.349066" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jT9T8_roty" type="revolute">
@@ -825,7 +975,7 @@
         <parent link="T8_f1"/>
         <child link="T8_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.261799" upper="0.698132" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jT9T8_rotz" type="revolute">
@@ -833,7 +983,7 @@
         <parent link="T8_f2"/>
         <child link="T8"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jT1C7_rotx" type="revolute">
@@ -841,7 +991,7 @@
         <parent link="T8"/>
         <child link="Neck_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jT1C7_roty" type="revolute">
@@ -849,7 +999,7 @@
         <parent link="Neck_f1"/>
         <child link="Neck_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.959931" upper="1.5708" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jT1C7_rotz" type="revolute">
@@ -857,7 +1007,7 @@
         <parent link="Neck_f2"/>
         <child link="Neck"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.22173" upper="1.22173" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jC1Head_rotx" type="revolute">
@@ -865,32 +1015,56 @@
         <parent link="Neck"/>
         <child link="Head_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.610865" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jC1Head_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="Head_f1"/>
+        <child link="Head_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jC1Head_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="Head_f2"/>
         <child link="Head"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.436332" upper="0.174533" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<!--Chain from (8) to (11)-->
 	<joint name="jRightC7Shoulder_rotx" type="revolute">
         <origin xyz="jRightC7Shoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="T8"/>
+        <child link="RightShoulder_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightC7Shoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightShoulder_f1"/>
+        <child link="RightShoulder_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jRightC7Shoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightShoulder_f2"/>
         <child link="RightShoulder"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.0872665" upper="0.785398" />
-        <axis xyz="1 0 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<joint name="jRightShoulder_rotx" type="revolute">
         <origin xyz="jRightShoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="RightShoulder"/>
         <child link="RightUpperArm_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-2.35619" upper="1.5708" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jRightShoulder_roty" type="revolute">
@@ -898,7 +1072,7 @@
         <parent link="RightUpperArm_f1"/>
         <child link="RightUpperArm_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jRightShoulder_rotz" type="revolute">
@@ -906,23 +1080,31 @@
         <parent link="RightUpperArm_f2"/>
         <child link="RightUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.785398" upper="3.14159" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<joint name="jRightElbow_roty" type="revolute">
+	<joint name="jRightElbow_rotx" type="revolute">
         <origin xyz="jRightElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="RightUpperArm"/>
         <child link="RightForeArm_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.48353" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
     </joint>
-	<joint name="jRightElbow_rotz" type="revolute">
+	<joint name="jRightElbow_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightForeArm_f1"/>
+        <child link="RightForeArm_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jRightElbow_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightForeArm_f2"/>
         <child link="RightForeArm"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="0" upper="2.53073" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jRightWrist_rotx" type="revolute">
@@ -930,32 +1112,56 @@
         <parent link="RightForeArm"/>
         <child link="RightHand_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.872665" upper="1.0472" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
-	<joint name="jRightWrist_rotz" type="revolute">
+	<joint name="jRightWrist_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightHand_f1"/>
+        <child link="RightHand_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jRightWrist_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightHand_f2"/>
         <child link="RightHand"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.349066" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<!--Chain from (12) to (15)-->
 	<joint name="jLeftC7Shoulder_rotx" type="revolute">
         <origin xyz="jLeftC7Shoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="T8"/>
+        <child link="LeftShoulder_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftC7Shoulder_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftShoulder_f1"/>
+        <child link="LeftShoulder_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jLeftC7Shoulder_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftShoulder_f2"/>
         <child link="LeftShoulder"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.0872665" upper="0.785398" />
-        <axis xyz="1 0 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<joint name="jLeftShoulder_rotx" type="revolute">
         <origin xyz="jLeftShoulder_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftShoulder"/>
         <child link="LeftUpperArm_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.5708" upper="2.35619" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jLeftShoulder_roty" type="revolute">
@@ -963,7 +1169,7 @@
         <parent link="LeftUpperArm_f1"/>
         <child link="LeftUpperArm_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.5708" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jLeftShoulder_rotz" type="revolute">
@@ -971,23 +1177,31 @@
         <parent link="LeftUpperArm_f2"/>
         <child link="LeftUpperArm"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-3.14159" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-    <joint name="jLeftElbow_roty" type="revolute">
+    <joint name="jLeftElbow_rotx" type="revolute">
         <origin xyz="jLeftElbow_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperArm"/>
         <child link="LeftForeArm_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.5708" upper="1.48353" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftElbow_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftForeArm_f1"/>
+        <child link="LeftForeArm_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jLeftElbow_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <parent link="LeftForeArm_f1"/>
+        <parent link="LeftForeArm_f2"/>
         <child link="LeftForeArm"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-2.53073" upper="0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jLeftWrist_rotx" type="revolute">
@@ -995,15 +1209,23 @@
         <parent link="LeftForeArm"/>
         <child link="LeftHand_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-1.0472" upper="0.872665" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
-	<joint name="jLeftWrist_rotz" type="revolute">
+	<joint name="jLeftWrist_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="LeftHand_f1"/>
+        <child link="LeftHand_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jLeftWrist_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftHand_f2"/>
         <child link="LeftHand"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.349066" upper="0.523599" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<!--Chain from (16) to (19)-->
@@ -1012,7 +1234,7 @@
         <parent link="Pelvis"/>
         <child link="RightUpperLeg_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jRightHip_roty" type="revolute">
@@ -1020,7 +1242,7 @@
         <parent link="RightUpperLeg_f1"/>
         <child link="RightUpperLeg_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.261799" upper="2.0944" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jRightHip_rotz" type="revolute">
@@ -1028,23 +1250,31 @@
         <parent link="RightUpperLeg_f2"/>
         <child link="RightUpperLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.785398" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<joint name="jRightKnee_roty" type="revolute">
+	<joint name="jRightKnee_rotx" type="revolute">
         <origin xyz="jRightKnee_ORIGIN" rpy="0 0 0"/>
         <parent link="RightUpperLeg"/>
         <child link="RightLowerLeg_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="0" upper="2.35619" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
     </joint>
-	<joint name="jRightKnee_rotz" type="revolute">
+	<joint name="jRightKnee_roty" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="RightLowerLeg_f1"/>
+        <child link="RightLowerLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jRightKnee_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightLowerLeg_f2"/>
         <child link="RightLowerLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.698132" upper="0.523599" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jRightAnkle_rotx" type="revolute">
@@ -1052,7 +1282,7 @@
         <parent link="RightLowerLeg"/>
         <child link="RightFoot_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jRightAnkle_roty" type="revolute">
@@ -1060,7 +1290,7 @@
         <parent link="RightFoot_f1"/>
         <child link="RightFoot_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.872665" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jRightAnkle_rotz" type="revolute">
@@ -1068,16 +1298,32 @@
         <parent link="RightFoot_f2"/>
         <child link="RightFoot"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.436332" upper="0.872665" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<joint name="jRightBallFoot_roty" type="revolute">
+	<joint name="jRightBallFoot_rotx" type="revolute">
         <origin xyz="jRightBallFoot_ORIGIN" rpy="0 0 0"/>
         <parent link="RightFoot"/>
+        <child link="RightToe_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jRightBallFoot_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightToe_f1"/>
+        <child link="RightToe_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jRightBallFoot_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="RightToe_f2"/>
         <child link="RightToe"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.174533" upper="1.5708" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 	<!--Chain from (20) to (23)-->
 	<joint name="jLeftHip_rotx" type="revolute">
@@ -1085,7 +1331,7 @@
         <parent link="Pelvis"/>
         <child link="LeftUpperLeg_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jLeftHip_roty" type="revolute">
@@ -1093,7 +1339,7 @@
         <parent link="LeftUpperLeg_f1"/>
         <child link="LeftUpperLeg_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.261799" upper="2.0944" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jLeftHip_rotz" type="revolute">
@@ -1101,23 +1347,31 @@
         <parent link="LeftUpperLeg_f2"/>
         <child link="LeftUpperLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.785398" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<joint name="jLeftKnee_roty" type="revolute">
+	<joint name="jLeftKnee_rotx" type="revolute">
         <origin xyz="jLeftKnee_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftUpperLeg"/>
         <child link="LeftLowerLeg_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="0" upper="2.35619" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftKnee_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftLowerLeg_f1"/>
+        <child link="LeftLowerLeg_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jLeftKnee_rotz" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <parent link="LeftLowerLeg_f1"/>
+        <parent link="LeftLowerLeg_f2"/>
         <child link="LeftLowerLeg"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.698132" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
 	<joint name="jLeftAnkle_rotx" type="revolute">
@@ -1125,7 +1379,7 @@
         <parent link="LeftLowerLeg"/>
         <child link="LeftFoot_f1"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.610865" upper="0.785398" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="1 0 0" />
     </joint>
 	<joint name="jLeftAnkle_roty" type="revolute">
@@ -1133,7 +1387,7 @@
         <parent link="LeftFoot_f1"/>
         <child link="LeftFoot_f2"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.523599" upper="0.872665" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 1 0" />
     </joint>
     <joint name="jLeftAnkle_rotz" type="revolute">
@@ -1141,16 +1395,32 @@
         <parent link="LeftFoot_f2"/>
         <child link="LeftFoot"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.872665" upper="0.436332" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
         <axis xyz="0 0 1" />
     </joint>
-	<joint name="jLeftBallFoot_roty" type="revolute">
+	<joint name="jLeftBallFoot_rotx" type="revolute">
         <origin xyz="jLeftBallFoot_ORIGIN" rpy="0 0 0"/>
         <parent link="LeftFoot"/>
+        <child link="LeftToe_f1"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="1 0 0" />
+    </joint>
+	<joint name="jLeftBallFoot_roty" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftToe_f1"/>
+        <child link="LeftToe_f2"/>
+        <dynamics damping="0.1" friction="0.0"/>
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+    <joint name="jLeftBallFoot_rotz" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="LeftToe_f2"/>
         <child link="LeftToe"/>
         <dynamics damping="0.1" friction="0.0"/>
-        <limit effort="30" velocity="1.0" lower="-0.174533" upper="1.5708" />
-        <axis xyz="0 1 0" />
+        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0" />
+        <axis xyz="0 0 1" />
     </joint>
 
 	<!--Insert sensors here, if any.-->
