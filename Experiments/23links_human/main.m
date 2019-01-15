@@ -542,19 +542,69 @@ if ~isfield(y_sim,'FextSim_RightFoot')
     extractFext_from_y_sim
 end
 
-%% Change of coordinates (CoC) analysis
-% Important note:
-% ---------------
-% This change of coordinates is related only to:
-% q_leftShoulder & tau_leftShoulder
-% q_rightShoulder & tau_rightShoulder
-% ---------------
-changeOfCoordinates;
-save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
-
+%% ---------------------------- EXO ANALYSIS ------------------------------
 if opts.EXO
-   EXOdataExtraction;
-   save(fullfile(bucket.pathToProcessedData,'exo.mat'),'exo');
+    %% Load and extract data from EXO table
+    EXO.dataFilename  = fullfile(bucket.datasetRoot, 'ForceDataTable.csv');
+    EXO.extractedDataRaw = table2array(readtable(EXO.dataFilename,'Delimiter',';'));
+
+    % Generic raw info table (labels/extraction range per label)
+    EXO.tableLabels = {'shoulderAngle';
+        'F_arm_scher';
+        'F_arm_support';
+        'F_ASkraft_x';
+        'F_ASkraft_y';
+        'F_KGkraft_x';
+        'F_KGkraft_y';
+        'M_support'};
+
+    for labelIdx = 1 : size(EXO.tableLabels,1)
+        EXO.tableInfo(labelIdx).labels = EXO.tableLabels{labelIdx};
+        EXO.tableInfo(labelIdx).range  = (labelIdx:8:96);
+    end
+
+    % Extraction of info from the EXO table per subject
+    EXO.nrOfSubj = 12;
+    for subjIdx = 1 : EXO.nrOfSubj
+        EXO.extractedTable(subjIdx).shoulder_angles  = EXO.extractedDataRaw(:,EXO.tableInfo(1).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_arm_scher   = EXO.extractedDataRaw(:,EXO.tableInfo(2).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_arm_support = EXO.extractedDataRaw(:,EXO.tableInfo(3).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_ASkraft_x   = EXO.extractedDataRaw(:,EXO.tableInfo(4).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_ASkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(5).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_KGkraft_x   = EXO.extractedDataRaw(:,EXO.tableInfo(6).range(subjIdx));
+        EXO.extractedTable(subjIdx).F_KGkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(7).range(subjIdx));
+        EXO.extractedTable(subjIdx).M_support     = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx));
+    end
+
+    %% Torque level analysis
+    if opts.EXO_torqueLevelAnalysis
+        disp('-------------------------------------------------------------------');
+        disp('[Start] EXO Torque level analysis');
+
+        % Change of coordinates (CoC) analysis
+        % Important note:
+        % ---------------
+        % This change of coordinates is related only to:
+        % q_leftShoulder  &  tau_leftShoulder
+        % q_rightShoulder &  tau_rightShoulder
+        % ---------------
+        changeOfCoordinates;
+        save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
+
+        EXO_torqueLevelAnalysis;
+        save(fullfile(bucket.pathToProcessedData,'exo_torqueLevel.mat'),'exo_tauLevel');
+        disp('[End] EXO Torque level analysis');
+    end
+
+    %% Force level analysis
+    if opts.EXO_forceLevelAnalysis
+        disp('-------------------------------------------------------------------');
+        disp('[Start] EXO Force level analysis');
+
+        % to be done
+
+        disp('[End] EXO Torque level analysis');
+    end
 end
 
 %% Final plots
