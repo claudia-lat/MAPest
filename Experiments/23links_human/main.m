@@ -70,7 +70,7 @@ if opts.EXO
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(1))^2);
         subjectParamsFromDataEXO.pelvisIzz  = (subjectParamsFromDataEXO.pelvisMass/12) * ...
             ((subjectParamsFromData.pelvisBox(3))^2 + (subjectParamsFromData.pelvisBox(2))^2);
-
+        
         save(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
     else
         load(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'),'subjectParamsFromDataEXO');
@@ -234,7 +234,7 @@ if opts.noC7joints
         load(fullfile(bucket.pathToProcessedData,'selectedJointsReduced.mat'));
         load(fullfile(bucket.pathToProcessedData,'synchroKinReduced.mat'));
     end
-
+    
     % Overwrite old variables with the new reduced variables
     selectedJoints = selectedJointsReduced;
     save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
@@ -547,7 +547,7 @@ if opts.EXO
     %% Load and extract data from EXO table
     EXO.dataFilename  = fullfile(bucket.datasetRoot, 'ForceDataTable.csv');
     EXO.extractedDataRaw = table2array(readtable(EXO.dataFilename,'Delimiter',';'));
-
+    
     % Generic raw info table (labels/extraction range per label)
     EXO.tableLabels = {'shoulderAngle';
         'F_arm_scher';
@@ -557,12 +557,12 @@ if opts.EXO
         'F_KGkraft_x';
         'F_KGkraft_y';
         'M_support'};
-
+    
     for labelIdx = 1 : size(EXO.tableLabels,1)
         EXO.tableInfo(labelIdx).labels = EXO.tableLabels{labelIdx};
         EXO.tableInfo(labelIdx).range  = (labelIdx:8:96);
     end
-
+    
     % Extraction of info from the EXO table per subject
     EXO.nrOfSubj = 12;
     for subjIdx = 1 : EXO.nrOfSubj
@@ -575,7 +575,7 @@ if opts.EXO
         EXO.extractedTable(subjIdx).F_KGkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(7).range(subjIdx));
         EXO.extractedTable(subjIdx).M_support     = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx));
     end
-
+    
     %% Change of coordinates (CoC)
     % Important note:
     % ---------------
@@ -585,20 +585,20 @@ if opts.EXO
     % ---------------
     changeOfCoordinates;
     save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
-
+    
     % Extraction and round of the shoulder angle vectors
     for blockIdx = 1 : block.nrOfBlocks
         % right shoulder
         EXO.tmp.qToCompare_right = (- CoC(blockIdx).Rsho_qFirst(1,:) + 90)'; % operation to compare the angles: change sign and then +90 deg
         EXO.CoC(blockIdx).qToCompare_right_round = round(EXO.tmp.qToCompare_right);
-
+        
         % left shoulder
         EXO.tmp.qToCompare_left = (CoC(blockIdx).Lsho_qFirst(1,:) + 90)'; % operation to compare the angles: +90 deg
         EXO.CoC(blockIdx).qToCompare_left_round = round(EXO.tmp.qToCompare_left);
     end
-
+    
     % remove tmp filed oin EXO.CoC -->TODO
-
+    
     %% Torque level analysis
     if opts.EXO_torqueLevelAnalysis
         disp('-------------------------------------------------------------------');
@@ -607,7 +607,7 @@ if opts.EXO
         save(fullfile(bucket.pathToProcessedData,'exo_torqueLevel.mat'),'exo_tauLevel');
         disp('[End] EXO Torque level analysis');
     end
-
+    
     %% Force level analysis
     if opts.EXO_forceLevelAnalysis
         disp('-------------------------------------------------------------------');
