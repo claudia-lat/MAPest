@@ -576,21 +576,33 @@ if opts.EXO
         EXO.extractedTable(subjIdx).M_support     = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx));
     end
 
+    %% Change of coordinates (CoC)
+    % Important note:
+    % ---------------
+    % This change of coordinates is related only to:
+    % q_leftShoulder  &  tau_leftShoulder
+    % q_rightShoulder &  tau_rightShoulder
+    % ---------------
+    changeOfCoordinates;
+    save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
+
+    % Extraction and round of the shoulder angle vectors
+    for blockIdx = 1 : block.nrOfBlocks
+        % right shoulder
+        EXO.tmp.qToCompare_right = (- CoC(blockIdx).Rsho_qFirst(1,:) + 90)'; % operation to compare the angles: change sign and then +90 deg
+        EXO.CoC(blockIdx).qToCompare_right_round = round(EXO.tmp.qToCompare_right);
+
+        % left shoulder
+        EXO.tmp.qToCompare_left = (CoC(blockIdx).Lsho_qFirst(1,:) + 90)'; % operation to compare the angles: +90 deg
+        EXO.CoC(blockIdx).qToCompare_left_round = round(EXO.tmp.qToCompare_left);
+    end
+
+    % remove tmp filed oin EXO.CoC -->TODO
+
     %% Torque level analysis
     if opts.EXO_torqueLevelAnalysis
         disp('-------------------------------------------------------------------');
         disp('[Start] EXO Torque level analysis');
-
-        % Change of coordinates (CoC) analysis
-        % Important note:
-        % ---------------
-        % This change of coordinates is related only to:
-        % q_leftShoulder  &  tau_leftShoulder
-        % q_rightShoulder &  tau_rightShoulder
-        % ---------------
-        changeOfCoordinates;
-        save(fullfile(bucket.pathToProcessedData,'CoC.mat'),'CoC');
-
         EXO_torqueLevelAnalysis;
         save(fullfile(bucket.pathToProcessedData,'exo_torqueLevel.mat'),'exo_tauLevel');
         disp('[End] EXO Torque level analysis');
