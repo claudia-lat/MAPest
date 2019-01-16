@@ -62,7 +62,7 @@ for blockIdx = 1 : block.nrOfBlocks
     exo_tauLevel(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
     exo_tauLevel(blockIdx).torqueFromTable_right = EXO.tmp.tau_EXO_right;
     exo_tauLevel(blockIdx).torqueFromTable_left  = EXO.tmp.tau_EXO_left;
-
+    
     % Final torque-level estimation only for the shoulders:
     %
     %    finalTorque_sho = tauFirst_MAPest_sho - tau_EXOfromTable_sho (new one)
