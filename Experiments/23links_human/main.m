@@ -344,14 +344,14 @@ priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
 % exists the iDynTree option.
 sensorsToBeRemoved = [];
 
-bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-bucket.temp.id = 'LeftHand';
-sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
-% %
-bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
-bucket.temp.id = 'RightHand';
-sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
-% %
+% bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% bucket.temp.id = 'LeftHand';
+% sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
+% % %
+% bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
+% bucket.temp.id = 'RightHand';
+% sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
+% % %
 % % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % % bucket.temp.id = 'RightFoot';
 % % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
