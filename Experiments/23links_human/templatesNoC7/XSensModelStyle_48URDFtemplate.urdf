@@ -1,5 +1,5 @@
-<!---------------------URDF MODEL 48 DoFs----------------------->
-<!-------------------------------------------------------------->
+<!--URDF MODEL 48 DoFs, C7 joint fixed-->
+
 <robot name="XSensStyleModel_template">
 <!--To open this model with Gazebo replace the null masses, inertias and dimensions of the 'fake links f1 and f2'-->
     <!--LINKS-->
