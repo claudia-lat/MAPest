@@ -620,6 +620,10 @@ if opts.EXO
 end
 
 %% Final plots
-finalPlots;
+opts.finalPlot = true;
+
+if opts.finalPlot
+    finalPlots;
+end
 
 disp('-------------------------------------------------------------------');
