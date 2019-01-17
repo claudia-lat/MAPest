@@ -1,8 +1,8 @@
 
 %% Preliminaries
 close all;
-powerTest = false;
-CoC_analysisPlot = false;
+opts.powerTest = false;
+opts.CoC_analysisPlot = false;
 
 for sjIdx = 1 : size(selectedJoints,1)
     % Right shoulder
@@ -55,7 +55,7 @@ for blockIdx = 1 : block.nrOfBlocks
         estimatedVariables.tau(blockIdx).values(jRshoRotz_idx,:)];
 %     tau_rightC7Sho = estimatedVariables.tau(blockIdx).values(jRshoC7Rotx_idx,:);
     
-    if CoC_analysisPlot
+    if opts.CoC_analysisPlot
         fig = figure();
         axes1 = axes('Parent',fig,'FontSize',16);
         box(axes1,'on');
@@ -145,7 +145,7 @@ for blockIdx = 1 : block.nrOfBlocks
         tauFirst_rightSho(:,i) = inv(jacobian_q_rightSho{i})' * tau_rightSho(:,i);
     end
     
-    if CoC_analysisPlot
+    if opts.CoC_analysisPlot
         subplot (425) %angles qFirst
         plot(qFirst_rightSho(1,:),'r','Linewidth',1.5)
         hold on
@@ -185,7 +185,7 @@ for blockIdx = 1 : block.nrOfBlocks
         estimatedVariables.tau(blockIdx).values(jLshoRotz_idx,:)];
 %     tau_leftC7Sho = estimatedVariables.tau(blockIdx).values(jLshoC7Rotx_idx,:);
     
-    if CoC_analysisPlot
+    if opts.CoC_analysisPlot
         subplot (422) % angles q
         plot(qx_leftSho,'r','Linewidth',1.5)
         hold on
@@ -270,7 +270,7 @@ for blockIdx = 1 : block.nrOfBlocks
 
     end
     
-    if CoC_analysisPlot
+    if opts.CoC_analysisPlot
         subplot (426) %angles qFirst
         plot(qFirst_leftSho(1,:),'r','Linewidth',1.5)
         hold on
@@ -319,8 +319,7 @@ end
 % test if qDot'*tau = qDotFirst'*tauFirst
 % LHS = qDot'*tau
 % RHS = qDotFirst'*tauFirst = (qDot'*J') *tauFirst
-if powerTest
-    clearvars powerTest;
+if opts.powerTest
 
     for blockIdx = 1 : block.nrOfBlocks
         len = size(synchroKin(blockIdx).masterTime ,2);
@@ -347,19 +346,36 @@ if powerTest
             LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (CoC(blockIdx).Lsho_tau(:,i));
             RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * CoC(blockIdx).J_left{i, 1}'*(CoC(blockIdx).Lsho_tauFirst(:,i));
         end
-        powerTest(blockIdx).block = block.labels(blockIdx);
-        powerTest(blockIdx).LHS_right = LHS_right_tmp;
-        powerTest(blockIdx).RHS_right = RHS_right_tmp;
-        powerTest(blockIdx).LHS_left  = LHS_left_tmp;
-        powerTest(blockIdx).RHS_left  = RHS_left_tmp;
+        opts.powerTest(blockIdx).block = block.labels(blockIdx);
+        opts.powerTest(blockIdx).LHS_right = LHS_right_tmp;
+        opts.powerTest(blockIdx).RHS_right = RHS_right_tmp;
+        opts.powerTest(blockIdx).LHS_left  = LHS_left_tmp;
+        opts.powerTest(blockIdx).RHS_left  = RHS_left_tmp;
 
-        powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
-        powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
+        opts.powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
+        opts.powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
     end
+    clearvars qDot_right qDot_leftSho ...
+        Sho LHS_right_tmp RHS_right_tmp LHS_left_tmp RHS_left_tmp;
 end
 
-
-
+%% Clear vars
+clearvars jRshoRotx_idx jRshoRoty_idx jRshoRotz_idx jLshoRotx_idx jLshoRoty_idx jLshoRotz_idx ...
+    qx_rightSho qy_rightSho qz_rightSho qx_leftSho qy_leftSho qz_leftSho ...
+    tau_rightSho tau_leftSho ...
+    jacobian_q_rightSho jacobian_q_leftSho ...
+    qFirst_rightSho   qFirst_leftSho ...
+    tauFirst_rightSho tauFirst_leftSho ...
+    rS11 rS12 rS13 rS21 rS22 rS23 rS31 rS32 rS33 ...
+    lS11 lS12 lS13 lS21 lS22 lS23 lS31 lS32 lS33 ...
+    q_rightSho q_leftSho ...
+    xL yL zL xR yR zR ...
+    R_q_rightSho R_q_leftSho ...
+    R_qx_rightSho R_qy_rightSho R_qz_rightSho ...
+    R_qx_leftSho  R_qy_leftSho  R_qz_leftSho ...
+    qxFirst_rightSho qyFirst_rightSho qzFirst_rightSho ...
+    qxFirst_leftSho  qyFirst_leftSho  qzFirst_leftSho;
+    
 %% Utility
 function [Rx, Ry, Rz] = angle2rots(x)
 %ANGLE2ROTS computes the three rotation matrices given a vector x of angles
