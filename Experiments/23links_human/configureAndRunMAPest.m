@@ -31,6 +31,10 @@ taskID = 1;
 
 % Check the EXO option
 opts.EXO = true;
+if opts.EXO
+    opts.EXO_torqueLevelAnalysis = true;
+    opts.EXO_forceLevelAnalysis  = false;
+end
 
 % Option to put the C7 joints as follows:
 % - fixed in the URDF model
