@@ -346,14 +346,14 @@ if opts.powerTest
             LHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * (CoC(blockIdx).Lsho_tau(:,i));
             RHS_left_tmp(i,1)  = (qDot_leftSho(:,i))' * CoC(blockIdx).J_left{i, 1}'*(CoC(blockIdx).Lsho_tauFirst(:,i));
         end
-        opts.powerTest(blockIdx).block = block.labels(blockIdx);
-        opts.powerTest(blockIdx).LHS_right = LHS_right_tmp;
-        opts.powerTest(blockIdx).RHS_right = RHS_right_tmp;
-        opts.powerTest(blockIdx).LHS_left  = LHS_left_tmp;
-        opts.powerTest(blockIdx).RHS_left  = RHS_left_tmp;
+        powerTest(blockIdx).block = block.labels(blockIdx);
+        powerTest(blockIdx).LHS_right = LHS_right_tmp;
+        powerTest(blockIdx).RHS_right = RHS_right_tmp;
+        powerTest(blockIdx).LHS_left  = LHS_left_tmp;
+        powerTest(blockIdx).RHS_left  = RHS_left_tmp;
 
-        opts.powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
-        opts.powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
+        powerTest(blockIdx).diffRigth = LHS_right_tmp - RHS_right_tmp;
+        powerTest(blockIdx).diffLeft  = LHS_left_tmp - RHS_left_tmp;
     end
     clearvars qDot_right qDot_leftSho ...
         Sho LHS_right_tmp RHS_right_tmp LHS_left_tmp RHS_left_tmp;
