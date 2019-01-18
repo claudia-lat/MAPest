@@ -1,31 +1,36 @@
 
 close all;
+
+balanceCheck = struct; %container for balance check test
+balanceCheck.tmpBlock = 1;
+balanceCheck.tmpSamples = 400;
+
 %% Preliminaries
 % % Mass of the entire shoes
 % mass.completeShoe = 1.17; % mass of each shoe
 % mass.noSensShoe   = 0.50; % mass of the each shoe with only the sandal + the two attached plates. No FTs or lowest plates!
 
 % Compute the 'weight' of the equipment from FP data
-staticWeightFP_mean = mean(synchroData(1).FP_SF(1:400,3)); % first 400 samples
-mass.equipmentFP = (staticWeightFP_mean/9.81) - masterFile.Subject.Info.Weight;
-% since equipmentMassFP is computed from the forceplates, it considers the
-% weight of: entire shoes(1.17kg x2) + suit(1kg) + drill(0.66kg) +
-% respiratory stuff(?kg)
+balanceCheck.staticWeightFP_mean = mean(synchroData(balanceCheck.tmpBlock).FP_SF(1:balanceCheck.tmpSamples,3)); % first 400 samples, fz component
+balanceCheck.mass.equipmentFP = (balanceCheck.staticWeightFP_mean/9.81) - masterFile.Subject.Info.Weight;
+% since mass.equipmentFP is computed from the forceplates, it considers the
+% weight of: entire shoes(1.17kg x2) + suit(1kg) + drill(0.66kg) + respiratory stuff(?kg)
 
 % Compute the 'weight' of the equipment from FtShoes data
-staticWeightFtShoes_mean = mean(data(blockIdx).data(82).meas(3,1:400)) + mean(data(blockIdx).data(74).meas(3,1:400)); % first 400 samples
-mass.equipmentFtShoes = (staticWeightFtShoes_mean/9.81) - masterFile.Subject.Info.Weight;
-% since equipmentMassFtShoes is computed from the ftShoes, it considers the
-% weight of: part of the shoe + suit(1kg) + drill(0.66kg) +
-% respiratory stuff(?kg)
+% (82) --> right foot
+% (74) --> left foot
+balanceCheck.staticWeightFtShoes_mean = mean(data(blockIdx).data(82).meas(3,1:balanceCheck.tmpSamples)) + ...
+                                        mean(data(blockIdx).data(74).meas(3,1:balanceCheck.tmpSamples)); % first 400 samples
+balanceCheck.mass.equipmentFtShoes = (balanceCheck.staticWeightFtShoes_mean/9.81) - masterFile.Subject.Info.Weight;
+% since mass.equipmentFtShoes is computed from the ftShoes, it considers the
+% weight of: (upper) part of the shoe + suit(1kg) + drill(0.66kg) + respiratory stuff(?kg)
 
 % Compute rotation matrices for MAP transform
 for linkIdx = 1: size(suit.links,1)
-    suit_test.links{linkIdx, 1}.label        = suit.links{linkIdx, 1}.label;
+    suit_test.links{linkIdx, 1}.label = suit.links{linkIdx, 1}.label;
     for blockIdx = 1 : block.nrOfBlocks
         suit_test.links{linkIdx, 1}.meas(blockIdx).block  = block.labels(blockIdx);
         suit_test.links{linkIdx, 1}.meas(blockIdx).orientation = suit.links{linkIdx, 1}.meas.orientation(:,tmp.cutRange{blockIdx});
-        
         suit_test.links{linkIdx, 1}.meas(blockIdx).G_R_L = cell(size(suit.links{linkIdx, 1}.meas.orientation(:,tmp.cutRange{blockIdx}),2), 1);
         for blockLenIdx = 1: size(suit.links{linkIdx, 1}.meas.orientation(:,tmp.cutRange{blockIdx}),2)
             suit_test.links{linkIdx, 1}.meas(blockIdx).G_R_L{blockLenIdx} = quat2Mat(suit_test.links{linkIdx, 1}.meas(blockIdx).orientation(:,blockLenIdx));
