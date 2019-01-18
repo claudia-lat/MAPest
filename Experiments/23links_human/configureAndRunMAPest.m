@@ -37,9 +37,9 @@ if opts.EXO
 end
 
 % Option to put the C7 joints as follows:
-% - fixed in the URDF model
-% - locked on the Osim model
-opts.noC7joints = true;
+% - fixed in the URDF model  (i.e., opts.noC7joints = true)
+% - locked on the Osim model (i.e., opts.noC7joints = true)
+opts.noC7joints = false;
 
 %% Run MAPest main.m
 main;
