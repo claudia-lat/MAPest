@@ -29,17 +29,29 @@ bucket.datasetRoot = fullfile(pwd, 'dataJSI');
 subjectID = 1;
 taskID = 1;
 
-% Check the EXO option
+% EXO option
 opts.EXO = true;
 if opts.EXO
     opts.EXO_torqueLevelAnalysis = true;
     opts.EXO_forceLevelAnalysis  = false;
 end
 
-% Option to put the C7 joints as follows:
+% Option for C7 joints as follows:
 % - fixed in the URDF model  (i.e., opts.noC7joints = true)
 % - locked on the Osim model (i.e., opts.noC7joints = true)
 opts.noC7joints = false;
+
+
+% ID comparisons for MAP benchmarking
+opts.MAPbenchmarking = false;
+if opts.MAPbenchmarking
+    opts.iDynID_kinDynClass = false;
+    opts.iDynID_estimClass  = false;
+%     opts.OsimID             = false;
+end
+
+% Final plots
+opts.finalPlot = false;
 
 %% Run MAPest main.m
 main;

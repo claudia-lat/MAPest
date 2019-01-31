@@ -15,11 +15,6 @@ masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subje
 % Option for computing the estimated Sigma
 opts.Sigma_dgiveny = false;
 
-% Option for computing ID comparisons
-opts.iDynID_kinDynClass = false;
-opts.iDynID_estimClass  = true;
-opts.OsimID             = false;
-
 % Define the template to be used
 if opts.noC7joints
     addpath(genpath('templatesNoC7'));
@@ -49,7 +44,7 @@ end
 % The subjects performed the experimental tasks with the drill on the right
 % hand. This code will be modified for taking into account the presence of
 % the drill. URDF/OSIM models and IK computation will be affected
-% from this change.
+% by this change.
 
 %% Extract subject parameters from SUIT
 if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'), 'file')
@@ -59,7 +54,7 @@ else
     load(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
 end
 
-if opts.EXO
+if opts.EXO && opts.EXO_torqueLevelAnalysis
     % Add manually the mass of the exo (1.8 kg) on the pelvis:
     if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromDataEXO.mat'), 'file')
         subjectParamsFromDataEXO = subjectParamsFromData;
@@ -88,7 +83,7 @@ if opts.noC7joints
             'GazeboModel',false);
     end
     % model WITH exo, with C7 joints FIXED
-    if opts.EXO
+    if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO_noC7.urdf', subjectID));
         if ~exist(bucket.filenameURDF, 'file')
             bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
@@ -107,7 +102,7 @@ else
             'GazeboModel',false);
     end
     % model WITH exo, with C7 joints (complete) REVOLUTE
-    if opts.EXO
+    if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
         if ~exist(bucket.filenameURDF, 'file')
             bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromDataEXO, ...
@@ -127,7 +122,7 @@ if opts.noC7joints
             bucket.filenameOSIM);
     end
     % model WITH exo, with C7 joints LOCKED
-    if opts.EXO
+    if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO_noC7.osim', subjectID));
         if ~exist(bucket.filenameOSIM, 'file')
             bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
@@ -142,7 +137,7 @@ else
             bucket.filenameOSIM);
     end
     % model WITH exo, with C7 joints (complete) UNLOCKED
-    if opts.EXO
+    if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
         if ~exist(bucket.filenameOSIM, 'file')
             bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromDataEXO, ...
@@ -386,61 +381,14 @@ else
 end
 disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
 
+
 %% --------------------------- ID comparisons -----------------------------
-% Compute or load comaparison params
-if opts.iDynID_kinDynClass || opts.iDynID_estimClass
-    addpath(genpath('test'));
-    for blockIdx = 1 : block.nrOfBlocks
-        tau_iDyn(blockIdx).block = block.labels(blockIdx);
-    end
-    if ~exist(fullfile(bucket.pathToProcessedData,'IDcomparisonParams.mat'), 'file')
-        test_IDcomparisonParamsCollection;
-    else
-        load(fullfile(bucket.pathToProcessedData,'IDcomparisonParams.mat'))
-    end
+% Section to benchmark MAP with
+% - iDynTree::kinDynComputation::InverseDynamics()
+% - iDynTree::ExtWrenchesAndJointTorquesEstimator::estimateExtWrenchesAndJointTorques()
+if opts.MAPbenchmarking
+    MAPbenchmarking;
 end
-
-% iDynTree ID via kinDynClass
-if opts.iDynID_kinDynClass
-    for blockIdx = 1 : block.nrOfBlocks
-        disp('-------------------------------------------------------------------');
-        disp(strcat('[Start] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx),'...'));
-        tau_iDyn(blockIdx).tau_kinDyn = iDynTreeID_kinDyn_floating(human_kinDynComp, ...
-            currentBase, ...
-            IDcomparisonParams.orientation(blockIdx).baseOrientation, ...
-            IDcomparisonParams.basePosition(blockIdx).basePos_wrtG, ...
-            IDcomparisonParams.baseVel(blockIdx).baseVel_wrtG, ...
-            IDcomparisonParams.baseAcc(blockIdx).baseAcc_wrtG, ...
-            synchroKin(blockIdx), ...
-            shoes(blockIdx));
-
-        disp(strcat('[End] iDynTree ID (via kinDyn) computation for Block ',num2str(blockIdx)));
-    end
-    save(fullfile(bucket.pathToProcessedData,'tau_iDyn.mat'),'tau_iDyn');
-end
-
-% ID estimation via estimator class
-if opts.iDynID_estimClass
-   for blockIdx = 1 : block.nrOfBlocks
-        disp('-------------------------------------------------------------------');
-        disp(strcat('[Start] iDynTree tau estimation for Block ',num2str(blockIdx),'...'));
-        tau_iDyn(blockIdx).tau_estim = iDynTreeID_estimClass_floating(bucket.filenameURDF, ...
-            cell2iDynTreeStringVector(selectedJoints), ...
-            currentBase, ...
-            synchroKin(blockIdx), ...
-            IDcomparisonParams.baseVel(blockIdx).baseAngVel_wrtBase, ...
-            IDcomparisonParams.baseAcc(blockIdx), ...
-            shoes(blockIdx));
-        disp(strcat('[End] iDynTree torque and forces estimation for Block ',num2str(blockIdx)));
-   end
-   save(fullfile(bucket.pathToProcessedData,'tau_iDyn_estim.mat'),'tau_iDyn');
-end
-
-% OpenSim ID --> TBD
-% if opts.OsimID
-%     addpath(genpath('test'));
-%     test_IDcomparisonParamsCollection;
-% end
 
 %% MAP computation
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
@@ -597,7 +545,7 @@ if opts.EXO
         EXO.CoC(blockIdx).qToCompare_left_round = round(EXO.tmp.qToCompare_left);
     end
     
-    % remove tmp filed oin EXO.CoC -->TODO
+    % TODO: remove tmp files EXO.CoC
     
     %% Torque level analysis
     if opts.EXO_torqueLevelAnalysis
@@ -619,9 +567,7 @@ if opts.EXO
     end
 end
 
-%% Final plots
-opts.finalPlot = true;
-
+%%  Final plots
 if opts.finalPlot
     finalPlots;
 end
