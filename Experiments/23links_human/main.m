@@ -547,6 +547,24 @@ if opts.EXO
     
     % TODO: remove tmp files EXO.CoC
     
+    %% Compute the term for the feet implicit constraints
+    % This section computes the term which makes the dynamics of the system to
+    % satisfy the 2-feet contact constraint.
+    disp('-------------------------------------------------------------------');
+    disp(strcat('[Start] Computing the term for the feet implicit constraint...'));
+    if ~exist(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'), 'file')
+        for blockIdx = 1 : block.nrOfBlocks
+            implFeetConstraint(blockIdx).block = block.labels(blockIdx);
+            implFeetConstraint(blockIdx).term  = computeImplicitFeetConstraintForm(human_kinDynComp, ...
+                currentBase, ...
+                synchroKin(blockIdx));
+        end
+        save(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'),'implFeetConstraint');
+    else
+        load(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'));
+    end
+    disp(strcat('[End] Computing the term for the feet implicit constraint'));
+
     %% Torque level analysis
     if opts.EXO_torqueLevelAnalysis
         disp('-------------------------------------------------------------------');
