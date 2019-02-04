@@ -521,7 +521,14 @@ if opts.EXO
         EXO.extractedTable(subjIdx).F_ASkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(5).range(subjIdx));
         EXO.extractedTable(subjIdx).F_KGkraft_x   = EXO.extractedDataRaw(:,EXO.tableInfo(6).range(subjIdx));
         EXO.extractedTable(subjIdx).F_KGkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(7).range(subjIdx));
-        EXO.extractedTable(subjIdx).M_support     = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx));
+        
+        % Correction: Computation of a
+        % newTableTorque = F_arm_support * 0.6895 * subject upper arm length
+        % Note: The point where the exo applies the force at the upper arm is
+        %       0.6895 of the total upper arm length (i.e., the application point
+        %       of the force does not coincide with the elbow joint!!!).
+        EXO.extractedTable(subjIdx).M_support_mod    = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx)) * ...
+            0.6895 * subjectParamsFromData.leftUpperArm_y;
     end
     
     %% Change of coordinates (CoC)

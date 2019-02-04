@@ -21,28 +21,14 @@
 % can be only computed for the shoulders (only available angles to
 % be matched with the CoC).
 
-%% Computation of new torque from table:
-%
-%   newTableTorque = F_arm_support * 0.6895 * subject upper arm length
-%
-% Note: The point where the exo applies the force at the upper arm is
-%       0.6895 of the total upper arm length (i.e., the application point
-%       of the force does not coincide with the elbow joint!!!).
-
-EXO.newTableTorque = zeros(size(EXO.extractedDataRaw,1),1);
-for tableIdx = 1 : size(EXO.extractedDataRaw,1)
-    EXO.newTableTorque(tableIdx) = EXO.extractedDataRaw(tableIdx,EXO.tableInfo(8).range(subjectID)) * ...
-        0.6895 * subjectParamsFromData.leftUpperArm_y;
-end
-
 %% Computation of torques w.r.t. URDF shoulder (rounded) angles
 for blockIdx = 1 : block.nrOfBlocks
     % right shoulder
     EXO.tmp.tau_EXO_right = zeros(1,size(EXO.CoC(blockIdx).qToCompare_right_round,1));
     for qIdx = 1 : size(EXO.CoC(blockIdx).qToCompare_right_round,1)
-        for tableIdx = 1 : size(EXO.extractedDataRaw,1)
-            if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedDataRaw(tableIdx,1))
-                EXO.tmp.tau_EXO_right(qIdx) = - EXO.newTableTorque(tableIdx,1);
+        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+            if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                EXO.tmp.tau_EXO_right(qIdx) = - EXO.extractedTable(subjectID).M_support_mod(tableIdx,1);
             end
         end
     end
@@ -50,9 +36,9 @@ for blockIdx = 1 : block.nrOfBlocks
     % left shoulder
     EXO.tmp.tau_EXO_left = zeros(1,size(EXO.CoC(blockIdx).qToCompare_left_round,1));
     for qIdx = 1 : size(EXO.CoC(blockIdx).qToCompare_left_round,1)
-        for tableIdx = 1 : size(EXO.extractedDataRaw,1)
-            if (EXO.CoC(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedDataRaw(tableIdx,1))
-                EXO.tmp.tau_EXO_left(qIdx) = EXO.newTableTorque(tableIdx,1); % sign changed because of mirrored torque
+        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+            if (EXO.CoC(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                EXO.tmp.tau_EXO_left(qIdx) = EXO.extractedTable(subjectID).M_support_mod(tableIdx,1); % sign changed because of mirrored torque
             end
         end
     end
