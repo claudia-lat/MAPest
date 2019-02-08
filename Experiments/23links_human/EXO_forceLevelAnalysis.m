@@ -175,28 +175,28 @@ end
 % 1) Const rotation LUAexo_R_LUAtable
 % Left arm : - LeftUpperArm_exo (i.e., LUAexo)     frame for the exo on the URDF
 %            - LeftUpperArm_table (i.e., LUAtable) frame for the table data (expressed w.r.t. arm frame)
-LUAexo_R_LUAtable = [ 0.0,  0.0,  1.0; ...
+EXO.LUAexo_R_LUAtable = [ 0.0,  0.0,  1.0; ...
     1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
 
 % 2) Const rotation LHexo_R_LHtable
 % Left hip : - LefHip_exo (i.e., LUAexo)      frame for the exo on the URDF
 %            - LeftHip_table (i.e., LUAtable) frame for the table data (expressed w.r.t. torso frame)
-LHexo_R_LHtable = [ 0.0,  0.0,  -1.0; ...
+EXO.LHexo_R_LHtable = [ 0.0,  0.0,  -1.0; ...
     -1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
 
-% 3) Const rotation RUAexo_R_RUAtable 
+% 3) Const rotation RUAexo_R_RUAtable
 % Right arm : - RightUpperArm_exo (i.e., RUAexo)     frame for the exo on the URDF
 %             - RightUpperArm_table (i.e., RUAtable) frame for the table data (expressed w.r.t. arm frame)
-RUAexo_R_RUAtable = [ 0.0,  0.0,  -1.0; ...
+EXO.RUAexo_R_RUAtable = [ 0.0,  0.0,  -1.0; ...
     -1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
 
-% 4) Const rotation RHexo_R_RHtable 
+% 4) Const rotation RHexo_R_RHtable
 % Right hip : - RightHip_exo (i.e., LUAexo)     frame for the exo on the URDF
 %             - RightHip_table (i.e., LUAtable) frame for the table data (expressed w.r.t. torso frame)
-RHexo_R_RHtable = [ 0.0,  0.0,  1.0; ...
+EXO.RHexo_R_RHtable = [ 0.0,  0.0,  1.0; ...
     1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
 
@@ -246,13 +246,77 @@ else
 end
 
 %% Force transformation
-
+% ----Match forces from EXO extractedTable with the angles.
+for blockIdx = 1 : block.nrOfBlocks
+    len = size(synchroKin(blockIdx).masterTime ,2);
+    EXO.exoForcesURDFcompatible(blockIdx).block = block.labels(blockIdx);
+    
+    EXO.tmp.f_table_LUA = zeros(3,len);
+    EXO.tmp.f_table_LH  = zeros(3,len);
+    for qIdx = 1 : len
+        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+            if (EXO.CoC(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                % -------Left upper arm
+                EXO.tmp.f_table_LUA(1,qIdx) = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1);
+                EXO.tmp.f_table_LUA(2,qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1);
+                % -------Left hip
+                EXO.tmp.f_table_LH(1,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1);
+                EXO.tmp.f_table_LH(2,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1);
+            end
+        end
+    end
+    % Transformations
+    for sampleIdx = 1:len
+        EXO.exoForcesURDFcompatible(blockIdx).LUA(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_LUAexo{sampleIdx,1} * ...
+            EXO.LUAexo_R_LUAtable * EXO.tmp.f_table_LUA(:,sampleIdx);
+        EXO.exoForcesURDFcompatible(blockIdx).LH(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_LHexo{sampleIdx,1} * ...
+            EXO.LHexo_R_LHtable * EXO.tmp.f_table_LH(:,sampleIdx);
+    end
+    
+    EXO.tmp.f_table_RUA = zeros(3,len);
+    EXO.tmp.f_table_RH  = zeros(3,len);
+    for qIdx = 1 : len
+        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+            if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                % -------Right upper arm
+                EXO.tmp.f_table_RUA(1,qIdx) = - EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RUA(2,qIdx) = - EXO.extractedTable(subjectID).F_arm_support(tableIdx,1); % sign? to be investigated
+                % -------Right hip
+                EXO.tmp.f_table_RH(1,qIdx) = - EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RH(2,qIdx) = - EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1); % sign? to be investigated
+            end
+        end
+    end
+    % Transformations
+    for sampleIdx = 1:len
+        EXO.exoForcesURDFcompatible(blockIdx).RUA(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_RUAexo{sampleIdx,1} * ...
+            EXO.RUAexo_R_RUAtable * EXO.tmp.f_table_RUA(:,sampleIdx);
+        EXO.exoForcesURDFcompatible(blockIdx).RH(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_RHexo{sampleIdx,1} * ...
+            EXO.RHexo_R_RHtable * EXO.tmp.f_table_RH(:,sampleIdx);
+    end
+end
 
 %% Computation of the final torque
 % Computation of finalTorque = MAPtorque - pinv(NB)N (J' * EXOforces)
 % More in detail, the term (J' * EXOforces) is:
-% (J_LUA'*G_f_LUA + J_LH'*G_f_LH + J_RUA'*G_f_RUA + J_RH'*G_f_RH) 
+% (J_LUA'*G_f_LUA + J_LH'*G_f_LH + J_RUA'*G_f_RUA + J_RH'*G_f_RH)
 
+% Load the term pinv(NB)N already computed
+load(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'));
+
+for blockIdx = 1 : block.nrOfBlocks
+    len = size(synchroKin(blockIdx).masterTime ,2);
+    
+    EXO.finalTorque(blockIdx).block = block.labels(blockIdx);
+    for sampleIdx = 1 : len
+        EXO.finalTorque(blockIdx).torque(:,sampleIdx) = estimatedVariables.tau(blockIdx).values(:,sampleIdx) - ... % MAP estiamation
+            implFeetConstraint(blockIdx).term{sampleIdx, 1} * ... % implicit term pinv(NB)N
+            (J_exo(blockIdx).LUA{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).LUA(:,sampleIdx) + ... % LUA
+            J_exo(blockIdx).LH{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).LH(:,sampleIdx) + ... % LH
+            J_exo(blockIdx).RUA{sampleIdx,1}(1:3,:)'  * EXO.exoForcesURDFcompatible(blockIdx).RUA(:,sampleIdx) + ... % RUA
+            J_exo(blockIdx).RH{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).RH(:,sampleIdx)); % RH
+    end
+end
 
 %% Clean up workspace
 % clearvars EXO.tmp variable
