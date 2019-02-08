@@ -93,7 +93,7 @@ if opts.noC7joints
         end
     end
 else
-    % model NO exo, with C7 joints (complete) REVOLUTE
+    % model NO exo  or EXO in forceLevelAnalysis, with C7 joints (complete) REVOLUTE
     bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
     if ~exist(bucket.filenameURDF, 'file')
         bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
@@ -101,7 +101,7 @@ else
             'filename',bucket.filenameURDF,...
             'GazeboModel',false);
     end
-    % model WITH exo, with C7 joints (complete) REVOLUTE
+    % model WITH exo in torqueLevelAnalysis, with C7 joints (complete) REVOLUTE
     if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof_EXO.urdf', subjectID));
         if ~exist(bucket.filenameURDF, 'file')
@@ -130,13 +130,13 @@ if opts.noC7joints
         end
     end
 else
-    % model NO exo, with C7 joints (complete) UNLOCKED
+    % model NO exo or EXO in forceLevelAnalysis, with C7 joints (complete) UNLOCKED
     bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
     if ~exist(bucket.filenameOSIM, 'file')
         bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
             bucket.filenameOSIM);
     end
-    % model WITH exo, with C7 joints (complete) UNLOCKED
+    % model WITH exo in torqueLevelAnalysis, with C7 joints (complete) UNLOCKED
     if opts.EXO && opts.EXO_torqueLevelAnalysis
         bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof_EXO.osim', subjectID));
         if ~exist(bucket.filenameOSIM, 'file')
@@ -436,7 +436,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 priors, ...
                 baseVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-             disp(strcat('[End] Complete MAP computation for Block ',num2str(blockIdx)));
+            disp(strcat('[End] Complete MAP computation for Block ',num2str(blockIdx)));
             % TODO: variables extraction
             % Sigma_tau extraction from Sigma d --> since sigma d is very big, it
             % cannot be saved! therefore once computed it is necessary to extract data
@@ -452,7 +452,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
                 priors, ...
                 baseVel(blockIdx).baseAngVelocity, ...
                 'SENSORS_TO_REMOVE', sensorsToBeRemoved);
-             disp(strcat('[End] mu_dgiveny MAP computation for Block ',num2str(blockIdx)));
+            disp(strcat('[End] mu_dgiveny MAP computation for Block ',num2str(blockIdx)));
         end
     end
     save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');

@@ -1,4 +1,4 @@
-function tau = extractEstimatedTau_from_mu_dgiveny2(berdy, mu_dgiveny, q)
+function tau = extractEstimatedTau_from_mu_dgiveny(berdy, mu_dgiveny, q)
 %EXTRACTEDESTIMATEDTAU_FROM_MUDGIVENY extracts via berdy the estimated
 % torque by MAP.
 
