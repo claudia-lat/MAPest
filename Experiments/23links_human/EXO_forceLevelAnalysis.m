@@ -319,4 +319,4 @@ for blockIdx = 1 : block.nrOfBlocks
 end
 
 %% Clean up workspace
-% clearvars EXO.tmp variable
+EXO = rmfield(EXO,'tmp');
