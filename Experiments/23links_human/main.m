@@ -618,10 +618,8 @@ if opts.EXO
     if opts.EXO_forceLevelAnalysis
         disp('-------------------------------------------------------------------');
         disp('[Start] EXO Force level analysis');
-
-        % to be done
-
-        disp('[End] EXO Torque level analysis');
+        EXO_forceLevelAnalysis;
+        disp('[End] EXO Force level analysis');
     end
 end
 
