@@ -201,45 +201,48 @@ RHexo_R_RHtable = [ 0.0,  0.0,  1.0; ...
     0.0,  1.0,  0.0];
 
 % 5) Varying rotations expressed w.r.t. the world frame G (as required in the dynamic equation)
-for blockIdx = 1 : 2   %: block.nrOfBlocks
-    len = length(synchroKin(blockIdx).masterTime);
-    EXO.tmp.I_R(blockIdx).block = block.labels(blockIdx);
-    disp('---------------------------');
-    
-    q  = iDynTree.JointPosDoubleArray(exo_kinDynComp.model);
-    dq = iDynTree.JointDOFsDoubleArray(exo_kinDynComp.model);
-    baseVelocity = iDynTree.Twist();
-    
-    gravity = iDynTree.Vector3();
-    gravity.fromMatlab([0; 0; -9.81]);
-%     gravityZero = iDynTree.Vector3();
-%     gravityZero.zero();
-    
-    for i = 1 : len
-        q.fromMatlab(synchroData(blockIdx).q(:,i));
-        dq.fromMatlab(synchroData(blockIdx).dq(:,i));
-        baseVelocity.fromMatlab([baseVel(blockIdx).baseLinVelocity(:,i); ...
-            baseVel(blockIdx).baseAngVelocity(:,i)]);
+if ~exist(fullfile(bucket.pathToProcessedData,'G_R_exoFrames.mat'), 'file')
+    for blockIdx = 1 : block.nrOfBlocks
+        len = length(synchroKin(blockIdx).masterTime);
+        G_R_exoFrames(blockIdx).block = block.labels(blockIdx);
         
-        exo_kinDynComp.setRobotState(G_T_base(blockIdx).G_T_b{i,1},q,baseVelocity,dq,gravity);
-        % 5.1) I_R_LUAexo
-        EXO.tmp.G_T_LUAexo = exo_kinDynComp.getWorldTransform('LeftUpperArm_exo');
-        EXO.tmp.G_H_LUAexo = EXO.tmp.G_T_LUAexo.asHomogeneousTransform().toMatlab();
-        EXO.tmp.G_R(blockIdx).G_R_LUAexo{i,1} = EXO.tmp.G_H_LUAexo(1:3,1:3);
-        % 5.2) I_R_RUAexo
-        EXO.tmp.G_T_RUAexo = exo_kinDynComp.getWorldTransform('RightUpperArm_exo');
-        EXO.tmp.G_H_RUAexo = EXO.tmp.G_T_RUAexo.asHomogeneousTransform().toMatlab();
-        EXO.tmp.G_R(blockIdx).G_R_RUAexo{i,1} = EXO.tmp.G_H_RUAexo(1:3,1:3);
-        % 5.3) I_R_LHexo
-        EXO.tmp.G_T_LHexo = exo_kinDynComp.getWorldTransform('LeftHip_exo');
-        EXO.tmp.G_H_LHexo = EXO.tmp.G_T_LHexo.asHomogeneousTransform().toMatlab();
-        EXO.tmp.G_R(blockIdx).G_R_LHexo{i,1} = EXO.tmp.G_H_LHexo(1:3,1:3);
-        % 5.4) I_R_RHexo
-        EXO.tmp.G_T_RHexo = exo_kinDynComp.getWorldTransform('RightHip_exo');
-        EXO.tmp.G_H_RHexo = EXO.tmp.G_T_RHexo.asHomogeneousTransform().toMatlab();
-        EXO.tmp.G_R(blockIdx).G_R_RHexo{i,1} = EXO.tmp.G_H_RHexo(1:3,1:3);
+        q  = iDynTree.JointPosDoubleArray(exo_kinDynComp.model);
+        dq = iDynTree.JointDOFsDoubleArray(exo_kinDynComp.model);
+        baseVelocity = iDynTree.Twist();
+        
+        gravity = iDynTree.Vector3();
+        gravity.fromMatlab([0; 0; -9.81]);
+        %     gravityZero = iDynTree.Vector3();
+        %     gravityZero.zero();
+        
+        for i = 1 : len
+            q.fromMatlab(synchroData(blockIdx).q(:,i));
+            dq.fromMatlab(synchroData(blockIdx).dq(:,i));
+            baseVelocity.fromMatlab([baseVel(blockIdx).baseLinVelocity(:,i); ...
+                baseVel(blockIdx).baseAngVelocity(:,i)]);
+            
+            exo_kinDynComp.setRobotState(G_T_base(blockIdx).G_T_b{i,1},q,baseVelocity,dq,gravity);
+            % 5.1) G_R_LUAexo
+            EXO.tmp.G_T_LUAexo = exo_kinDynComp.getWorldTransform('LeftUpperArm_exo');
+            EXO.tmp.G_H_LUAexo = EXO.tmp.G_T_LUAexo.asHomogeneousTransform().toMatlab();
+            G_R_exoFrames(blockIdx).G_R_LUAexo{i,1} = EXO.tmp.G_H_LUAexo(1:3,1:3);
+            % 5.2) G_R_RUAexo
+            EXO.tmp.G_T_RUAexo = exo_kinDynComp.getWorldTransform('RightUpperArm_exo');
+            EXO.tmp.G_H_RUAexo = EXO.tmp.G_T_RUAexo.asHomogeneousTransform().toMatlab();
+            G_R_exoFrames(blockIdx).G_R_RUAexo{i,1} = EXO.tmp.G_H_RUAexo(1:3,1:3);
+            % 5.3) G_R_LHexo
+            EXO.tmp.G_T_LHexo = exo_kinDynComp.getWorldTransform('LeftHip_exo');
+            EXO.tmp.G_H_LHexo = EXO.tmp.G_T_LHexo.asHomogeneousTransform().toMatlab();
+            G_R_exoFrames(blockIdx).G_R_LHexo{i,1} = EXO.tmp.G_H_LHexo(1:3,1:3);
+            % 5.4) G_R_RHexo
+            EXO.tmp.G_T_RHexo = exo_kinDynComp.getWorldTransform('RightHip_exo');
+            EXO.tmp.G_H_RHexo = EXO.tmp.G_T_RHexo.asHomogeneousTransform().toMatlab();
+            G_R_exoFrames(blockIdx).G_R_RHexo{i,1} = EXO.tmp.G_H_RHexo(1:3,1:3);
+        end
     end
-
+    save(fullfile(bucket.pathToProcessedData,'G_R_exoFrames.mat'),'G_R_exoFrames');
+else
+    load(fullfile(bucket.pathToProcessedData,'G_R_exoFrames.mat'));
 end
 
 %% Force transformation
