@@ -50,8 +50,8 @@ for i = 1 : suit.properties.nrOfLinks
     suit.links{i}.label = mvnxData.segments.segment(i).ATTRIBUTE.label;
     suit.links{i}.meas = struct;
     suit.links{i}.meas.orientation         = zeros(4, suit.properties.lenData);
-% % %     suit.links{i}.meas.position           = zeros(3, suit.properties.lenData); %not used in JSI analysis, not in the.csv
-% % %     suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData); %not used in JSI analysis, not in the.csv
+    suit.links{i}.meas.position           = zeros(3, suit.properties.lenData);
+    suit.links{i}.meas.velocity           = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.acceleration        = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularVelocity     = zeros(3, suit.properties.lenData);
     suit.links{i}.meas.angularAcceleration = zeros(3, suit.properties.lenData);
@@ -162,12 +162,12 @@ end
 %--------INTERMEDIATE STRUCT FROM CSV
 %--LINKS
 for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
-% % %     if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'position:'))   %not used in JSI analysis, not in the.csv
-% % %         tmp.lastIdxPos = i; %last index
-% % %     end
-% % %     if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'velocity:'))   %not used in JSI analysis, not in the.csv
-% % %         tmp.lastIdxVel = i; %last index
-% % %     end
+    if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'position:'))
+        tmp.lastIdxPos = i; %last index
+    end
+    if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'velocity:'))
+        tmp.lastIdxVel = i; %last index
+    end
     if (contains(mvnxDataFromCSV.orderedLabel{i, 1}, 'acceleration:'))
         tmp.lastIdxAcc = i; %last index
     end
@@ -182,11 +182,11 @@ for i = 1: size(mvnxDataFromCSV.orderedLabel,1)
     end
 end
 % (23x3 variables)
-% % % tmp.link.position.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);    %not used in JSI analysis, not in the.csv
-% % % tmp.link.position.data =zeros(nrOfFrames,3*(suit.properties.nrOfLinks));   %not used in JSI analysis, not in the.csv
-% % % 
-% % % tmp.link.velocity.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);    %not used in JSI analysis, not in the.csv
-% % % tmp.link.velocity.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));  %not used in JSI analysis, not in the.csv
+tmp.link.position.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
+tmp.link.position.data =zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
+
+tmp.link.velocity.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
+tmp.link.velocity.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
 tmp.link.acceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1);
 tmp.link.acceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
@@ -198,13 +198,11 @@ tmp.link.angularAcceleration.orderedLabel = cell(3*(suit.properties.nrOfLinks),1
 tmp.link.angularAcceleration.data = zeros(nrOfFrames,3*(suit.properties.nrOfLinks));
 
 for i = 1 : 3*(suit.properties.nrOfLinks)
-          %not used in JSI analysis, not in the.csv
-% % %     tmp.link.position.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)), 1};
-% % %     tmp.link.position.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)));
-% % %     
-          %not used in JSI analysis, not in the.csv
-% % %     tmp.link.velocity.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxVel - 3*(suit.properties.nrOfLinks)), 1};
-% % %     tmp.link.velocity.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxVel - 3*(suit.properties.nrOfLinks)));
+    tmp.link.position.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.position.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxPos - 3*(suit.properties.nrOfLinks)));
+    
+    tmp.link.velocity.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxVel - 3*(suit.properties.nrOfLinks)), 1};
+    tmp.link.velocity.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxVel - 3*(suit.properties.nrOfLinks)));
     
     tmp.link.acceleration.orderedLabel{i,1} = mvnxDataFromCSV.orderedLabel{i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)), 1};
     tmp.link.acceleration.data(:,i) = mvnxDataFromCSV.data(:,i+(tmp.lastIdxAcc - 3*(suit.properties.nrOfLinks)));
@@ -249,25 +247,26 @@ end
 %--------FROM TMP TO SUIT
 %--LINKS
 for suitLinkIdx = 1 : size(suit.links,1)
-    for j = 1:3*(suit.properties.nrOfLinks) % for link acc/angVel/angAcc
-        if (contains(tmp.link.acceleration.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
+    % for link pos/vel/acc/angVel/angAcc
+    for j = 1:3*(suit.properties.nrOfLinks)
+        if (contains(tmp.link.position.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
             tmpIndex = j;
             break;
         end
     end
-          %not used in JSI analysis, not in the.csv
-% % %     for j = 1:3*(suit.properties.nrOfLinks) % for link pos/acc/angVel/angAcc
-% % %         if (contains(tmp.link.position.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
-% % %             tmpIndex = j;
-% % %             break;
-% % %         end
-% % %     end
-% % %     suit.links{suitLinkIdx}.meas.position            = tmp.link.position.data(:,tmpIndex:tmpIndex+2)';   %not used in JSI analysis, not in the.csv
-% % %     suit.links{suitLinkIdx}.meas.velocity            = tmp.link.velocity.data(:,tmpIndex:tmpIndex+2)';   %not used in JSI analysis, not in the.csv
+%     for j = 1:3*(suit.properties.nrOfLinks) % for link acc/angVel/angAcc
+%         if (contains(tmp.link.acceleration.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
+%             tmpIndex = j;
+%             break;
+%         end
+%     end
+    suit.links{suitLinkIdx}.meas.position            = tmp.link.position.data(:,tmpIndex:tmpIndex+2)';
+    suit.links{suitLinkIdx}.meas.velocity            = tmp.link.velocity.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.acceleration        = tmp.link.acceleration.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularVelocity     = tmp.link.angularVelocity.data(:,tmpIndex:tmpIndex+2)';
     suit.links{suitLinkIdx}.meas.angularAcceleration = tmp.link.angularAcceleration.data(:,tmpIndex:tmpIndex+2)';
-    for j = 1:4*(suit.properties.nrOfLinks) %  only for orientation
+    %  only for orientation
+    for j = 1:4*(suit.properties.nrOfLinks)
         if (contains(tmp.link.orientation.orderedLabel{j, 1}, suit.links{suitLinkIdx, 1}.label))
             tmpIndex = j;
             break;
@@ -324,14 +323,16 @@ for suitLinkIdx = 1 : size(suit.links,1)
 end
 %--SENSORS
 for suitSensorIdx = 1 : size(suit.sensors,1)
-    for j = 1:4*(suit.properties.nrOfSensors) % for sensor orientation
+    % for sensor orientation
+    for j = 1:4*(suit.properties.nrOfSensors)
         if (contains(tmp.sensor.orientation.orderedLabel{j, 1}, suit.sensors{suitSensorIdx, 1}.label))
             tmpIndex = j;
             break;
         end
     end
     suit.sensors{suitSensorIdx}.meas.sensorOrientation = tmp.sensor.orientation.data(:,tmpIndex:tmpIndex+3)';
-    for j = 1:3*(suit.properties.nrOfSensors) % for sensor freeAcc
+    % for sensor freeAcc
+    for j = 1:3*(suit.properties.nrOfSensors)
         if (contains(tmp.sensor.freeAcceleration.orderedLabel{j, 1}, suit.sensors{suitSensorIdx, 1}.label))
             tmpIndex = j;
             break;
