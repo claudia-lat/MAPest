@@ -254,7 +254,7 @@ human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
-humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
+% humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
 bucket.base = 'Pelvis'; % floating base
 
 %% Initialize berdy
