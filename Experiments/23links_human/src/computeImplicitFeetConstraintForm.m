@@ -1,6 +1,6 @@
-function [ implFeetConstraintForm ] = computeImplicitFeetConstraintForm( kynDynComputation, currentBerdyBase, state)
+function [ implFeetConstraintForm ] = computeImplicitFeetConstraintForm( kynDynComputation, currentBerdyBase, G_T_base, state, baseVel)
 %COMPUTEIMPLICITFEETCONSTRAINTFORM computes the term
-%                     pinv(N*B)* N
+%                     pinv(N*B) * N
 % which makes the dynamics of the system to satisfy the 2-feet contact
 % constraint.
 %
@@ -31,8 +31,12 @@ iDynTreeJacobian.zero();
 
 q  = iDynTree.JointPosDoubleArray(kynDynComputation.model);
 dq = iDynTree.JointDOFsDoubleArray(kynDynComputation.model);
-gravityZero = iDynTree.Vector3();
-gravityZero.zero();
+baseVelocity = iDynTree.Twist();
+
+% gravityZero = iDynTree.Vector3();
+% gravityZero.zero();
+gravity = iDynTree.Vector3();
+gravity.fromMatlab([0; 0; -9.81]);
 
 kynDynComputation.setFloatingBase(currentBerdyBase);
 samples = size(state.q ,2);
@@ -49,10 +53,11 @@ iDynTreeJacobianRF.zero();
 for i = 1 : samples
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
+    baseVelocity.fromMatlab([baseVel.baseLinVelocity(:,i);baseVel.baseAngVelocity(:,i)]);
     
-    kinDynCompLF.setRobotState(q,dq,gravityZero);
+    kinDynCompLF.setRobotState(G_T_base.G_T_b{i,1},q,baseVelocity,dq,gravity);
     kinDynCompLF.getFrameFreeFloatingJacobian('LeftFoot', iDynTreeJacobianLF);
-    kinDynCompRF.setRobotState(q,dq,gravityZero);
+    kinDynCompRF.setRobotState(G_T_base.G_T_b{i,1},q,baseVelocity,dq,gravity);
     kinDynCompRF.getFrameFreeFloatingJacobian('RightFoot', iDynTreeJacobianRF);
     
     fullJacobianLF = iDynTreeJacobianLF.toMatlab();
