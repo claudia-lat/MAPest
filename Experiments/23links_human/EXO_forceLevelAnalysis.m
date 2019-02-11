@@ -4,26 +4,30 @@
 % EXO forces affect the whole-body dynamics.
 % The final computation is:
 %
-%                finalTorque = MAPtorque - pinv(NB)N (J' * EXOforces)
+%          exo_forceLevel = MAPtorque - pinv(NB)N (J' * EXOforces)
 %
 % where:
 % - MAPtorque : is the whole-body torque
-%               - computed in MAPcomputation_floating.m with the exo weight
-%                 at the Pelvis
-%               - transformed with a Change of Coordinate (CoC) procedure
-%                 in order to match the EXO table values (3D vs. 2D plan).
-%                 (TO BE INVESTIGATED IF THIS CoC IS NECESSARY!!!!)
-% - J' : ...
-% - EXOforces  : forces coming from the EXO table and transformed in the
-%                human frames
+%               - computed in MAPcomputation_floating.m without the exo
+%                 weight in the URDF
+% - pinv(NB)N : is the term for the feet implicit constraints which makes
+%               the dynamics of the system to satisfy the 2-feet contact
+%               constraint
+% - (J' * EXOforces) is:   (J_LUA'*G_f_LUA + J_LH'*G_f_LH +
+%                          J_RUA'*G_f_RUA + J_RH'*G_f_RH)
+%    where
+%    - each force is the force of the exo (cin the table) transformed in
+%      the global frame G,
+%    - each J' is the jacobian when considering new frames for the exo
+%      contact points.
 
-%    Legend:
-%    ---------------------
-%    LUA = Left Upper Arm
-%    LH  = Left Hip
-%    RUA = Right Upper Arm
-%    RH  = Right Hip
-%    ---------------------
+% Legend:
+% ---------------------
+% LUA = Left Upper Arm
+% LH  = Left Hip
+% RUA = Right Upper Arm
+% RH  = Right Hip
+% ---------------------
 
 
 %% Compute the Jacobians for the EXO contact points (i.e., J_exo)
@@ -128,10 +132,10 @@ if ~exist(fullfile(bucket.pathToProcessedData,'J_exo.mat'), 'file')
             
             gravity = iDynTree.Vector3();
             gravity.fromMatlab([0; 0; -9.81]);
-%             gravityZero = iDynTree.Vector3();
-%             gravityZero.zero();
+            %             gravityZero = iDynTree.Vector3();
+            %             gravityZero.zero();
             
-%             exo_kinDynComp.setFloatingBase(currentBase);
+            %             exo_kinDynComp.setFloatingBase(currentBase);
             baseKinDynModel = exo_kinDynComp.getFloatingBase();
             % Consistency check
             % berdy.model base and exo_kinDynComp.model have to be consistent!
@@ -279,11 +283,11 @@ for blockIdx = 1 : block.nrOfBlocks
         for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
             if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
                 % -------Right upper arm
-                EXO.tmp.f_table_RUA(1,qIdx) = - EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1); % sign? to be investigated
-                EXO.tmp.f_table_RUA(2,qIdx) = - EXO.extractedTable(subjectID).F_arm_support(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RUA(1,qIdx) = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RUA(2,qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1); % sign? to be investigated
                 % -------Right hip
-                EXO.tmp.f_table_RH(1,qIdx) = - EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1); % sign? to be investigated
-                EXO.tmp.f_table_RH(2,qIdx) = - EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RH(1,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1); % sign? to be investigated
+                EXO.tmp.f_table_RH(2,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1); % sign? to be investigated
             end
         end
     end
@@ -307,14 +311,18 @@ load(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'));
 for blockIdx = 1 : block.nrOfBlocks
     len = size(synchroKin(blockIdx).masterTime ,2);
     
-    EXO.finalTorque(blockIdx).block = block.labels(blockIdx);
+    exo_forceLevel(blockIdx).block = block.labels(blockIdx);
     for sampleIdx = 1 : len
-        EXO.finalTorque(blockIdx).torque(:,sampleIdx) = estimatedVariables.tau(blockIdx).values(:,sampleIdx) - ... % MAP estiamation
-            implFeetConstraint(blockIdx).term{sampleIdx, 1} * ... % implicit term pinv(NB)N
+        exo_forceLevel(blockIdx).torqueEXO(:,sampleIdx) = implFeetConstraint(blockIdx).term{sampleIdx, 1} * ... % implicit term pinv(NB)N
             (J_exo(blockIdx).LUA{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).LUA(:,sampleIdx) + ... % LUA
             J_exo(blockIdx).LH{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).LH(:,sampleIdx) + ... % LH
             J_exo(blockIdx).RUA{sampleIdx,1}(1:3,:)'  * EXO.exoForcesURDFcompatible(blockIdx).RUA(:,sampleIdx) + ... % RUA
             J_exo(blockIdx).RH{sampleIdx,1}(1:3,:)' * EXO.exoForcesURDFcompatible(blockIdx).RH(:,sampleIdx)); % RH
+    end
+    
+    for sampleIdx = 1 : len
+        exo_forceLevel(blockIdx).torque(:,sampleIdx) = estimatedVariables.tau(blockIdx).values(:,sampleIdx) - ... % MAP estimation
+            exo_forceLevel(blockIdx).torqueEXO(:,sampleIdx); % compuetd EXO torque
     end
 end
 

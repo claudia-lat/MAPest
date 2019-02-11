@@ -619,6 +619,7 @@ if opts.EXO
         disp('-------------------------------------------------------------------');
         disp('[Start] EXO Force level analysis');
         EXO_forceLevelAnalysis;
+        save(fullfile(bucket.pathToProcessedData,'exo_forceLevel.mat'),'exo_forceLevel');
         disp('[End] EXO Force level analysis');
     end
 end
