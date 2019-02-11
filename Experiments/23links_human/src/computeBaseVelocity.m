@@ -1,4 +1,4 @@
-function [ baseLinVelocity, baseAngVelocity, baseKinDynModel ] = computeBaseAngularVelocity( kynDynComputation, currentBerdyBase, state, G_T_base ,endEffectorFrame)
+function [ baseLinVelocity, baseAngVelocity, baseKinDynModel ] = computeBaseVelocity( kynDynComputation, currentBerdyBase, state, G_T_base ,endEffectorFrame)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
