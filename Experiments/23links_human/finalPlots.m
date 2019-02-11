@@ -1,4 +1,13 @@
 
+close all;
+
+% options for plots
+opts.rightArmPlot = false;  %C7shoulder-shoulder-elbow-wrist
+opts.leftArmPlot  = false;  %C7shoulder-shoulder-elbow-wrist
+opts.torsoPlot    = false;  %L5S1L4L3-L1T12-T9T8-T1C7-C1head
+opts.rightLegPlot = false;  %hip-knee-ankle-ballFoot
+opts.leftLegPlot  = false;  %hip-knee-ankle-ballFoot
+
 if opts.EXO
     if opts.EXO_torqueLevelAnalysis
         % -----------------------------------------------------------------
@@ -63,7 +72,166 @@ if opts.EXO
         % ---------------------------------------------------------------------
         % ====================== EXO_forceLevelAnalysis =======================
         % ---------------------------------------------------------------------
-        % to be written
+        % $$$$$$$$$$$$$$$$$$
+        if opts.rightArmPlot
+            rightArmIdx   = (15:1:22);
+            for i = 1 : length(rightArmIdx)
+                fig = figure('Name', 'EXO_forceLevelAnalysis','NumberTitle','off');
+                axes1 = axes('Parent',fig,'FontSize',16);
+                box(axes1,'on');
+                hold(axes1,'on');
+                grid on;
+                
+                for blockIdx = 1 : block.nrOfBlocks
+                    torque_index = rightArmIdx(i);
+                    subplot (5,1,blockIdx)
+                    % MAP torque
+                    plot1 = plot(estimatedVariables.tau(blockIdx).values(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % EXO computed torque
+                    plot2 = plot(exo_forceLevel(blockIdx).torqueEXO(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % tau_final --> tau_MAPest - tau_EXO
+                    plot3 = plot(exo_forceLevel(blockIdx).torque(torque_index,:),'lineWidth',1.5);
+                    title(sprintf('%s, Block %s',selectedJoints{rightArmIdx(i)}, num2str(blockIdx)),'Interpreter','latex');
+                    ylabel('torque [Nm]');
+                    set(gca,'FontSize',15)
+                    grid on;
+                    %legend
+                    leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$', ...
+                        '$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+                    set(leg,'Interpreter','latex','FontSize',20);
+                end
+            end
+        end
+        % $$$$$$$$$$$$$$$$$$
+        if opts.leftArmPlot
+            leftArmIdx   = (23:1:30);
+            for i = 1 : length(leftArmIdx)
+                fig = figure('Name', 'EXO_forceLevelAnalysis','NumberTitle','off');
+                axes1 = axes('Parent',fig,'FontSize',16);
+                box(axes1,'on');
+                hold(axes1,'on');
+                grid on;
+                
+                for blockIdx = 1 : block.nrOfBlocks
+                    torque_index = leftArmIdx(i);
+                    subplot (5,1,blockIdx)
+                    % MAP torque
+                    plot1 = plot(estimatedVariables.tau(blockIdx).values(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % EXO computed torque
+                    plot2 = plot(exo_forceLevel(blockIdx).torqueEXO(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % tau_final --> tau_MAPest - tau_EXO
+                    plot3 = plot(exo_forceLevel(blockIdx).torque(torque_index,:),'lineWidth',1.5);
+                    title(sprintf('%s, Block %s',selectedJoints{leftArmIdx(i)}, num2str(blockIdx)),'Interpreter','latex');
+                    ylabel('torque [Nm]');
+                    set(gca,'FontSize',15)
+                    grid on;
+                    %legend
+                    leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$', ...
+                        '$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+                    set(leg,'Interpreter','latex','FontSize',20);
+                end
+            end
+        end
+        % $$$$$$$$$$$$$$$$$$
+        if opts.torsoPlot
+            torsoIdx   = (1:1:14);
+            for i = 1 : length(torsoIdx)
+                fig = figure('Name', 'EXO_forceLevelAnalysis','NumberTitle','off');
+                axes1 = axes('Parent',fig,'FontSize',16);
+                box(axes1,'on');
+                hold(axes1,'on');
+                grid on;
+                
+                for blockIdx = 1 : block.nrOfBlocks
+                    torque_index = torsoIdx(i);
+                    subplot (5,1,blockIdx)
+                    % MAP torque
+                    plot1 = plot(estimatedVariables.tau(blockIdx).values(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % EXO computed torque
+                    plot2 = plot(exo_forceLevel(blockIdx).torqueEXO(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % tau_final --> tau_MAPest - tau_EXO
+                    plot3 = plot(exo_forceLevel(blockIdx).torque(torque_index,:),'lineWidth',1.5);
+                    title(sprintf('%s, Block %s',selectedJoints{torsoIdx(i)}, num2str(blockIdx)),'Interpreter','latex');
+                    ylabel('torque [Nm]');
+                    set(gca,'FontSize',15)
+                    grid on;
+                    %legend
+                    leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$', ...
+                        '$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+                    set(leg,'Interpreter','latex','FontSize',20);
+                end
+            end
+        end
+        % $$$$$$$$$$$$$$$$$$
+        if opts.rightLegPlot
+            rightLegIdx   = (31:1:39);
+            for i = 1 : length(rightLegIdx)
+                fig = figure('Name', 'EXO_forceLevelAnalysis','NumberTitle','off');
+                axes1 = axes('Parent',fig,'FontSize',16);
+                box(axes1,'on');
+                hold(axes1,'on');
+                grid on;
+                
+                for blockIdx = 1 : block.nrOfBlocks
+                    torque_index = rightLegIdx(i);
+                    subplot (5,1,blockIdx)
+                    % MAP torque
+                    plot1 = plot(estimatedVariables.tau(blockIdx).values(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % EXO computed torque
+                    plot2 = plot(exo_forceLevel(blockIdx).torqueEXO(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % tau_final --> tau_MAPest - tau_EXO
+                    plot3 = plot(exo_forceLevel(blockIdx).torque(torque_index,:),'lineWidth',1.5);
+                    title(sprintf('%s, Block %s',selectedJoints{rightLegIdx(i)}, num2str(blockIdx)),'Interpreter','latex');
+                    ylabel('torque [Nm]');
+                    set(gca,'FontSize',15)
+                    grid on;
+                    %legend
+                    leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$', ...
+                        '$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+                    set(leg,'Interpreter','latex','FontSize',20);
+                end
+            end
+        end
+        % $$$$$$$$$$$$$$$$$$
+        if opts.leftLegPlot
+            leftLegIdx   = (40:1:48);
+            for i = 1 : length(leftLegIdx)
+                fig = figure('Name', 'EXO_forceLevelAnalysis','NumberTitle','off');
+                axes1 = axes('Parent',fig,'FontSize',16);
+                box(axes1,'on');
+                hold(axes1,'on');
+                grid on;
+                
+                for blockIdx = 1 : block.nrOfBlocks
+                    torque_index = leftLegIdx(i);
+                    subplot (5,1,blockIdx)
+                    % MAP torque
+                    plot1 = plot(estimatedVariables.tau(blockIdx).values(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % EXO computed torque
+                    plot2 = plot(exo_forceLevel(blockIdx).torqueEXO(torque_index,:),'lineWidth',1.5);
+                    hold on;
+                    % tau_final --> tau_MAPest - tau_EXO
+                    plot3 = plot(exo_forceLevel(blockIdx).torque(torque_index,:),'lineWidth',1.5);
+                    title(sprintf('%s, Block %s',selectedJoints{leftLegIdx(i)}, num2str(blockIdx)),'Interpreter','latex');
+                    ylabel('torque [Nm]');
+                    set(gca,'FontSize',15)
+                    grid on;
+                    %legend
+                    leg = legend([plot1,plot2,plot3],{'$\tau_{MAPest}$','$\tau_{EXO}$', ...
+                        '$\tau_{MAPest}-\tau_{EXO}$'},'Location','northeast');
+                    set(leg,'Interpreter','latex','FontSize',20);
+                end
+            end
+        end
     end
 else
     % ---------------------------------------------------------------------
