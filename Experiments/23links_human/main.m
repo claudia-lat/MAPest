@@ -586,14 +586,46 @@ if opts.EXO
     for blockIdx = 1 : block.nrOfBlocks
         % right shoulder
         EXO.tmp.qToCompare_right = (- CoC(blockIdx).Rsho_qFirst(1,:) + 90)'; % operation to compare the angles: change sign and then +90 deg
-        EXO.CoC(blockIdx).qToCompare_right_round = round(EXO.tmp.qToCompare_right);
+        EXO.rightRoundedTable(blockIdx).block = block.labels(blockIdx);
+        EXO.rightRoundedTable(blockIdx).qToCompare_right_round = round(EXO.tmp.qToCompare_right);
         
         % left shoulder
         EXO.tmp.qToCompare_left = (CoC(blockIdx).Lsho_qFirst(1,:) + 90)'; % operation to compare the angles: +90 deg
-        EXO.CoC(blockIdx).qToCompare_left_round = round(EXO.tmp.qToCompare_left);
+        EXO.leftRoundedTable(blockIdx).block = block.labels(blockIdx);
+        EXO.leftRoundedTable(blockIdx).qToCompare_left_round = round(EXO.tmp.qToCompare_left);
     end
     
-    % TODO: remove tmp files EXO.CoC
+    % Extraction from table of values accordingly to the shoulder angle vectors (rounded_q)
+    for blockIdx = 1 : block.nrOfBlocks
+        % right
+        for qIdx = 1 : size(EXO.rightRoundedTable(blockIdx).qToCompare_right_round,1)
+            for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+                if (EXO.rightRoundedTable(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                    EXO.rightRoundedTable(blockIdx).F_arm_scher(qIdx)   = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1);
+                    EXO.rightRoundedTable(blockIdx).F_arm_support(qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1);
+                    % EXO.rightRoundedTable(blockIdx).F_ASkraft_x(qIdx)   = EXO.extractedTable(subjectID).F_ASkraft_x(tableIdx,1);
+                    % EXO.rightRoundedTable(blockIdx).F_ASkraft_y(qIdx)   = EXO.extractedTable(subjectID).F_ASkraft_y(tableIdx,1);
+                    EXO.rightRoundedTable(blockIdx).F_KGkraft_x(qIdx)   = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1);
+                    EXO.rightRoundedTable(blockIdx).F_KGkraft_y(qIdx)   = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1);
+                    EXO.rightRoundedTable(blockIdx).M_support_mod(qIdx) = EXO.extractedTable(subjectID).M_support_mod(tableIdx,1);
+                end
+            end
+        end
+        % left
+        for qIdx = 1 : size(EXO.leftRoundedTable(blockIdx).qToCompare_left_round,1)
+            for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
+                if (EXO.leftRoundedTable(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
+                    EXO.leftRoundedTable(blockIdx).F_arm_scher(qIdx)   = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1);
+                    EXO.leftRoundedTable(blockIdx).F_arm_support(qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1);
+                    % EXO.leftRoundedTable(blockIdx).F_ASkraft_x(qIdx)   = EXO.extractedTable(subjectID).F_ASkraft_x(tableIdx,1);
+                    % EXO.leftRoundedTable(blockIdx).F_ASkraft_y(qIdx)   = EXO.extractedTable(subjectID).F_ASkraft_y(tableIdx,1);
+                    EXO.leftRoundedTable(blockIdx).F_KGkraft_x(qIdx)   = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1);
+                    EXO.leftRoundedTable(blockIdx).F_KGkraft_y(qIdx)   = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1);
+                    EXO.leftRoundedTable(blockIdx).M_support_mod(qIdx) = EXO.extractedTable(subjectID).M_support_mod(tableIdx,1);
+                end
+            end
+        end
+    end
     
     %% Compute the term for the feet implicit constraints
     % This section computes the term which makes the dynamics of the system to

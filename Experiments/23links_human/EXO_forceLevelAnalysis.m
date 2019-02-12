@@ -253,20 +253,16 @@ for blockIdx = 1 : block.nrOfBlocks
     len = size(synchroKin(blockIdx).masterTime ,2);
     EXO.exoForcesURDFcompatible(blockIdx).block = block.labels(blockIdx);
     
+    % Left
     EXO.tmp.f_table_LUA = zeros(3,len);
     EXO.tmp.f_table_LH  = zeros(3,len);
-    for qIdx = 1 : len
-        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
-            if (EXO.CoC(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
-                % -------Left upper arm
-                EXO.tmp.f_table_LUA(1,qIdx) = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1);
-                EXO.tmp.f_table_LUA(2,qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1);
-                % -------Left hip
-                EXO.tmp.f_table_LH(1,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1);
-                EXO.tmp.f_table_LH(2,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1);
-            end
-        end
-    end
+    % -------Left upper arm
+    EXO.tmp.f_table_LUA(1,:) = EXO.leftRoundedTable(blockIdx).F_arm_scher;
+    EXO.tmp.f_table_LUA(2,:) = EXO.leftRoundedTable(blockIdx).F_arm_support;
+    % -------Left hip
+    EXO.tmp.f_table_LH(1,:) = EXO.leftRoundedTable(blockIdx).F_KGkraft_x;
+    EXO.tmp.f_table_LH(2,:) = EXO.leftRoundedTable(blockIdx).F_KGkraft_y;
+
     % Transformations
     for sampleIdx = 1:len
         EXO.exoForcesURDFcompatible(blockIdx).LUA(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_LUAexo{sampleIdx,1} * ...
@@ -275,20 +271,16 @@ for blockIdx = 1 : block.nrOfBlocks
             EXO.LHexo_R_LHtable * EXO.tmp.f_table_LH(:,sampleIdx);
     end
     
+    % Right
     EXO.tmp.f_table_RUA = zeros(3,len);
     EXO.tmp.f_table_RH  = zeros(3,len);
-    for qIdx = 1 : len
-        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
-            if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
-                % -------Right upper arm
-                EXO.tmp.f_table_RUA(1,qIdx) = EXO.extractedTable(subjectID).F_arm_scher(tableIdx,1); % sign? to be investigated
-                EXO.tmp.f_table_RUA(2,qIdx) = EXO.extractedTable(subjectID).F_arm_support(tableIdx,1); % sign? to be investigated
-                % -------Right hip
-                EXO.tmp.f_table_RH(1,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_x(tableIdx,1); % sign? to be investigated
-                EXO.tmp.f_table_RH(2,qIdx) = EXO.extractedTable(subjectID).F_KGkraft_y(tableIdx,1); % sign? to be investigated
-            end
-        end
-    end
+    % -------Right upper arm
+    EXO.tmp.f_table_RUA(1,:) = EXO.rightRoundedTable(blockIdx).F_arm_scher;
+    EXO.tmp.f_table_RUA(2,:) = EXO.rightRoundedTable(blockIdx).F_arm_support;
+    % -------Right hip
+    EXO.tmp.f_table_RH(1,:) = EXO.rightRoundedTable(blockIdx).F_KGkraft_x;
+    EXO.tmp.f_table_RH(2,:) = EXO.rightRoundedTable(blockIdx).F_KGkraft_y;
+
     % Transformations
     for sampleIdx = 1:len
         EXO.exoForcesURDFcompatible(blockIdx).RUA(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_RUAexo{sampleIdx,1} * ...

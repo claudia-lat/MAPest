@@ -23,38 +23,17 @@
 
 %% Computation of torques w.r.t. URDF shoulder (rounded) angles
 for blockIdx = 1 : block.nrOfBlocks
-    % right shoulder
-    EXO.tmp.tau_EXO_right = zeros(1,size(EXO.CoC(blockIdx).qToCompare_right_round,1));
-    for qIdx = 1 : size(EXO.CoC(blockIdx).qToCompare_right_round,1)
-        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
-            if (EXO.CoC(blockIdx).qToCompare_right_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
-                EXO.tmp.tau_EXO_right(qIdx) = - EXO.extractedTable(subjectID).M_support_mod(tableIdx,1);
-            end
-        end
-    end
     
-    % left shoulder
-    EXO.tmp.tau_EXO_left = zeros(1,size(EXO.CoC(blockIdx).qToCompare_left_round,1));
-    for qIdx = 1 : size(EXO.CoC(blockIdx).qToCompare_left_round,1)
-        for tableIdx = 1 : size(EXO.extractedTable(1).shoulder_angles,1)
-            if (EXO.CoC(blockIdx).qToCompare_left_round(qIdx) == EXO.extractedTable(subjectID).shoulder_angles(tableIdx,1))
-                EXO.tmp.tau_EXO_left(qIdx) = EXO.extractedTable(subjectID).M_support_mod(tableIdx,1); % sign changed because of mirrored torque
-            end
-        end
-    end
-    
-    %% Save into a struct
     exo_tauLevel(blockIdx).block = block.labels(blockIdx);
     exo_tauLevel(blockIdx).masterTime = synchroKin(blockIdx).masterTime;
-    exo_tauLevel(blockIdx).torqueFromTable_right = EXO.tmp.tau_EXO_right;
-    exo_tauLevel(blockIdx).torqueFromTable_left  = EXO.tmp.tau_EXO_left;
+    exo_tauLevel(blockIdx).torqueFromTable_right = EXO.rightRoundedTable(blockIdx).M_support_mod;
+    exo_tauLevel(blockIdx).torqueFromTable_left  = EXO.leftRoundedTable(blockIdx).M_support_mod;
     
     % Final torque-level estimation only for the shoulders:
-    %
-    %    finalTorque_sho = tauFirst_MAPest_sho - tau_EXOfromTable_sho (new one)
-    %
-    % with tauFirst_MAPest after the CoC
-    exo_tauLevel(blockIdx).finalTorque_right = CoC(blockIdx).Rsho_tauFirst(1,:) - EXO.tmp.tau_EXO_right;
-    exo_tauLevel(blockIdx).finalTorque_left  = CoC(blockIdx).Lsho_tauFirst(1,:) - EXO.tmp.tau_EXO_left;
-    
+    %       finalTorque_sho = tauFirst_MAPest_sho - tau_EXOfromTable_sho (new one)
+    % with tauFirst_MAPest after the CoC.
+    exo_tauLevel(blockIdx).finalTorque_right = CoC(blockIdx).Rsho_tauFirst(1,:) - ...
+        EXO.rightRoundedTable(blockIdx).M_support_mod;
+    exo_tauLevel(blockIdx).finalTorque_left  = CoC(blockIdx).Lsho_tauFirst(1,:) - ...
+        EXO.leftRoundedTable(blockIdx).M_support_mod;
 end
