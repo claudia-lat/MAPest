@@ -393,7 +393,8 @@ disp(strcat('[End] Computing the <',currentBase,'> transform w.r.t. the global f
 % Define the end effector frame.  In this frame the velocity is assumed to
 % be zero (e.g., a frame associated to a link that is in fixed contact with
 % the ground).
-endEffectorFrame = 'LeftFoot';
+constraints.endEffectorFrameLF = 'LeftFoot';
+constraints.endEffectorFrameRF = 'RightFoot';
 
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
@@ -404,7 +405,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
             currentBase, ...
             synchroKin(blockIdx),...
             G_T_base(blockIdx), ...
-            endEffectorFrame);
+            constraints);
     end
     save(fullfile(bucket.pathToProcessedData,'baseVelocity.mat'),'baseVel');
 else
