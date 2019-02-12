@@ -367,7 +367,7 @@ sensorsToBeRemoved = [];
 
 %% Compute the transformation of the base w.r.t. the global suit frame G
 disp('-------------------------------------------------------------------');
-disp(strcat('[Start] Computing the <',currentBase,'> transform w.r.t. the global frame G...'));
+disp(strcat('[Start] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G...'));
 %--------Computation of the suit base orientation and position w.r.t. G
 for suitLinksIdx = 1 : size(suit.links,1)
     if suit.links{suitLinksIdx, 1}.label == currentBase
@@ -392,7 +392,7 @@ for blockIdx = 1 : block.nrOfBlocks
         bucket.orientation(blockIdx).baseOrientation, ...
         bucket.basePosition(blockIdx).basePos_wrtG);
 end
-disp(strcat('[End] Computing the <',currentBase,'> transform w.r.t. the global frame G'));
+disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
 
 
 %% Velocity of the currentBase
@@ -408,7 +408,7 @@ constraints.endEffectorFrameRF = 'RightFoot';
 
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
-if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
+if ~exist(fullfile(bucket.pathToProcessedData,'baseVelocity.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
         baseVel(blockIdx).block = block.labels(blockIdx);
         [baseVel(blockIdx).baseLinVelocity, baseVel(blockIdx).baseAngVelocity] = computeBaseVelocity(human_kinDynComp, ...

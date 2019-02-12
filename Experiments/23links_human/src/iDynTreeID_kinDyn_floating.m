@@ -20,7 +20,7 @@ function [tau] = iDynTreeID_kinDyn_floating(kinDynComputation, currentBase, base
 
 
 % Check if the model was correctly loaded by printing the model
-kinDynComputation.model().toString() % print model
+% kinDynComputation.model().toString() % print model
 
 % Initialize state
 q = iDynTree.VectorDynSize();

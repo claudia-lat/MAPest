@@ -136,8 +136,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'J_exo.mat'), 'file')
             %             gravityZero.zero();
             
             baseKinDynModel = exo_kinDynComp.getFloatingBase();
-            % Consistency check
-            % berdy.model base and exo_kinDynComp.model have to be consistent!
+            % Consistency check: berdy.model base and exo_kinDynComp.model have to be consistent!
             if currentBase ~= baseKinDynModel
                 error(strcat('[ERROR] The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
             end
