@@ -1,4 +1,4 @@
-function [ baseLinVelocity, baseAngVelocity, baseKinDynModel ] = computeBaseVelocity( kynDynComputation, currentBerdyBase, state, G_T_base ,constraints)
+function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kynDynComputation, state, G_T_base ,constraints)
 %COMPUTEBASEVELOCITY computes the 6D base velocity via differential
 %kinematic equation by considering 2 constraints.
 
@@ -24,14 +24,6 @@ gravity.fromMatlab([0; 0; -9.81]);
 samples = size(state.q ,2);
 baseLinVelocity = zeros(3,samples);
 baseAngVelocity = zeros(3,samples);
-
-kynDynComputation.setFloatingBase(currentBerdyBase);
-baseKinDynModel = kynDynComputation.getFloatingBase();
-% Consistency check
-% berdy.model base and kynDynComputation.model have to be consistent!
-if currentBerdyBase ~= baseKinDynModel
-    error(strcat('[ERROR] The berdy model base (',currentBerdyBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
-end
 
 for i = 1 : samples
     q.fromMatlab(state.q(:,i));

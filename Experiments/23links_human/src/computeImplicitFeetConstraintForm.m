@@ -1,4 +1,4 @@
-function [ implFeetConstraintForm ] = computeImplicitFeetConstraintForm( kynDynComputation, currentBerdyBase, G_T_base, state, baseVel)
+function [ implFeetConstraintForm ] = computeImplicitFeetConstraintForm( kynDynComputation, G_T_base, state, baseVel)
 %COMPUTEIMPLICITFEETCONSTRAINTFORM computes the term
 %                     pinv(N*B) * N
 % which makes the dynamics of the system to satisfy the 2-feet contact
@@ -38,7 +38,6 @@ baseVelocity = iDynTree.Twist();
 gravity = iDynTree.Vector3();
 gravity.fromMatlab([0; 0; -9.81]);
 
-kynDynComputation.setFloatingBase(currentBerdyBase);
 samples = size(state.q ,2);
 implFeetConstraintForm = cell(samples,1);
 

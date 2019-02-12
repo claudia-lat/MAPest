@@ -135,7 +135,6 @@ if ~exist(fullfile(bucket.pathToProcessedData,'J_exo.mat'), 'file')
             %             gravityZero = iDynTree.Vector3();
             %             gravityZero.zero();
             
-            %             exo_kinDynComp.setFloatingBase(currentBase);
             baseKinDynModel = exo_kinDynComp.getFloatingBase();
             % Consistency check
             % berdy.model base and exo_kinDynComp.model have to be consistent!

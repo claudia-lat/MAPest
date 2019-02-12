@@ -273,10 +273,20 @@ berdyOptions.includeFixedBaseExternalWrench = false;
 % Load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(humanModel, humanSensors, berdyOptions);
+
 % Get the current traversal
 traversal = berdy.dynamicTraversal;
+
+% Floating base settings
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('Current base is < ', currentBase,'>.'));
+human_kinDynComp.setFloatingBase(currentBase);
+baseKinDynModel = human_kinDynComp.getFloatingBase();
+% Consistency check: berdy.model base and human_kinDynComp.model have to be consistent!
+if currentBase ~= baseKinDynModel
+    error(strcat('[ERROR] The berdy model base (',currentBerdyBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
+end
+
 % Get the tree is visited IS the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1); %for each link in the traversal get the name
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
@@ -401,8 +411,7 @@ disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
 if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
     for blockIdx = 1 : block.nrOfBlocks
         baseVel(blockIdx).block = block.labels(blockIdx);
-        [baseVel(blockIdx).baseLinVelocity, baseVel(blockIdx).baseAngVelocity, baseKinDynModel] = computeBaseVelocity(human_kinDynComp, ...
-            currentBase, ...
+        [baseVel(blockIdx).baseLinVelocity, baseVel(blockIdx).baseAngVelocity] = computeBaseVelocity(human_kinDynComp, ...
             synchroKin(blockIdx),...
             G_T_base(blockIdx), ...
             constraints);
@@ -595,7 +604,6 @@ if opts.EXO
         for blockIdx = 1 : block.nrOfBlocks
             implFeetConstraint(blockIdx).block = block.labels(blockIdx);
             implFeetConstraint(blockIdx).term  = computeImplicitFeetConstraintForm(human_kinDynComp, ...
-                currentBase, ...
                 G_T_base(blockIdx), ...
                 synchroKin(blockIdx), ...
                 baseVel(blockIdx));
