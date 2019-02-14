@@ -82,6 +82,28 @@ synchroKin.state.dq = synchroKin.state.dq * pi/180; % in rad
 synchroKin.ddq      = synchroKin.ddq * pi/180;      % in rad
 disp('[End] IK computation');
 
+%% Transform the sensorFreeAcceleration
+% Code to transform the <suit.sensors.sensorFreeAcceleration> (i.e., the sensor
+% acceleration without the gravity, expressed w.r.t. the Xsens global frame G)
+% into <suit.sensors.sensorOldAcceleration> (i.e., the sensor
+% acceleration with the gravity, expressed w.r.t. the sensor frame)
+
+if ~isfield(suit.sensors{1, 1}.meas,'sensorOldAcceleration')
+    gravity = [0; 0; -9.81];
+    for sensIdx = 1: suit.properties.nrOfSensors
+        for lenIdx = 1 : suit.nrOfFrames
+            G_R_S = quat2Mat(suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,lenIdx));
+            % Transformation:        S_a_old = S_R_G * (G_a_new - gravity)
+            suit.sensors{sensIdx, 1}.meas.sensorOldAcceleration(:,lenIdx) = ...
+                transpose(G_R_S) * ...
+                (suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,lenIdx) - gravity);
+        end
+    end
+    save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
+else
+    load(fullfile(bucket.pathToProcessedData,'suit.mat'));
+end
+
 %% Transform feet forces from sensor into human frames
 % Preliminary assumption on contact links: 2 contacts only.
 bucket.contactLink = cell(2,1);
