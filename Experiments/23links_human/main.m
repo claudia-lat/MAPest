@@ -7,50 +7,28 @@
 bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
 bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 
-% Path to the folder where `raw` data are saved.
-bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
+% Path to the folder for raw data and URDFs.
+bucket.pathToWearableData = fullfile(bucket.pathToTask,'data');
+bucket.pathToURDF         = fullfile(bucket.pathToSubject,'URDFs');
 
-% Path to the folder where .mat struct (processed data) will be saved
+% Path to the folder where processed data will be saved
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
+
 disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
-
-% Extraction of the masterFile.
-% NOTE: If you have a file containing data/info of your experiment you can extract it here.
-% This file clearly depends on the user's choice and it could be different or even not existing.
-masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
-
-% Option for computing the estimated Sigma (default = FALSE)
-opts.Sigma_dgiveny = false;
-
-% Define model templates
-addpath(genpath('templates'));
 
 %% ---------------------UNA TANTUM PROCEDURE-------------------------------
 %% SUIT struct creation
-disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     disp('[Start] Suit extraction ...');
-    % 1) extract data from suit
-    if opts.suitAsParsedMVNX
-        % data from the suit come as parsed MVNX files
-        extractSuitDataFromParsing;
-        lenData = suit.properties.lenData;
-        inputArg = suit;
-    end
-    if opts.suitAsIWear
-        % data from the suit come as YARP-dumped IWear file
-        extractWearableDataFromIWear;
-        lenData = wearData.nrOfFrames;
-        inputArg = wearData;
-    end
+    % 1) extract data from suit as YARP-dumped IWear file
+    extractWearableDataFromIWear;
     % 2) compute sensor position wrt the links
     disp('[Warning]: Check manually the length of the data for the sensor position computation!');
     disp('[Warning]: By default, the computation of the sensor position is done by considering all the samples. It may take time!');
-    suit = computeSuitSensorPosition(inputArg, lenData);
+    suit = computeSuitSensorPosition(wearData, wearData.nrOfFrames);
     save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
     disp('[End] Suit extraction');
 else
-    disp('Suit extraction already saved!');
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
