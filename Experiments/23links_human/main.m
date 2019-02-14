@@ -42,12 +42,23 @@ addpath(genpath('templates'));
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     disp('[Start] Suit extraction ...');
-    % 1) extract data from C++ parsed files
-    extractSuitDataFromParsing;
+    % 1) extract data from suit
+    if opts.suitAsParsedMVNX
+        % data from the suit come as parsed MVNX files
+        extractSuitDataFromParsing;
+        lenData = suit.properties.lenData;
+        inputArg = suit;
+    end
+    if opts.suitAsIWear
+        % data from the suit come as YARP-dumped IWear file
+        extractWearableDataFromIWear;
+        lenData = wearData.nrOfFrames;
+        inputArg = wearData;
+    end
     % 2) compute sensor position wrt the links
     disp('[Warning]: Check manually the length of the data for the sensor position computation!');
     disp('[Warning]: By default, the computation of the sensor position is done by considering all the samples. It may take time!');
-    suit = computeSuitSensorPosition(suit);
+    suit = computeSuitSensorPosition(inputArg, lenData);
     save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
     disp('[End] Suit extraction');
 else

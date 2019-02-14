@@ -27,5 +27,9 @@ bucket.datasetRoot = fullfile(pwd, 'dataExperiment');
 subjectID = 1;
 taskID = 1;
 
+%% Options
+opts.suitAsParsedMVNX  = true;
+opts.suitAsIWear       = false;
+
 %% Run MAPest main.m
 main;

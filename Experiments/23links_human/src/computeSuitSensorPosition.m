@@ -1,12 +1,11 @@
-function [suit] = computeSuitSensorPosition(suit)
+function [suit] = computeSuitSensorPosition(suit, len)
 % COMPUTESUITSENSORPOSITION computes the position of the sensors in the
 % suit wrt the link frame. It returns its value in a new field of the same
 % suit stucture. Notation: G = global, S = sensor; L = link.
 
-len = suit.properties.lenData;
-% NOTE: Check/modify manually this value. You can decide to insert a fixed
+% NOTE: Check/modify manually len value. You can decide to insert a fixed
 % number of frames useful to capture all the movements performed during
-% your own experiment (e.g., len = 10000).
+% your own experiment.
 
 for sIdx = 1: suit.properties.nrOfSensors
     sensor = suit.sensors{sIdx};
