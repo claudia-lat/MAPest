@@ -32,81 +32,55 @@ else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
-%% Extract subject parameters from SUIT
-if ~exist(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'), 'file')
-    subjectParamsFromData = subjectParamsComputation(suit, masterFile.Subject.Info.Weight);
-    save(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
-else
-    load(fullfile(bucket.pathToSubject,'subjectParamsFromData.mat'),'subjectParamsFromData');
-end
+%% Define the analysis type w.r.t. the DoFs of the model
+DofAnalysis;
 
-%% Create URDF model
-bucket.filenameURDF = fullfile(bucket.pathToSubject, sprintf('XSensURDF_subj%02d_48dof.urdf', subjectID));
-if ~exist(bucket.filenameURDF, 'file')
-    bucket.URDFmodel = createXsensLikeURDFmodel(subjectParamsFromData, ...
-        suit.sensors,...
-        'filename',bucket.filenameURDF,...
-        'GazeboModel',false);
-end
-
-%% Create OSIM model
-bucket.filenameOSIM = fullfile(bucket.pathToSubject, sprintf('XSensOSIM_subj%02d_48dof.osim', subjectID));
-if ~exist(bucket.filenameOSIM, 'file')
-    bucket.OSIMmodel = createXsensLikeOSIMmodel(subjectParamsFromData, ...
-        bucket.filenameOSIM);
-end
-
-%% Inverse Kinematic computation (via OpenSim)
+%% Extraction of suit angles
 disp('-------------------------------------------------------------------');
-if ~exist(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'), 'file')
-    disp('[Start] IK computation ...');
-    bucket.setupFile = fullfile(pwd, 'templates', 'setupOpenSimIKTool_Template.xml');
-    bucket.trcFile   = fullfile(bucket.pathToRawData,sprintf('S%02d_%02d.trc',subjectID,taskID));
-    bucket.motFile   = fullfile(bucket.pathToProcessedData,sprintf('S%02d_%02d.mot',subjectID,taskID));
-    [human_state_tmp, human_ddq_tmp, selectedJoints] = IK(bucket.filenameOSIM, ...
-        bucket.trcFile, ...
-        bucket.setupFile, ...
-        suit.properties.frameRate, ...
-        bucket.motFile);
-    % here selectedJoints is the order of the OpenSim computation.
-    save(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'),'human_state_tmp');
-    save(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'),'human_ddq_tmp');
-    save(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'),'selectedJoints');
-    disp('[End] IK computation');
-else
-    disp('IK computation already saved!');
-    load(fullfile(bucket.pathToProcessedData,'human_state_tmp.mat'));
-    load(fullfile(bucket.pathToProcessedData,'human_ddq_tmp.mat'));
-    load(fullfile(bucket.pathToProcessedData,'selectedJoints.mat'));
+disp('[Start] IK computation ...');
+
+synchroKin.timestamp = suit.timestamp;
+synchroKin.state.q = zeros(nrDofs,suit.nrOfFrames); %deg
+for dofsIdx = 1 : nrDofs
+    for jointsIdx = 1 : suit.properties.nrOfJoints
+        if contains(selectedJoints{dofsIdx},suit.joints{jointsIdx, 1}.label)
+            if contains(selectedJoints{dofsIdx},'rotx')
+                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(1,:);
+                break;
+            end
+            if contains(selectedJoints{dofsIdx},'roty')
+                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(2,:);
+                break;
+            end
+            if contains(selectedJoints{dofsIdx},'rotz')
+                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(3,:);
+                break;
+            end
+        end
+    end
 end
-% disp('[Warning]: The IK is expressed in current frame and not in fixed frame!');
-disp('-------------------------------------------------------------------');
 
-%% Raw data handling
-rawDataHandling;
+%% Computation of dq,ddq via Savitzi-Golay
+% Set Sg parameters
+Sg.samplingTime = 1/suit.estimatedFrameRate; % strong assumption!
+Sg.polinomialOrder = 3;
+Sg.window = 5; % required by the moving-window avarage filter.
 
-% This section is highly user dependent.  Here you should have a collection
-% of subfunctions/subscripts that allow you to synchronize your data 
-% (e.g., state, forceplates, ftShoes, robot).  This section should provide 
-% the synchronized timestamp, as well.
-% 
-% The outcome of this section is to have:
-% - timestamp
-% - q,dq,ddq
-% - forces from forceplates (e.g., synchroDataFromFP)
-% - forces from forceplates (e.g., synchroDataFromShoes)
-% - robot (e.g., synchroDataFromRobot)
-% - ...
-% - ...
-% all synchronized in a Matlab struct.
-% 
-% It could come in handy if you create here a Matlab struct only for the
-% synchronized kinematics (e.g., synchroKin.mat) structured as follows:
-% synchroKin = []
-% synchroKin.timestamp
-% synchroKin.state.q
-% synchroKin.state.dq
-% synchroKin.ddq
+if ~isfield(suit.joints{1, 1}.meas,'velocity')
+    [~,synchroKin.state.dq,~] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
+        Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
+end
+
+if ~isfield(suit.joints{1, 1}.meas,'acceleration')
+    [~,~,synchroKin.ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
+        Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
+end
+
+% Transformation in radians
+synchroKin.state.q  = synchroKin.state.q  * pi/180; % in rad
+synchroKin.state.dq = synchroKin.state.dq * pi/180; % in rad
+synchroKin.ddq      = synchroKin.ddq * pi/180;      % in rad
+disp('[End] IK computation');
 
 %% Transform feet forces from sensor into human frames
 % Preliminary assumption on contact links: 2 contacts only.
