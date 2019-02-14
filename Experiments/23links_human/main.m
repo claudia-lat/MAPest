@@ -8,18 +8,6 @@ bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
 bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 
 % Path to the folder where `raw` data are saved.
-% This folder should contain:
-% - a file .mat collecting all the data of the acquisition (user-dependent);
-% - the original .trc file extracted from the Xsens acquisition
-% - a subfolder `parsedFromMvnx` that, in turn, contains:
-%    - a file .xml (generic info, points, identity/tpose/tpose-isb)
-%    - a .log file (segment and sensor list)
-%    - a .csv file (index, msTime, xSensTime, each link (acceleration,
-%      orientation, angular velocity, angular acceleration), each sensor
-%      (orientation, free acceleration))
-%    Data in this folder comes from a C++ parsing of the .mvnx file of the
-%    Xsens (see
-%    https://github.com/robotology-playground/xsens-mvn/tree/master/mvnxparser).
 bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
 
 % Path to the folder where .mat struct (processed data) will be saved

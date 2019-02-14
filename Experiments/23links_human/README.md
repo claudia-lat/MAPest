@@ -20,16 +20,20 @@ The model of the human is more complex with respect to the [previous 3-link mode
 
 ### What you need
 
-1. A data folder (e.g., `dataExperiment`) containing your own dataset, per each subject (e.g., `S0X`) and each task (e.g., `TaskY`).  Per each task, two folders  structured as follows:
+A data folder (e.g., `dataExperiment`) containing your own dataset, per each subject (e.g., `S0X`) and each task (e.g., `TaskY`).  Per each task, two macro folders  structured as follows:
 
-   **Folder: `data`**
+1. **Folder: `data`** containing your raw data.  They can come into two forms:
+
+    **FORM 1**: a set of C++ parsed parsed + a trajectory file:
    - `S0X_0Y.trc`:trc file comming from Xsens acquisition
    - `parsedFromMvnx`: a subfolder containing the following files parsed from the original Xsens .mvnx file [via C++ parser](https://github.com/robotology-playground/xsens-mvn/tree/master/mvnxparser):
       - a file `.xml` (generic info, points, identity/tpose/tpose-isb)
       - a `.log` file (segment and sensor list)
       - a `.csv` file (index, msTime, xSensTime, each link (acceleration, orientation, angular velocity, angular acceleration), each sensor (orientation, free acceleration))
 
-   **Folder: `processed`**
+    **FORM 2**: a `.log` YARP-dumped file IWear from [here](https://github.com/robotology-playground/wearables).
+
+2. **Folder: `processed`**
       - a folder in which the code will automatically store all the processed data.
 
 3. **Folder `templates`** containig human templates for both the URDF and the osim models.  The osim model and the `setupOpenSimIKTool_Template.xml` files are mandatory for the OpenSim computation.
