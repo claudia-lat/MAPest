@@ -94,7 +94,6 @@
 %                                                                                 ddq_x ddq_y ddq_z))
 
 %% Load and read wearable file
-bucket.pathToWearableData   = fullfile(pwd,'data');
 
 bucket.LOGfilename = fullfile(bucket.pathToWearableData, 'data.log');
 fileID = fopen(bucket.LOGfilename);
