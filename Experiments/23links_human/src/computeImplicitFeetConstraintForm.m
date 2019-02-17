@@ -70,6 +70,6 @@ for i = 1 : samples
         J_feet * inv(massMatrix);
     
     % Compute the term for the implicit feet constraint:   pinv(N*B)* N
-    implFeetConstraintForm{i,:} = pinv(nullProj_N * selectorMatrix, 1e-4) * nullProj_N;
+    implFeetConstraintForm{i,:} = pinvDamped(nullProj_N * selectorMatrix, 1e-8) * nullProj_N;
 end
 end
