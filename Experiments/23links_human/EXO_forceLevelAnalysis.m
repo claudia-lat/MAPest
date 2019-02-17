@@ -230,14 +230,14 @@ if ~exist(fullfile(bucket.pathToProcessedData,'G_R_exoFrames.mat'), 'file')
             EXO.tmp.G_T_LUAexo = exo_kinDynComp.getWorldTransform('LeftUpperArm_exo');
             EXO.tmp.G_H_LUAexo = EXO.tmp.G_T_LUAexo.asHomogeneousTransform().toMatlab();
             G_R_exoFrames(blockIdx).G_R_LUAexo{i,1} = EXO.tmp.G_H_LUAexo(1:3,1:3);
-            % 5.2) G_R_RUAexo
-            EXO.tmp.G_T_RUAexo = exo_kinDynComp.getWorldTransform('RightUpperArm_exo');
-            EXO.tmp.G_H_RUAexo = EXO.tmp.G_T_RUAexo.asHomogeneousTransform().toMatlab();
-            G_R_exoFrames(blockIdx).G_R_RUAexo{i,1} = EXO.tmp.G_H_RUAexo(1:3,1:3);
-            % 5.3) G_R_LHexo
+            % 5.2) G_R_LHexo
             EXO.tmp.G_T_LHexo = exo_kinDynComp.getWorldTransform('LeftHip_exo');
             EXO.tmp.G_H_LHexo = EXO.tmp.G_T_LHexo.asHomogeneousTransform().toMatlab();
             G_R_exoFrames(blockIdx).G_R_LHexo{i,1} = EXO.tmp.G_H_LHexo(1:3,1:3);
+            % 5.3) G_R_RUAexo
+            EXO.tmp.G_T_RUAexo = exo_kinDynComp.getWorldTransform('RightUpperArm_exo');
+            EXO.tmp.G_H_RUAexo = EXO.tmp.G_T_RUAexo.asHomogeneousTransform().toMatlab();
+            G_R_exoFrames(blockIdx).G_R_RUAexo{i,1} = EXO.tmp.G_H_RUAexo(1:3,1:3);
             % 5.4) G_R_RHexo
             EXO.tmp.G_T_RHexo = exo_kinDynComp.getWorldTransform('RightHip_exo');
             EXO.tmp.G_H_RHexo = EXO.tmp.G_T_RHexo.asHomogeneousTransform().toMatlab();
