@@ -29,6 +29,8 @@
 % RH  = Right Hip
 % ---------------------
 
+%% Preliminaries
+opts.plotExoForcesURDFcompatible = false;
 
 %% Compute the Jacobians for the EXO contact points (i.e., J_exo)
 
@@ -287,6 +289,45 @@ for blockIdx = 1 : block.nrOfBlocks
             EXO.RUAexo_R_RUAtable * EXO.tmp.f_table_RUA(:,sampleIdx);
         EXO.exoForcesURDFcompatible(blockIdx).RH(:,sampleIdx) = G_R_exoFrames(blockIdx).G_R_RHexo{sampleIdx,1} * ...
             EXO.RHexo_R_RHtable * EXO.tmp.f_table_RH(:,sampleIdx);
+    end
+end
+
+% ------Test: plot EXO.exoForcesURDFcompatible
+if opts.plotExoForcesURDFcompatible
+    % Left
+    for blockIdx = 1 : block.nrOfBlocks
+        fig = figure('Name', 'exoForcesURDFcompatible_Left','NumberTitle','off');
+        subplot(2,1,1)
+        plot(EXO.exoForcesURDFcompatible(blockIdx).LUA','lineWidth',1.5)
+        legend('x','y','z');
+        title(sprintf('LUA, Block %s', num2str(blockIdx)));
+        xlabel('samples');
+        ylabel('force [N]');
+        
+        subplot(2,1,2)
+        plot(EXO.exoForcesURDFcompatible(blockIdx).LH','lineWidth',1.5)
+        legend('x','y','z');
+        title(sprintf('LH, Block %s', num2str(blockIdx)));
+        xlabel('samples');
+        ylabel('force [N]');
+    end
+    
+    % Right
+    for blockIdx = 1 : block.nrOfBlocks
+        fig = figure('Name', 'exoForcesURDFcompatible_Right','NumberTitle','off');
+        subplot(2,1,1)
+        plot(EXO.exoForcesURDFcompatible(blockIdx).RUA','lineWidth',1.5)
+        legend('x','y','z');
+        title(sprintf('RUA, Block %s', num2str(blockIdx)));
+        xlabel('samples');
+        ylabel('force [N]');
+        
+        subplot(2,1,2)
+        plot(EXO.exoForcesURDFcompatible(blockIdx).RH','lineWidth',1.5)
+        legend('x','y','z');
+        title(sprintf('RH, Block %s', num2str(blockIdx)));
+        xlabel('samples');
+        ylabel('force [N]');
     end
 end
 
