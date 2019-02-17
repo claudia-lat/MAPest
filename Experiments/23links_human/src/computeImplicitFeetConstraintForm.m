@@ -66,8 +66,8 @@ for i = 1 : samples
     
     % Compute the N null space projector of J_feet, i.e.,
     % N:=[1 - J_feet' inv(J_feet inv(M) J_feet') J_feet inv(M)]
-    nullProj_N = identityMatrix - J_feet' * inv(J_feet * inv(massMatrix) * J_feet') * ...
-        J_feet * inv(massMatrix);
+    nullProj_N = identityMatrix - J_feet' /((J_feet /massMatrix) * J_feet') * ...
+        J_feet /massMatrix;
     
     % Compute the term for the implicit feet constraint:   pinv(N*B)* N
     implFeetConstraintForm{i,:} = pinvDamped(nullProj_N * selectorMatrix, 1e-8) * nullProj_N;
