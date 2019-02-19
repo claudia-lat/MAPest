@@ -269,31 +269,6 @@ sensorsToBeRemoved = [];
 % bucket.temp.id = 'LeftFoot';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
 
-%% Angular velocity of the currentBase
-% Code to handle the info of the angular velocity of the base.
-% This value is mandatorily required in the floating-base formalism.
-% The new MVNX2018 does not provide the sensorAngularVelocity anymore.
-
-% Define the end effector frame.  In this frame the velocity is assumed to
-% be zero (e.g., a frame associated to a link that is in fixed contact with
-% the ground).
-disp('-------------------------------------------------------------------');
-endEffectorFrame = 'LeftFoot';
-disp(strcat('[Info] Current end effector is < ', endEffectorFrame,'>.'));
-
-
-disp(strcat('[Start] Computing the <',currentBase,'> angular velocity...'));
-if ~exist(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'), 'file')
-    [baseAngVel, baseKinDynModel] = computeBaseAngularVelocity( human_kinDynComp, ...
-        currentBase, ...
-        synchroKin.state, ...
-        endEffectorFrame);
-    save(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'),'baseAngVel');
-else
-    load(fullfile(bucket.pathToProcessedData,'baseAngVelocity.mat'));
-end
-disp(strcat('[End] Computing the <',currentBase,'> angular velocity...'));
-
 %% MAP computation
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
@@ -306,7 +281,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
             synchroKin.state, ...
             data.y, ...
             priors, ...
-            baseAngVel, ...
+            baseVelocity.angular, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] Complete MAP computation');
         % TODO: variables extraction
@@ -321,7 +296,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
             synchroKin.state,...
             data.y, ...
             priors, ...
-            baseAngVel, ...
+            baseVelocity.angular, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] mu_dgiveny MAP computation');
     end
@@ -367,12 +342,11 @@ end
 % have to pass through the y_sim and only later to compare y and y_sim.
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
-    
     disp('[Start] Simulated y computation...');
     [y_sim] = sim_y_floating(berdy, ...
         synchroKin.state, ...
         traversal, ...
-        baseAngVel, ...
+        baseVelocity.angular, ...
         estimation.mu_dgiveny);
     disp('[End] Simulated y computation');
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
