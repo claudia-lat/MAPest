@@ -172,10 +172,21 @@ berdyOptions.includeFixedBaseExternalWrench = false;
 % Load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(humanModel, humanSensors, berdyOptions);
+
 % Get the current traversal
 traversal = berdy.dynamicTraversal;
+
+% Floating base settings
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('[Info] Current base is < ', currentBase,'>.'));
+human_kinDynComp.setFloatingBase(currentBase);
+baseKinDynModel = human_kinDynComp.getFloatingBase();
+
+% Consistency check: berdy.model base and human_kinDynComp.model have to be consistent!
+if currentBase ~= baseKinDynModel
+    error(strcat('[ERROR] The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
+end
+
 % Get the tree is visited as the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1);
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
