@@ -16,7 +16,19 @@ bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
 disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
 
-%% ---------------------UNA TANTUM PROCEDURE-------------------------------
+%% URDF loading
+if opts.analysis_48dofURDF
+    nrDofs = 48;
+    bucket.URDFfilename = fullfile(bucket.pathToURDF,sprintf('humanSubject%02d_%ddof.urdf',subjectID,nrDofs));
+    %TODO: extract selectedJoints here?
+end
+
+if opts.analysis_66dofURDF
+    nrDofs = 66;
+    bucket.URDFfilename = fullfile(bucket.pathToURDF,sprintf('humanSubject%02d_%ddof.urdf',subjectID,nrDofs));
+    %TODO: extract selectedJoints here?
+end
+
 %% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     disp('[Start] Suit extraction ...');
@@ -118,7 +130,7 @@ shoes = transformShoesWrenches(synchroDataFromShoes, subjectParamsFromData);
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
-humanModel.filename = bucket.filenameURDF;
+humanModel.filename = bucket.URDFfilename;
 humanModelLoader = iDynTree.ModelLoader();
 if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
         cell2iDynTreeStringVector(selectedJoints))
