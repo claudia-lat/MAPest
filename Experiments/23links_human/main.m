@@ -201,6 +201,22 @@ disp('[End] Wrapping measurements');
 % printBerdySensorOrder(berdy);
 % ---------------------------------------------------
 
+%% Compute the transformation of the base w.r.t. the global suit frame G
+disp('-------------------------------------------------------------------');
+disp(strcat('[Start] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G...'));
+%--------Computation of the suit base orientation and position w.r.t. G
+for suitLinksIdx = 1 : size(suit.links,1)
+    if strcmp(suit.links{suitLinksIdx, 1}.label, currentBase)
+        basePos_wrtG  = suit.links{suitLinksIdx, 1}.meas.position;
+        baseOrientation = suit.links{suitLinksIdx, 1}.meas.orientation;
+    end
+end
+
+G_T_b = computeTransformBaseToGlobalFrame(human_kinDynComp, synchroKin.state,...
+    baseOrientation, basePos_wrtG);
+
+disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
+
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
