@@ -110,33 +110,21 @@ disp('[End] IK computation');
 % into <suit.sensors.sensorOldAcceleration> (i.e., the sensor
 % acceleration with the gravity, expressed w.r.t. the sensor frame)
 
-if ~isfield(suit.sensors{1, 1}.meas,'sensorOldAcceleration')
-    gravity = [0; 0; -9.81];
-    for sensIdx = 1: suit.properties.nrOfSensors
-        for lenIdx = 1 : suit.nrOfFrames
-            G_R_S = quat2Mat(suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,lenIdx));
-            % Transformation:        S_a_old = S_R_G * (G_a_new - gravity)
-            suit.sensors{sensIdx, 1}.meas.sensorOldAcceleration(:,lenIdx) = ...
-                transpose(G_R_S) * ...
-                (suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,lenIdx) - gravity);
-        end
-    end
-    save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
-else
-    load(fullfile(bucket.pathToProcessedData,'suit.mat'));
-end
+%% Transform feet forces from sensor frames into human frames
+% 1.Manual transform computation
 
-%% Transform feet forces from sensor into human frames
-% Preliminary assumption on contact links: 2 contacts only.
-bucket.contactLink = cell(2,1);
+bucket.linkInShoes = cell(2,1);
+bucket.linkInShoes{1} = 'RightFoot'; % human link in contact with RightShoe
+bucket.linkInShoes{2} = 'LeftFoot';  % human link in contact with LeftShoe
 
-% Define contacts configuration.
-% The code here following is valid if you are using sensorized shoes.
-% You could change the code to fit other type of force acquisition (e.g.,
-% forceplates).
-bucket.contactLink{1} = 'RightFoot'; % human link in contact with RightShoe
-bucket.contactLink{2} = 'LeftFoot';  % human link in contact with LeftShoe
-shoes = transformShoesWrenches(synchroDataFromShoes, subjectParamsFromData);
+shoesForcesInSensorFrames = struct;
+shoesForcesInSensorFrames.LeftShoe_SF  = suit.ftShoes.Left';
+shoesForcesInSensorFrames.RightShoe_SF = suit.ftShoes.Right';
+
+shoes = transformShoesWrenches(shoesForcesInSensorFrames);
+
+% 2.Import transform from IHumanForceProvider
+% TODO: the comparison.
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
