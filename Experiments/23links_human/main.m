@@ -32,7 +32,7 @@ end
 %% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     disp('[Start] Suit extraction ...');
-    % 1) extract data from suit as YARP-dumped IWear file
+    % 1) ---extract data from suit as YARP-dumped IWear file
     extractWearableDataFromIWear;
     % Change the name of T4Shoulder in C7Shoulder
     for jointsIdx = 1 : wearData.properties.nrOfJoints
@@ -46,7 +46,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
 
     % 2) ---compute sensor position w.r.t. the links
     disp('[Warning]: Check manually the length of the data for the sensor position computation!');
-    disp('[Warning]: By default, the computation of the sensor position is done by considering all the samples. It may take time!');
+    disp('[Warning]: By default, the computation is done by considering all the samples. It may take time!');
     suit = computeSuitSensorPosition(wearData, wearData.nrOfFrames);
     save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
     disp('[End] Suit extraction');
@@ -239,11 +239,32 @@ G_T_b = computeTransformBaseToGlobalFrame(human_kinDynComp, synchroKin.state,...
 
 disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
 
+%% Computation of the angular velocity of the currentBase
+% Tthe angular velocity of the base is mandatorily required in the 
+% floating-base formalism.
+
+% Define the end effector frame/frames in which the velocity is assumed to
+% be zero (e.g., a frame associated to a link that is in fixed contact with
+% the ground).
+constraints = {'LeftFoot','RightFoot'}; %2feet
+% constraints = {'LeftFoot'};  %1foot
+% constraints = {'RightFoot'}; %1foot
+
+disp('-------------------------------------------------------------------');
+disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
+[baseVelocity.linear, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
+    synchroKin.state,...
+    G_T_b, ...
+    constraints);
+disp(strcat('[End] Computing the <',currentBase,'> velocity'));
+
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
-priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables()); % 1e+4 means low reliability on the estimation (i.e., no prior info on the final solution d)
-priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations()); % 1e-4 means high reliability on the model constraints
+priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables());
+% 1e+4 means low reliability on the estimation (i.e., no prior info on the final solution d)
+priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
+% 1e-4 means high reliability on the model constraints
 
 %% Possibility to remove a sensor from the analysis
 % except fot the accelerometers and gyroscope for whose removal already
