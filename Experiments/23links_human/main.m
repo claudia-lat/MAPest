@@ -34,7 +34,17 @@ if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
     disp('[Start] Suit extraction ...');
     % 1) extract data from suit as YARP-dumped IWear file
     extractWearableDataFromIWear;
-    % 2) compute sensor position wrt the links
+    % Change the name of T4Shoulder in C7Shoulder
+    for jointsIdx = 1 : wearData.properties.nrOfJoints
+        if strcmp(wearData.joints{jointsIdx, 1}.label,'jLeftT4Shoulder')
+            wearData.joints{jointsIdx, 1}.label = 'jLeftC7Shoulder';
+        end
+        if strcmp(wearData.joints{jointsIdx, 1}.label,'jRightT4Shoulder')
+            wearData.joints{jointsIdx, 1}.label = 'jRightC7Shoulder';
+        end
+    end
+
+    % 2) ---compute sensor position w.r.t. the links
     disp('[Warning]: Check manually the length of the data for the sensor position computation!');
     disp('[Warning]: By default, the computation of the sensor position is done by considering all the samples. It may take time!');
     suit = computeSuitSensorPosition(wearData, wearData.nrOfFrames);
