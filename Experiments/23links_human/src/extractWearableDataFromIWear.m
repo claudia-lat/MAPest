@@ -120,7 +120,10 @@ tmp.file{1,1} = erase(tmp.file{1,1},tmp.match);
 
 for fileIdx = 1 : length(tmp.file{1,1})-1
     if strcmp(tmp.file{1, 1}{fileIdx,1},tmp.file{1, 1}{fileIdx+1,1})
-        tmp.file{1, 1}{fileIdx,1} = 'repeatedValue';
+        TF = isstrprop(tmp.file{1, 1}{fileIdx,1},'digit');
+        if ~any(TF)
+            tmp.file{1, 1}{fileIdx,1} = 'repeatedValue';
+        end
     end
 end
 
