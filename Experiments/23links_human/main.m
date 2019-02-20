@@ -54,32 +54,26 @@ else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
-%% Define the analysis type w.r.t. the DoFs of the model
-DofAnalysis;
+%% Transform the sensorFreeAcceleration
+% Code to transform the <suit.sensors.sensorFreeAcceleration> (i.e., the sensor
+% acceleration without the gravity, expressed w.r.t. the Xsens global frame G)
+% into <suit.sensors.sensorOldAcceleration> (i.e., the sensor
+% acceleration with the gravity, expressed w.r.t. the sensor frame)
 
-%% Extraction of suit angles
-disp('-------------------------------------------------------------------');
-disp('[Start] IK computation ...');
-
-synchroKin.timestamp = suit.timestamp;
-synchroKin.state.q = zeros(nrDofs,suit.nrOfFrames); %deg
-for dofsIdx = 1 : nrDofs
-    for jointsIdx = 1 : suit.properties.nrOfJoints
-        if contains(selectedJoints{dofsIdx},suit.joints{jointsIdx, 1}.label)
-            if contains(selectedJoints{dofsIdx},'rotx')
-                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(1,:);
-                break;
-            end
-            if contains(selectedJoints{dofsIdx},'roty')
-                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(2,:);
-                break;
-            end
-            if contains(selectedJoints{dofsIdx},'rotz')
-                synchroKin.state.q(dofsIdx,:) = suit.joints{jointsIdx, 1}.meas.angle(3,:);
-                break;
-            end
+if ~isfield(suit.sensors{1, 1}.meas,'sensorOldAcceleration')
+    gravity = [0; 0; -9.81];
+    for sensIdx = 1: suit.properties.nrOfSensors
+        for lenIdx = 1 : suit.nrOfFrames
+            G_R_S = quat2Mat(suit.sensors{sensIdx, 1}.meas.sensorOrientation(:,lenIdx));
+            % Transformation:        S_a_old = S_R_G * (G_a_new - gravity)
+            suit.sensors{sensIdx, 1}.meas.sensorOldAcceleration(:,lenIdx) = ...
+                transpose(G_R_S) * ...
+                (suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,lenIdx) - gravity);
         end
     end
+    save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
+else
+    load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
 %% Computation of dq,ddq via Savitzi-Golay
