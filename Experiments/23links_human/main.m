@@ -232,6 +232,9 @@ G_T_b = computeTransformBaseToGlobalFrame(human_kinDynComp, synchroKin.state,...
 
 disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
 
+%% Walking analysis
+walkingPatternDetection;
+
 %% Computation of the angular velocity of the currentBase
 % Tthe angular velocity of the base is mandatorily required in the 
 % floating-base formalism.
