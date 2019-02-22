@@ -232,8 +232,17 @@ G_T_b = computeTransformBaseToGlobalFrame(human_kinDynComp, synchroKin.state,...
 
 disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
 
-%% Walking analysis
-walkingPatternDetection;
+%% Contact pattern analysis
+patternRanges.parameterForDStuning = 19;
+% This value is a % of the mean total weight of the subject.  It defines how
+% big the area for double support (DS) has to be considered in the
+% analysis.
+
+patternRanges.sampleDSTreshold = 20;
+% For a number of samples < patternRanges.sampleDSTreshold, DS is
+% considered as the previous SS.
+
+contactPatternDetection;
 
 %% Computation of the angular velocity of the currentBase
 % Tthe angular velocity of the base is mandatorily required in the 
