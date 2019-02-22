@@ -237,42 +237,24 @@ else
     % =========================== NO EXO Analysis =========================
     % ---------------------------------------------------------------------
     
-    % ------------Right Shoulder
-    fig = figure('Name', 'noEXO analysis','NumberTitle','off');
-    axes1 = axes('Parent',fig,'FontSize',16);
-    box(axes1,'on');
-    hold(axes1,'on');
-    grid on;
-    
-    for blockIdx = 1 : block.nrOfBlocks
-        subplot (5,1,blockIdx)
-        % tau MAPest without no exo --> tauFirst_MAPest
-        plot1 = plot(CoC(blockIdx).Rsho_tauFirst(1,:),'lineWidth',1.5);
-        title(sprintf('Right Shoulder NO EXO, Block %s', num2str(blockIdx)));
-        ylabel('torque [Nm]');
-        set(gca,'FontSize',15)
+    for jointsIdx = 1 : length(estimatedVariables.tau(1).label)
+        fig = figure('Name', 'noEXO analysis','NumberTitle','off');
+        axes1 = axes('Parent',fig,'FontSize',16);
+        box(axes1,'on');
+        hold(axes1,'on');
         grid on;
-        %legend
-        leg = legend(plot1,{'$\tau\prime_{MAPest}$'},'Location','northeast');
-        set(leg,'Interpreter','latex');
-    end
-    % ------------Left Shoulder
-    fig = figure('Name', 'noEXO analysis','NumberTitle','off');
-    axes1 = axes('Parent',fig,'FontSize',16);
-    box(axes1,'on');
-    hold(axes1,'on');
-    grid on;
-    
-    for blockIdx = 1 : block.nrOfBlocks
-        subplot (5,1,blockIdx)
-        % tau MAPest without no exo --> tauFirst_MAPest
-        plot1 = plot(CoC(blockIdx).Lsho_tauFirst(1,:),'lineWidth',1.5);
-        title(sprintf('Left Shoulder NO EXO, Block %s', num2str(blockIdx)));
-        ylabel('torque [Nm]');
-        set(gca,'FontSize',15)
-        grid on;
-        %legend
-        leg = legend(plot1,{'$\tau\prime_{MAPest}$'},'Location','northeast');
-        set(leg,'Interpreter','latex');
+        for blockIdx = 1 : block.nrOfBlocks
+            subplot (5,1,blockIdx)
+            % tau MAP estimation
+            plot1 = plot(estimatedVariables.tau(blockIdx).values(jointsIdx,:),'lineWidth',1.5);
+            title(sprintf('%s, Block %s',estimatedVariables.tau(blockIdx).label{jointsIdx, 1}, ...
+                num2str(blockIdx)),'Interpreter','latex');
+            ylabel('torque [Nm]');
+            set(gca,'FontSize',15)
+            grid on;
+            %legend
+            leg = legend(plot1,{'$\tau_{MAPest}$'},'Location','northeast');
+            set(leg,'Interpreter','latex');
+        end
     end
 end
