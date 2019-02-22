@@ -1,13 +1,6 @@
 
 close all;
 
-% options for plots
-opts.rightArmPlot = false;  %C7shoulder-shoulder-elbow-wrist
-opts.leftArmPlot  = false;  %C7shoulder-shoulder-elbow-wrist
-opts.torsoPlot    = false;  %L5S1L4L3-L1T12-T9T8-T1C7-C1head
-opts.rightLegPlot = false;  %hip-knee-ankle-ballFoot
-opts.leftLegPlot  = false;  %hip-knee-ankle-ballFoot
-
 if opts.EXO
     if opts.EXO_torqueLevelAnalysis
         % -----------------------------------------------------------------
@@ -72,6 +65,12 @@ if opts.EXO
         % ---------------------------------------------------------------------
         % ====================== EXO_forceLevelAnalysis =======================
         % ---------------------------------------------------------------------
+        % options
+        opts.rightArmPlot = true;  %C7shoulder-shoulder-elbow-wrist
+        opts.leftArmPlot  = true;  %C7shoulder-shoulder-elbow-wrist
+        opts.torsoPlot    = true;  %L5S1-L4L3-L1T12-T9T8-T1C7-C1head
+        opts.rightLegPlot = true;  %hip-knee-ankle-ballFoot
+        opts.leftLegPlot  = true;  %hip-knee-ankle-ballFoot
         % $$$$$$$$$$$$$$$$$$
         if opts.rightArmPlot
             rightArmIdx   = (15:1:22);
