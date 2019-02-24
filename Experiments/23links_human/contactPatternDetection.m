@@ -54,7 +54,7 @@ end
 for SSidx = 1 : tmp.nrOfDS
     patternRanges.SSrange(SSidx).rangeMin = patternRanges.DSrange(SSidx).rangeMax;
     if SSidx == tmp.nrOfDS(end)
-        patternRanges.SSrange(SSidx).rangeMax = patternRanges.SSrange(SSidx).rangeMin;
+        patternRanges.SSrange(SSidx).rangeMax = tmp.shoeLength;
     else
         patternRanges.SSrange(SSidx).rangeMax = patternRanges.DSrange(SSidx+1).rangeMin;
     end
@@ -86,6 +86,19 @@ for removeIdx = 1 : length(tmp.DSfieldTobeRemoved)
     for DSidx = 1 : tmp.nrOfDS
         if tmp.DSfieldTobeRemoved(removeIdx) == patternRanges.SSrange(DSidx).rangeMax
             patternRanges.SSrange(DSidx).rangeMax = patternRanges.SSrange(DSidx+1).rangeMin;
+        end
+    end
+end
+
+%% Final approximated contact pattern range
+contactPattern = cell(tmp.shoeLength,1);
+for lenIdx  = 1 : tmp.shoeLength
+    for SSidx = 1 : length(patternRanges.SSrange)
+        if lenIdx >= patternRanges.SSrange(SSidx).rangeMin && lenIdx <= patternRanges.SSrange(SSidx).rangeMax
+            contactPattern{lenIdx} = patternRanges.SSrange(SSidx).contact;
+            break
+        else
+            contactPattern{lenIdx} = 'doubleSupport';
         end
     end
 end
@@ -169,7 +182,8 @@ if opts.plotPatternDetection
 end
 
 %% Clean up
-clearvars tmp crossIdx DSconditionIdx DSidx SSidx shadedIdx intervalIdx removeIdx...
+clearvars tmp patternRanges ...
+    crossIdx DSconditionIdx DSidx SSidx shadedIdx intervalIdx removeIdx...
     shadedPatch1 shadedPatch2 shadedPatch3 ...
     flag_SSleft flag_SSright ...
     plot1 plot2 plot3 axes1...
