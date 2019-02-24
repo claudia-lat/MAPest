@@ -245,7 +245,7 @@ patternRanges.sampleDSTreshold = 20;
 contactPatternDetection;
 
 %% Computation of the angular velocity of the currentBase
-% Tthe angular velocity of the base is mandatorily required in the 
+% The angular velocity of the base is mandatorily required in the
 % floating-base formalism.
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));

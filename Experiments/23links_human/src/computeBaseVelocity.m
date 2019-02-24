@@ -48,8 +48,8 @@ for i = 1 : samples
     
     fullJacobian = getFloatingContactJacobian(kinDynComputation,endEffectorFrame);
     % Compute I_v_B
-    G_v_b = - pinvDamped(fullJacobian(:,1:6),1e-4)* fullJacobian(:,7:end)*state.dq(:,i);
-    baseLinVelocity(:,i) = G_v_b(1:3,:);
-    baseAngVelocity(:,i) = G_v_b(4:6,:);
+    I_v_b = - pinvDamped(fullJacobian(:,1:6),1e-4)* fullJacobian(:,7:end)*state.dq(:,i);
+    baseLinVelocity(:,i) = I_v_b(1:3,:);
+    baseAngVelocity(:,i) = I_v_b(4:6,:);
 end
 end
