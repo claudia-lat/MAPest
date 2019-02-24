@@ -247,20 +247,10 @@ contactPatternDetection;
 %% Computation of the angular velocity of the currentBase
 % Tthe angular velocity of the base is mandatorily required in the 
 % floating-base formalism.
-
-% Define the end effector frame/frames in which the velocity is assumed to
-% be zero (e.g., a frame associated to a link that is in fixed contact with
-% the ground).
-constraints = {'LeftFoot','RightFoot'}; %2feet
-% constraints = {'LeftFoot'};  %1foot
-% constraints = {'RightFoot'}; %1foot
-
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
-[baseVelocity.linear, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
-    synchroKin.state,...
-    G_T_b, ...
-    constraints);
+[~, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
+    synchroKin.state, G_T_b, contactPattern);
 disp(strcat('[End] Computing the <',currentBase,'> velocity'));
 
 %% ------------------------------- MAP ------------------------------------

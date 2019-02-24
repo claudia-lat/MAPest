@@ -1,4 +1,4 @@
-function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kinDynComputation, state,  I_T_base ,endEffectorFrame)
+function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kinDynComputation, state,  I_T_base ,contactPattern)
 %COMPUTEBASEANGULARVELOCITY computes the angular velocity of the model Base
 %via differential kinematic equation in [rad/s].
 %
@@ -14,8 +14,8 @@ function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kinDynComput
 %  - state:             Matlab struct containing q and dq
 %  - I_T_base           iDynTreeTransform from the base frame to the inertial
 %                       frame
-%  - endEffectorFrame:  frame of an end effector whose velocity is assumed to
-%                       be zero (e.g., a frame associated to a link that is in 
+%  - contactPattern:    list of frames of end effectors whose velocity is assumed
+%                       to be zero (e.g., a frame associated to a link that is in
 %                       fixed contact with the ground).
 % Outputs: 
 %  - baseAngVelocity:   I_\dot(x)_b, linear velocity of the base B w.r.t. the
@@ -39,6 +39,13 @@ for i = 1 : samples
     base_vel.fromMatlab(zeros(6,1));
     % Compute the Jacobian J = [J(q)_B J(q)_S] from kin
     kinDynComputation.setRobotState(I_T_base{i,1},q,base_vel,dq,gravity);
+    
+    if strcmp(contactPattern{i},'doubleSupport')
+        endEffectorFrame = {'LeftFoot','RightFoot'};
+    else
+        endEffectorFrame = contactPattern{i};
+    end
+    
     fullJacobian = getFloatingContactJacobian(kinDynComputation,endEffectorFrame);
     % Compute I_v_B
     G_v_b = - pinvDamped(fullJacobian(:,1:6),1e-4)* fullJacobian(:,7:end)*state.dq(:,i);
