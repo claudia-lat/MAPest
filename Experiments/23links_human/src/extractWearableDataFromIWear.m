@@ -4,6 +4,8 @@
 
 % STATUS: 1 value
 % -----
+% UNKNOWN: 1 value, if data are dumped with yarpdatadumper rx/tx time (discard it!)
+% -----
 % TIMPESTAMP: 1 value
 % -----
 % DEVICE NAME: IWearRemapper
