@@ -157,29 +157,17 @@ tmp.rightFtShoeIndx = find(strcmp(tmp.file{1, 1}, 'FTShoeRightFTSensors'));
 % ----Check if values are missing in the left shoe
 flag.missingLeftValues = false; % assumed no value is missing as default
 if length(tmp.leftFtShoeIndx) ~= wearData.nrOfFrames
-     disp('[Info]: Missing values for the Left shoe!');
-    tmp.missingLeftShoeIdx = [ ];
-    for nrOfFramesIdx = 1 : wearData.nrOfFrames
-        % find the indices where the force is missing
-        if ~strcmp(tmp.file{1, 1}{tmp.IWearRemapperIndx(nrOfFramesIdx)+5,1},'FTShoeLeftFTSensors')
-            tmp.missingLeftShoeIdx = [tmp.missingLeftShoeIdx,tmp.IWearRemapperIndx(nrOfFramesIdx)+5];
-            flag.missingLeftValues = true;
-        end
-    end
+    disp('[Info]: Missing values for the Left shoe!');
+    [tmp.missingLeftShoeIdx,flag.missingLeftValues] = checkingMissingValues(tmp.file{1, 1}, ...
+        tmp.IWearRemapperIndx, wearData.nrOfFrames, 5, 'FTShoeLeftFTSensors');
 end
 
 % ----Check if values are missing in the right shoe
 flag.missingRightValues = false; % assumed no value is missing as default
 if length(tmp.rightFtShoeIndx) ~= wearData.nrOfFrames
     disp('[Info]: Missing values for the Right shoe!');
-    tmp.missingRightShoeIdx = [ ];
-    for nrOfFramesIdx = 1 : wearData.nrOfFrames
-        % find the indices where the force is missing
-        if ~strcmp(tmp.file{1, 1}{tmp.IWearRemapperIndx(nrOfFramesIdx)+14,1},'FTShoeRightFTSensors')
-            tmp.missingRightShoeIdx = [tmp.missingRightShoeIdx,tmp.IWearRemapperIndx(nrOfFramesIdx)+14];
-            flag.missingRightValues = true;
-        end
-    end
+    [tmp.missingRightShoeIdx,flag.missingRightValues] = checkingMissingValues(tmp.file{1, 1}, ...
+        tmp.IWearRemapperIndx, wearData.nrOfFrames, 14, 'FTShoeRightFTSensors');
 end
 
 % ----Fill wearData for the shoes
@@ -199,27 +187,11 @@ end
 % ----If values missing, fill them with the previous valid one
 % Left
 if flag.missingLeftValues
-    tmp.sortedLeftFtShoeIndx = sort(vertcat(tmp.leftFtShoeIndx,tmp.missingLeftShoeIdx'));
-    for l_shoeIdx = 1 : length(tmp.sortedLeftFtShoeIndx)
-        for missingIdx = 1 : length(tmp.missingLeftShoeIdx)
-            if tmp.sortedLeftFtShoeIndx(l_shoeIdx) == tmp.missingLeftShoeIdx(missingIdx)
-                tmp.tempForce = wearData.ftShoes.Left(:,l_shoeIdx-1);
-                wearData.ftShoes.Left = (insertrows(wearData.ftShoes.Left',tmp.tempForce',l_shoeIdx-1))';
-            end
-        end
-    end
+    wearData.ftShoes.Left = fillMissingValues(tmp.leftFtShoeIndx,tmp.missingLeftShoeIdx,wearData.ftShoes.Left);
 end
 % Right
 if flag.missingRightValues
-    tmp.sortedRightFtShoeIndx = sort(vertcat(tmp.rightFtShoeIndx,tmp.missingRightShoeIdx'));
-    for r_shoeIdx = 1 : length(tmp.sortedRightFtShoeIndx)
-        for missingIdx = 1 : length(tmp.missingRightShoeIdx)
-            if tmp.sortedRightFtShoeIndx(r_shoeIdx) == tmp.missingRightShoeIdx(missingIdx)
-                tmp.tempForce = wearData.ftShoes.Right(:,r_shoeIdx-1);
-                wearData.ftShoes.Right = (insertrows(wearData.ftShoes.Right',tmp.tempForce',r_shoeIdx-1))';
-            end
-        end
-    end
+    wearData.ftShoes.Right = fillMissingValues(tmp.rightFtShoeIndx,tmp.missingRightShoeIdx,wearData.ftShoes.Right);
 end
 
 % ----Final shoes check: wearData.ftShoes.Right and wearData.ftShoes.Left
