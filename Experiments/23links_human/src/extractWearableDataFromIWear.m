@@ -152,15 +152,78 @@ wearData.estimatedFrameRate  = round(mean(1./(diff(tmp.timestampNormalized))));
 tmp.leftFtShoeIndx  = find(strcmp(tmp.file{1, 1}, 'FTShoeLeftFTSensors'));
 tmp.rightFtShoeIndx = find(strcmp(tmp.file{1, 1}, 'FTShoeRightFTSensors'));
 
-wearData.ftShoes.Left  = zeros(6,wearData.nrOfFrames);
-wearData.ftShoes.Right = zeros(6,wearData.nrOfFrames);
-for shoeIdx = 1 : wearData.nrOfFrames
-    for vect6Idx = 1 : 6
-        % Left
-        wearData.ftShoes.Left(vect6Idx,shoeIdx)  = str2num(tmp.file{1, 1}{tmp.leftFtShoeIndx(shoeIdx)+(vect6Idx+1),1});
-        % Right
-        wearData.ftShoes.Right(vect6Idx,shoeIdx) = str2num(tmp.file{1, 1}{tmp.rightFtShoeIndx(shoeIdx)+(vect6Idx+1),1});
+% ----Check if values are missing in the left shoe
+flag.missingLeftValues = false; % assumed no value is missing as default
+if length(tmp.leftFtShoeIndx) ~= wearData.nrOfFrames
+     disp('[Info]: Missing values for the Left shoe!');
+    tmp.missingLeftShoeIdx = [ ];
+    for nrOfFramesIdx = 1 : wearData.nrOfFrames
+        % find the indices where the force is missing
+        if ~strcmp(tmp.file{1, 1}{tmp.IWearRemapperIndx(nrOfFramesIdx)+5,1},'FTShoeLeftFTSensors')
+            tmp.missingLeftShoeIdx = [tmp.missingLeftShoeIdx,tmp.IWearRemapperIndx(nrOfFramesIdx)+5];
+            flag.missingLeftValues = true;
+        end
     end
+end
+
+% ----Check if values are missing in the right shoe
+flag.missingRightValues = false; % assumed no value is missing as default
+if length(tmp.rightFtShoeIndx) ~= wearData.nrOfFrames
+    disp('[Info]: Missing values for the Right shoe!');
+    tmp.missingRightShoeIdx = [ ];
+    for nrOfFramesIdx = 1 : wearData.nrOfFrames
+        % find the indices where the force is missing
+        if ~strcmp(tmp.file{1, 1}{tmp.IWearRemapperIndx(nrOfFramesIdx)+14,1},'FTShoeRightFTSensors')
+            tmp.missingRightShoeIdx = [tmp.missingRightShoeIdx,tmp.IWearRemapperIndx(nrOfFramesIdx)+14];
+            flag.missingRightValues = true;
+        end
+    end
+end
+
+% ----Fill wearData for the shoes
+wearData.ftShoes.Left  = zeros(6,length(tmp.leftFtShoeIndx));
+wearData.ftShoes.Right = zeros(6,length(tmp.rightFtShoeIndx));
+for l_shoeIdx = 1 : length(tmp.leftFtShoeIndx) % Left
+    for vect6Idx = 1 : 6
+        wearData.ftShoes.Left(vect6Idx,l_shoeIdx)  = str2num(tmp.file{1, 1}{tmp.leftFtShoeIndx(l_shoeIdx)+(vect6Idx+1),1});
+    end
+end
+for r_shoeIdx = 1 : length(tmp.rightFtShoeIndx) % Right
+    for vect6Idx = 1 : 6
+        wearData.ftShoes.Right(vect6Idx,r_shoeIdx)  = str2num(tmp.file{1, 1}{tmp.rightFtShoeIndx(r_shoeIdx)+(vect6Idx+1),1});
+    end
+end
+
+% ----If values missing, fill them with the previous valid one
+% Left
+if flag.missingLeftValues
+    tmp.sortedLeftFtShoeIndx = sort(vertcat(tmp.leftFtShoeIndx,tmp.missingLeftShoeIdx'));
+    for l_shoeIdx = 1 : length(tmp.sortedLeftFtShoeIndx)
+        for missingIdx = 1 : length(tmp.missingLeftShoeIdx)
+            if tmp.sortedLeftFtShoeIndx(l_shoeIdx) == tmp.missingLeftShoeIdx(missingIdx)
+                tmp.tempForce = wearData.ftShoes.Left(:,l_shoeIdx-1);
+                wearData.ftShoes.Left = (insertrows(wearData.ftShoes.Left',tmp.tempForce',l_shoeIdx-1))';
+            end
+        end
+    end
+end
+% Right
+if flag.missingRightValues
+    tmp.sortedRightFtShoeIndx = sort(vertcat(tmp.rightFtShoeIndx,tmp.missingRightShoeIdx'));
+    for r_shoeIdx = 1 : length(tmp.sortedRightFtShoeIndx)
+        for missingIdx = 1 : length(tmp.missingRightShoeIdx)
+            if tmp.sortedRightFtShoeIndx(r_shoeIdx) == tmp.missingRightShoeIdx(missingIdx)
+                tmp.tempForce = wearData.ftShoes.Right(:,r_shoeIdx-1);
+                wearData.ftShoes.Right = (insertrows(wearData.ftShoes.Right',tmp.tempForce',r_shoeIdx-1))';
+            end
+        end
+    end
+end
+
+% ----Final shoes check: wearData.ftShoes.Right and wearData.ftShoes.Left
+% must have the same dimension
+if length(wearData.ftShoes.Right) ~= length(wearData.ftShoes.Left)
+    error('Different length for the shoes! Check it! ...')
 end
 
 %% SENSORS
