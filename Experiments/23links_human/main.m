@@ -8,11 +8,15 @@ bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
 bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 
 % Path to the folder for raw data and URDFs.
-bucket.pathToWearableData = fullfile(bucket.pathToTask,'data');
+bucket.pathToWearableData = fullfile(bucket.pathToTask,'data/wearable');
+bucket.pathToIKdata       = fullfile(bucket.pathToTask,'data/humanState');
 bucket.pathToURDF         = fullfile(bucket.pathToSubject,'URDFs');
 
 % Path to the folder where processed data will be saved
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
+if ~exist(bucket.pathToProcessedData)
+    mkdir (bucket.pathToProcessedData)
+end
 
 disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
 
@@ -20,13 +24,11 @@ disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(t
 if opts.analysis_48dofURDF
     nrDofs = 48;
     bucket.URDFfilename = fullfile(bucket.pathToURDF,sprintf('humanSubject%02d_%ddof.urdf',subjectID,nrDofs));
-    %TODO: extract selectedJoints here?
 end
 
 if opts.analysis_66dofURDF
     nrDofs = 66;
     bucket.URDFfilename = fullfile(bucket.pathToURDF,sprintf('humanSubject%02d_%ddof.urdf',subjectID,nrDofs));
-    %TODO: extract selectedJoints here?
 end
 
 %% SUIT struct creation
@@ -76,21 +78,36 @@ else
     load(fullfile(bucket.pathToProcessedData,'suit.mat'));
 end
 
+%% IK struct creation
+extractIKfromHumanStateProvider;
+
+% TODO: investigate the timestamp of this file
+
+% TODO: consistency check: frame rate IK and frame rate wearable must be the
+% same! Otherwise I should do manually downsampling --> overkill!
+
+% TODO: consistency check: number of frames of suit and IKdata should be
+% the same! If not (due to the fact that the devices are attached/detached in
+% different times) cute first or last ones!
+
+% Rearrange q in the required format:
+% synchroKin.state.q = zeros(nrDofs,63);    %suit.nrOfFrames);
+synchroKin.state.q = [ ];
+for jointsIdx = 1: nrDofs
+    synchroKin.state.q = [synchroKin.state.q, IKdata.joints{jointsIdx, 1}.angle'];
+end
+
 %% Computation of dq,ddq via Savitzi-Golay
 % Set Sg parameters
 Sg.samplingTime = 1/suit.estimatedFrameRate; % strong assumption!
 Sg.polinomialOrder = 3;
 Sg.window = 5; % required by the moving-window avarage filter.
 
-if ~isfield(suit.joints{1, 1}.meas,'velocity')
-    [~,synchroKin.state.dq,~] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
-        Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
-end
+[~,synchroKin.state.dq,~] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
+    Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
 
-if ~isfield(suit.joints{1, 1}.meas,'acceleration')
-    [~,~,synchroKin.ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
-        Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
-end
+[~,~,synchroKin.ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
+    Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
 
 % Transformation in radians
 synchroKin.state.q  = synchroKin.state.q  * pi/180; % in rad
