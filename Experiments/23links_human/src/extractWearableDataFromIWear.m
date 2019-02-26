@@ -1,5 +1,6 @@
 
-% Per each timestamp the IWearRemapper .log file provides data according to
+%% Structure of the data
+% Per each timestamp the wearable .log file provides data according to
 % the following structure:
 
 % STATUS: 1 value
@@ -375,3 +376,6 @@ for jointIdx = 1 : wearData.properties.nrOfJoints
         end
     end
 end
+
+%% Cleaning up
+clearvars tmp;
