@@ -81,14 +81,16 @@ end
 %% IK struct creation
 extractIKfromHumanStateProvider;
 
-% TODO: investigate the timestamp of this file
+% Frame rate consistency check
+if suit.estimatedFrameRate ~= IKdata.estimatedFrameRate
+    error('The frame rates of suit and IKdata are different! Check it! ...')
+end
 
-% TODO: consistency check: frame rate IK and frame rate wearable must be the
-% same! Otherwise I should do manually downsampling --> overkill!
-
-% TODO: consistency check: number of frames of suit and IKdata should be
-% the same! If not (due to the fact that the devices are attached/detached in
-% different times) cute first or last ones!
+% Number of samples/timestamps consistency check
+if suit.nrOfFrames ~= IKdata.nrOfFrames
+    disp('[Info] The number of frames of suit and IKdata is different.')
+    timestampAndNrSamplesEquilizer;
+end
 
 % Rearrange q in the required format:
 % synchroKin.state.q = zeros(nrDofs,63);    %suit.nrOfFrames);
