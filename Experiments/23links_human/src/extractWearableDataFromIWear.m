@@ -121,12 +121,20 @@ tmp.file{1,1} = erase(tmp.file{1,1},tmp.match);
 tmp.match = ('(');
 tmp.file{1,1} = erase(tmp.file{1,1},tmp.match);
 
+% Check for the repeated values
 for fileIdx = 1 : length(tmp.file{1,1})-1
     if strcmp(tmp.file{1, 1}{fileIdx,1},tmp.file{1, 1}{fileIdx+1,1})
         TF = isstrprop(tmp.file{1, 1}{fileIdx,1},'digit');
         if ~any(TF)
             tmp.file{1, 1}{fileIdx,1} = 'repeatedValue';
         end
+    end
+end
+
+for fileIdx = 1 : length(tmp.file{1,1})-1
+    if strcmp(tmp.file{1, 1}{fileIdx,1},tmp.file{1, 1}{fileIdx+1,1}) ...
+        && ~strcmp(tmp.file{1, 1}{fileIdx,1},'repeatedValue')
+        tmp.file{1, 1}{fileIdx,1} = 'repeatedValue';
     end
 end
 
