@@ -33,6 +33,7 @@ end
 
 %% SUIT struct creation
 if ~exist(fullfile(bucket.pathToProcessedData,'suit.mat'), 'file')
+    disp('-------------------------------------------------------------------');
     disp('[Start] Suit extraction ...');
     % 1) ---extract data from suit as YARP-dumped IWear file
     extractWearableDataFromIWear;
@@ -79,6 +80,8 @@ else
 end
 
 %% IK struct creation
+disp('-------------------------------------------------------------------');
+disp('[Start] IK analysis ...');
 extractIKfromHumanStateProvider;
 
 % Frame rate consistency check
@@ -115,13 +118,7 @@ Sg.window = 5; % required by the moving-window avarage filter.
 synchroKin.state.q  = synchroKin.state.q  * pi/180; % in rad
 synchroKin.state.dq = synchroKin.state.dq * pi/180; % in rad
 synchroKin.ddq      = synchroKin.ddq * pi/180;      % in rad
-disp('[End] IK computation');
-
-%% Transform the sensorFreeAcceleration
-% Code to transform the <suit.sensors.sensorFreeAcceleration> (i.e., the sensor
-% acceleration without the gravity, expressed w.r.t. the Xsens global frame G)
-% into <suit.sensors.sensorOldAcceleration> (i.e., the sensor
-% acceleration with the gravity, expressed w.r.t. the sensor frame)
+disp('[End] IK analysis');
 
 %% Transform feet forces from sensor frames into human frames
 % 1.Manual transform computation
