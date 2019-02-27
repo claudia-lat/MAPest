@@ -147,7 +147,7 @@ wearData.properties.nrOfSensors  = 17;
 
 % --------TIMESTAMP
 % The timestamp appears always before the string 'IWearRemapper'
-tmp.IWearRemapperIndx = find(strcmp(tmp.file{1, 1}, 'IWearRemapper'));
+tmp.IWearRemapperIndx = find(strcmp(tmp.file{1, 1}, 'IWearRemapper::'));
 wearData.nrOfFrames   = length(tmp.IWearRemapperIndx);
 
 wearData.timestamp = zeros(wearData.nrOfFrames,1);
