@@ -53,7 +53,7 @@ humanModel.addAdditionalFrameToLink('LeftUpperArm','LeftUpperArm_exo', EXO.tmp.L
 EXO.tmp.exoLHdistance = subjectParamsFromData.pelvisBox(2)/2;
 % pos
 EXO.tmp.Hip_T_exoLHPos = iDynTree.Position();
-EXO.tmp.Hip_T_exoLHPos.fromMatlab([0; EXO.tmp.exoLHdistance; 0]); %exoRHseenFromHip
+EXO.tmp.Hip_T_exoLHPos.fromMatlab([0; EXO.tmp.exoLHdistance; 0]); %exoLHseenFromHip
 % rot
 EXO.tmp.Hip_T_exoLHRot = iDynTree.Rotation;
 EXO.tmp.Hip_T_exoLHRot.fromMatlab([ 1.0,  0.0,  0.0; ...
@@ -184,8 +184,8 @@ EXO.LUAexo_R_LUAtable = [ 0.0,  0.0,  1.0; ...
     0.0,  1.0,  0.0];
 
 % 2) Const rotation LHexo_R_LHtable
-% Left hip : - LefHip_exo (i.e., LUAexo)      frame for the exo on the URDF
-%            - LeftHip_table (i.e., LUAtable) frame for the table data (expressed w.r.t. torso frame)
+% Left hip : - LefHip_exo (i.e., LHexo)      frame for the exo on the URDF
+%            - LeftHip_table (i.e., LHtable) frame for the table data (expressed w.r.t. torso frame)
 EXO.LHexo_R_LHtable = [ 0.0,  0.0,  -1.0; ...
     -1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
@@ -198,8 +198,8 @@ EXO.RUAexo_R_RUAtable = [ 0.0,  0.0,  -1.0; ...
     0.0,  1.0,  0.0];
 
 % 4) Const rotation RHexo_R_RHtable
-% Right hip : - RightHip_exo (i.e., LUAexo)     frame for the exo on the URDF
-%             - RightHip_table (i.e., LUAtable) frame for the table data (expressed w.r.t. torso frame)
+% Right hip : - RightHip_exo (i.e., RHexo)     frame for the exo on the URDF
+%             - RightHip_table (i.e., RHtable) frame for the table data (expressed w.r.t. torso frame)
 EXO.RHexo_R_RHtable = [ 0.0,  0.0,  1.0; ...
     1.0,  0.0,  0.0; ...
     0.0,  1.0,  0.0];
