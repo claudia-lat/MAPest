@@ -385,3 +385,14 @@ else
     disp('Simulated y computation already saved!');
     load(fullfile(bucket.pathToProcessedData,'y_sim.mat'));
 end
+
+%% Variables extraction from y_sim
+disp('-------------------------------------------------------------------');
+if ~exist(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'), 'file')
+    disp('[Start] Simulated y forces extraction...');
+    extractFext_from_y_sim;
+    disp('[End] Simulated y forces extraction');
+else
+    disp('Simulated y forces extraction already saved!');
+    load(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'));
+end
