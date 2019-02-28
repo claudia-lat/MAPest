@@ -30,9 +30,10 @@ dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 baseIndex = berdy.model().getFrameIndex(currentBase);
 base_angVel = iDynTree.Vector3();
+samples = size(human_state.q ,2);
 
-for i = 1: length(human_state.q)
-    
+for i = 1: samples
+
     q.fromMatlab(human_state.q(:,i));
     dq.fromMatlab(human_state.q(:,i));
     base_angVel.fromMatlab(baseAngVel(:,i));
