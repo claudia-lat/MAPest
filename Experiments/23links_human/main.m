@@ -145,6 +145,7 @@ if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
     % here the model loads the same order of selectedJoints.
     fprintf('Something wrong with the model loading.')
 end
+
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
@@ -155,6 +156,7 @@ humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 bucket.base = 'Pelvis'; % floating base
 
 %% Initialize berdy
+disp('-------------------------------------------------------------------');
 % Specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
 
@@ -182,7 +184,7 @@ baseKinDynModel = human_kinDynComp.getFloatingBase();
 
 % Consistency check: berdy.model base and human_kinDynComp.model have to be consistent!
 if currentBase ~= baseKinDynModel
-    error(strcat('[ERROR] The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
+    error(strcat('The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
 end
 
 % Get the tree is visited as the order of variables in vector d
@@ -287,7 +289,7 @@ sensorsToBeRemoved = [];
 % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % bucket.temp.id = 'LeftHand';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
-% 
+%
 % bucket.temp.type = iDynTree.NET_EXT_WRENCH_SENSOR;
 % bucket.temp.id = 'RightHand';
 % sensorsToBeRemoved = [sensorsToBeRemoved; bucket.temp];
@@ -341,28 +343,27 @@ end
 %% Variables extraction from MAP estimation
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
-    
     % torque extraction (via Berdy)
-    disp('[Start] Torque extraction...');
+    disp('[Start] Torque MAP extraction...');
     estimatedVariables.tau.label  = selectedJoints;
     estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
         estimation.mu_dgiveny, ...
         synchroKin.state.q);
-    disp('[End] Torque extraction');
+    disp('[End] Torque MAP extraction');
     
     % fext extraction (no via Berdy)
     disp('-------------------------------------------------------------------');
-    disp('[Start] External force extraction...');
+    disp('[Start] External force MAP extraction...');
     estimatedVariables.Fext.label  = dVectorOrder;
     estimatedVariables.Fext.values = extractEstimatedFext_from_mu_dgiveny(berdy, ...
         dVectorOrder, ...
         estimation.mu_dgiveny);
-    disp('[End] External force extraction for Block');
+    disp('[End] External force MAP extraction for Block');
     
     % save extracted viariables
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
-    disp('Torque and ext force extraction already saved!');
+    disp('Torque and ext force MAP extraction already saved!');
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
 
