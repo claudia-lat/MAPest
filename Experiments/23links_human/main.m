@@ -101,6 +101,7 @@ synchroKin.state.q = [ ];
 for jointsIdx = 1: nrDofs
     synchroKin.state.q = [synchroKin.state.q, IKdata.joints{jointsIdx, 1}.angle'];
 end
+synchroKin.state.q = synchroKin.state.q';
 
 %% Computation of dq,ddq via Savitzi-Golay
 % Set Sg parameters
