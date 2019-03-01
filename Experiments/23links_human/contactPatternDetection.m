@@ -17,7 +17,7 @@ shoes.weight = mean(shoes.Left_HF(3,:) + shoes.Right_HF(3,:));
 %% Define ranges for double support (DS)
 tmp.DSconditionWRTtotalLength = zeros(tmp.shoeLength,1);
 for crossIdx = 1 : tmp.shoeLength
-    if shoes.Left_HF(3,crossIdx) == shoes.Right_HF(3,crossIdx) | ...
+    if shoes.Left_HF(3,crossIdx) == shoes.Right_HF(3,crossIdx) || ...
             abs(shoes.Left_HF(3,crossIdx) - shoes.Right_HF(3,crossIdx)) <= (patternRanges.parameterForDStuning*shoes.weight)/100
         tmp.DSconditionWRTtotalLength(crossIdx,1) = crossIdx;
     end
