@@ -103,6 +103,8 @@ for lenIdx  = 1 : tmp.shoeLength
     end
 end
 
+patternRanges.nrOfDS = tmp.nrOfDS;
+
 %% Plots
 if opts.plotPatternDetection
     fig = figure('Name', 'Contact pattern detection','NumberTitle','off');
@@ -182,7 +184,7 @@ if opts.plotPatternDetection
 end
 
 %% Clean up
-clearvars tmp patternRanges ...
+clearvars tmp ...
     crossIdx DSconditionIdx DSidx SSidx shadedIdx intervalIdx removeIdx...
     shadedPatch1 shadedPatch2 shadedPatch3 ...
     flag_SSleft flag_SSright ...
