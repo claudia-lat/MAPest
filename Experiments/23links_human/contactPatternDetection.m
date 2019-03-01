@@ -1,6 +1,6 @@
 
 close all;
-opts.plotPatternDetection = false;
+opts.plotPatternDetection = true;
 
 %% Preliminaries
 tmp.shoeLength = size(shoes.Left_HF,2);
@@ -189,3 +189,5 @@ clearvars tmp patternRanges ...
     plot1 plot2 plot3 axes1...
     x1 x2 y1 y2 ...
     singleSupportColor_left singleSupportColor_right doubleSupportColor;
+
+close all;
