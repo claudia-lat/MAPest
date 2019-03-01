@@ -133,7 +133,7 @@ end
 
 for fileIdx = 1 : length(tmp.file{1,1})-1
     if strcmp(tmp.file{1, 1}{fileIdx,1},tmp.file{1, 1}{fileIdx+1,1}) ...
-        && ~strcmp(tmp.file{1, 1}{fileIdx,1},'repeatedValue')
+            && ~isempty(strfind(tmp.file{1, 1}{fileIdx+1,1},'::'))
         tmp.file{1, 1}{fileIdx,1} = 'repeatedValue';
     end
 end
