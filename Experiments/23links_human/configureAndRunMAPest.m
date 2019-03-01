@@ -5,6 +5,7 @@ format long;
 
 %% Add src to the path
 addpath(genpath('src'));
+addpath(genpath('analysisAndPlots'));
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
 
