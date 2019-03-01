@@ -5,7 +5,7 @@
 
 % Path to the folder of the subject and the task, respectively
 bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
-bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
+bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%02d',taskID));
 
 % Path to the folder for raw data and URDFs.
 bucket.pathToWearableData = fullfile(bucket.pathToTask,'data/wearable');
