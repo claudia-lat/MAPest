@@ -272,6 +272,7 @@ plot1 = plot(torque_LA_rotx,'k','lineWidth',1.5);
 % title(sprintf('Left Ankle Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 ylabel('Left \tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -1122,6 +1123,7 @@ if flag_SSleft & flag_SSright % DS + leftSS + rightSS
     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 end
+set(leg,'Orientation','horizontal');
 
 %% Squeeze figure and save as pdf
 subplotsqueeze(gcf, 1.2);
