@@ -1,11 +1,6 @@
 % Plot the estimated joint torques w.r.t. the contact pattern detected
 close all;
 
-% Plot folder
-bucket.pathToPlots = fullfile(bucket.pathToTask,'plots');
-if ~exist(bucket.pathToPlots)
-    mkdir (bucket.pathToPlots)
-end
 saveON = false;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,6 +85,7 @@ plot1 = plot(torque_RA_rotx,'k','lineWidth',1.5);
 title(sprintf('Ankle Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 ylabel('Right\tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -137,6 +133,7 @@ plot1 = plot(torque_RA_roty,'k','lineWidth',1.5);
 
 ylabel('Right \tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -183,6 +180,7 @@ plot1 = plot(torque_RA_rotz,'k','lineWidth',1.5);
 
 ylabel('Right \tau_{z} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -200,10 +198,6 @@ axis tight;
 %     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
 %         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 % end
-
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('right_ankle')),fig,600);
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LEFT ANKLE JOINT
@@ -325,6 +319,7 @@ plot1 = plot(torque_LA_roty,'k','lineWidth',1.5);
 
 ylabel('Left \tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -388,10 +383,6 @@ axis tight;
 %     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
 %         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 % end
-
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('left_knee')),fig,600);
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RIGHT KNEE JOINT
@@ -464,6 +455,7 @@ plot1 = plot(torque_RK_rotx,'k','lineWidth',1.5);
 title(sprintf('Knee Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 % ylabel('\tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -511,6 +503,7 @@ plot1 = plot(torque_RK_roty,'k','lineWidth',1.5);
 
 % ylabel('\tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -557,6 +550,7 @@ plot1 = plot(torque_RK_rotz,'k','lineWidth',1.5);
 
 % ylabel('\tau_{z} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -574,10 +568,6 @@ axis tight;
 %     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
 %         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 % end
-
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('right_knee')),fig,600);
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LEFT KNEE JOINT
@@ -651,6 +641,7 @@ plot1 = plot(torque_LK_rotx,'k','lineWidth',1.5);
 % title(sprintf('Left Knee Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 % ylabel('\tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -698,6 +689,7 @@ plot1 = plot(torque_LK_roty,'k','lineWidth',1.5);
 
 % ylabel('\tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -761,10 +753,6 @@ axis tight;
 %     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
 %         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 % end
-
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('left_ankle')),fig,600);
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RIGHT HIP JOINT
@@ -837,6 +825,7 @@ plot1 = plot(torque_RH_rotx,'k','lineWidth',1.5);
 title(sprintf('Hip Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 % ylabel('\tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -884,6 +873,7 @@ plot1 = plot(torque_RH_roty,'k','lineWidth',1.5);
 
 % ylabel('\tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -930,6 +920,7 @@ plot1 = plot(torque_RH_rotz,'k','lineWidth',1.5);
 
 % ylabel('\tau_{z} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -946,10 +937,6 @@ axis tight;
 %     leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
 %         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 % end
-
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('right_hip')),fig,600);
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LEFT HIP JOINT
@@ -1023,6 +1010,7 @@ plot1 = plot(torque_LH_rotx,'k','lineWidth',1.5);
 % title(sprintf('Left Hip Joint, Subj %s, Task %s',num2str(subjectID),num2str(taskID)));
 % ylabel('\tau_{x} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -1070,6 +1058,7 @@ plot1 = plot(torque_LH_roty,'k','lineWidth',1.5);
 
 % ylabel('\tau_{y} [Nm]');
 % xlabel('samples');
+set(gca,'XTickLabel',[])
 set(gca,'FontSize',15)
 grid on;
 axis tight;
@@ -1134,9 +1123,11 @@ if flag_SSleft & flag_SSright % DS + leftSS + rightSS
         {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
 end
 
-if saveON
-    save2pdf(fullfile(bucket.pathToPlots, ('left_hip')),fig,600);
-end
+%% Squeeze figure and save as pdf
+subplotsqueeze(gcf, 1.2);
 
-%% Squeeze figure
-subplotsqueeze(gcf, 1.1);
+if saveON
+    set(fig,'PaperSize',[26 13]); %set the paper size to what you want
+    figureName = sprintf('legTorques_Subj%s_Task%s',num2str(subjectID),num2str(taskID));
+    print(fig,figureName,'-dpdf') % then print it
+end
