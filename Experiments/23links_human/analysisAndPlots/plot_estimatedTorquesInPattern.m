@@ -608,19 +608,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for tauIdx = 1 : nrDofs
     % ----------------------- Left Knee rotx ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_rotx')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftKnee_rotx')
         torque_LK_rotx = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LK_rotx = max(torque_LK_rotx);
         minVal_LK_rotx = min(torque_LK_rotx);
     end
     % ----------------------- Left Knee roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_roty')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftKnee_roty')
         torque_LK_roty = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LK_roty = max(torque_LK_roty);
         minVal_LK_roty = min(torque_LK_roty);
     end
     % ----------------------- Left Knee roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_rotz')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftKnee_rotz')
         torque_LK_rotz = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LK_rotz = max(torque_LK_rotz);
         minVal_LK_rotz = min(torque_LK_rotz);
@@ -807,19 +807,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for tauIdx = 1 : nrDofs
     % ----------------------- Right Hip rotx ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightKnee_rotx')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightHip_rotx')
         torque_RH_rotx = estimatedVariables.tau.values(tauIdx,:);
         maxVal_RH_rotx = max(torque_RH_rotx);
         minVal_RH_rotx = min(torque_RH_rotx);
     end
     % ----------------------- Right Hip roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightKnee_roty')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightHip_roty')
         torque_RH_roty = estimatedVariables.tau.values(tauIdx,:);
         maxVal_RH_roty = max(torque_RH_roty);
         minVal_RH_roty = min(torque_RH_roty);
     end
     % ----------------------- Right Hip roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightKnee_rotz')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jRightHip_rotz')
         torque_RH_rotz = estimatedVariables.tau.values(tauIdx,:);
         maxVal_RH_rotz = max(torque_RH_rotz);
         minVal_RH_rotz = min(torque_RH_rotz);
@@ -1004,19 +1004,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for tauIdx = 1 : nrDofs
     % ----------------------- Left Hip rotx ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_rotx')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftHip_rotx')
         torque_LH_rotx = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LH_rotx = max(torque_LH_rotx);
         minVal_LH_rotx = min(torque_LH_rotx);
     end
     % ----------------------- Left Hip roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_roty')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftHip_roty')
         torque_LH_roty = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LH_roty = max(torque_LH_roty);
         minVal_LH_roty = min(torque_LH_roty);
     end
     % ----------------------- Left Hip roty ----------------------------
-    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftAnkle_rotz')
+    if strcmp(estimatedVariables.tau.label{tauIdx},'jLeftHip_rotz')
         torque_LH_rotz = estimatedVariables.tau.values(tauIdx,:);
         maxVal_LH_rotz = max(torque_LH_rotz);
         minVal_LH_rotz = min(torque_LH_rotz);
