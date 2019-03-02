@@ -1,5 +1,5 @@
 % Plot the estimated joint torques w.r.t. the contact pattern detected
-close all;
+% close all;
 
 % Plot folder
 bucket.pathToPlots = fullfile(bucket.pathToTask,'plots');
@@ -55,12 +55,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -71,8 +73,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -99,12 +103,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -115,8 +121,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -141,12 +149,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -157,8 +167,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -176,9 +188,19 @@ grid on;
 axis tight;
 
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('right_ankle')),fig,600);
@@ -232,12 +254,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -248,8 +272,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -276,12 +302,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -292,8 +320,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -318,12 +348,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -334,8 +366,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -353,9 +387,19 @@ grid on;
 axis tight;
 
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('left_knee')),fig,600);
@@ -408,12 +452,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -424,8 +470,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -452,12 +500,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -468,8 +518,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -494,12 +546,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -510,8 +564,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -529,9 +585,19 @@ grid on;
 axis tight;
 
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('right_knee')),fig,600);
@@ -585,12 +651,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -601,8 +669,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -629,12 +699,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -645,8 +717,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -671,12 +745,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -687,8 +763,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -706,9 +784,19 @@ grid on;
 axis tight;
 
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('left_ankle')),fig,600);
@@ -761,12 +849,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -777,8 +867,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -805,12 +897,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -821,8 +915,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -847,12 +943,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -863,8 +961,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -880,11 +980,20 @@ xlabel('samples');
 set(gca,'FontSize',15)
 grid on;
 axis tight;
-
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('right_hip')),fig,600);
@@ -938,12 +1047,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -954,8 +1065,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -982,12 +1095,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -998,8 +1113,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -1024,12 +1141,14 @@ for shadedIdx = 1 : patternRanges.nrOfDS
     x1 = patternRanges.DSrange(shadedIdx).rangeMin(1);
     x2 = patternRanges.DSrange(shadedIdx).rangeMax(1);
     shadedPatch1 = fill([x1 x1 x2 x2],[y1 y2 y2 y1],doubleSupportColor);
+    hold on
 end
-hold on
 
 % SS_left
+flag_SSleft = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'LeftFoot')
+        flag_SSleft = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -1040,8 +1159,10 @@ end
 hold on
 
 % SS_right
+flag_SSright = false; % by default
 for shadedIdx = 1 : patternRanges.nrOfDS
     if strcmp(patternRanges.SSrange(shadedIdx).contact,'RightFoot')
+        flag_SSright = true;
         y1 = maxVal;
         y2 = minVal;
         x1 = patternRanges.SSrange(shadedIdx).rangeMin(1);
@@ -1059,9 +1180,19 @@ grid on;
 axis tight;
 
 %legend
-leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
-    {'$\tau_{MAP}$','doubleSupport','leftSupport','rightSupport'},'Location','southwest','FontSize',18);
-set(leg,'Interpreter','latex');
+if flag_SSleft % DS + leftSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSright % DS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+if flag_SSleft & flag_SSright % DS + leftSS + rightSS
+    leg = legend([plot1,shadedPatch1,shadedPatch2,shadedPatch3], ...
+        {'\tau_{MAP}','doubleSupport','leftSupport','rightSupport'},'Location','northeast','FontSize',18);
+end
+
 subplotsqueeze(gcf, 1.2);
 if saveON
     save2pdf(fullfile(bucket.pathToPlots, ('left_hip')),fig,600);
