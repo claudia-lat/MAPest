@@ -96,9 +96,10 @@ if suit.nrOfFrames ~= IKdata.nrOfFrames
 end
 
 % Rearrange q in the required format:
-% synchroKin.state.q = zeros(nrDofs,63);    %suit.nrOfFrames);
+synchroKin.label   = cell(nrDofs,1);
 synchroKin.state.q = [ ];
 for jointsIdx = 1: nrDofs
+    synchroKin.label{jointsIdx,1} =  IKdata.joints{jointsIdx, 1}.label;
     synchroKin.state.q = [synchroKin.state.q, IKdata.joints{jointsIdx, 1}.angle'];
 end
 synchroKin.state.q = synchroKin.state.q';
