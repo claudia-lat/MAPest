@@ -117,9 +117,9 @@ Sg.window = 5; % required by the moving-window avarage filter.
     Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
 
 % Transformation in radians
-synchroKin.state.q  = synchroKin.state.q  * pi/180; % in rad
-synchroKin.state.dq = synchroKin.state.dq * pi/180; % in rad
-synchroKin.ddq      = synchroKin.ddq * pi/180;      % in rad
+synchroKin.state.q  = synchroKin.state.q;   % in rad
+synchroKin.state.dq = synchroKin.state.dq;  % in rad
+synchroKin.ddq      = synchroKin.ddq;       % in rad
 disp('[End] IK analysis');
 
 %% Transform feet forces from sensor frames into human frames
