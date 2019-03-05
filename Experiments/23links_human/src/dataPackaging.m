@@ -33,7 +33,7 @@ for i = 1 :  nOfSensor.acc
     sensorsLabelToCmp{i}= tempData(i,1);
     for j = 1 : nOfSensorsFromSuit
         if  strcmp(sensorsLabelToCmp{i},suit.sensors{j, 1}.label)
-            data.acc.meas{i} = suit.sensors{i, 1}.meas.sensorOldAcceleration;
+            data.acc.meas{i} = suit.sensors{j, 1}.meas.sensorOldAcceleration;
             break;
         end
     end
