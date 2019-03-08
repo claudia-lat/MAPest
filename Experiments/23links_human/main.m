@@ -106,20 +106,12 @@ synchroKin.state.q = synchroKin.state.q';
 
 %% Computation of dq,ddq via Savitzi-Golay
 % Set Sg parameters
-Sg.samplingTime = 1/suit.estimatedFrameRate; % strong assumption!
+Sg.samplingTime = 1/suit.estimatedFrameRate;
 Sg.polinomialOrder = 3;
 Sg.window = 5; % required by the moving-window avarage filter.
 
-[~,synchroKin.state.dq,~] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
-    Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
-
-[~,~,synchroKin.ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
-    Sg.window,synchroKin.state.q,Sg.samplingTime); % in deg
-
-% Transformation in radians
-synchroKin.state.q  = synchroKin.state.q;   % in rad
-synchroKin.state.dq = synchroKin.state.dq;  % in rad
-synchroKin.ddq      = synchroKin.ddq;       % in rad
+[~,synchroKin.state.dq,synchroKin.ddq] = SgolayFilterAndDifferentiation(Sg.polinomialOrder, ...
+    Sg.window,synchroKin.state.q,Sg.samplingTime); %in rad
 disp('[End] IK analysis');
 
 %% Transform feet forces from sensor frames into human frames
