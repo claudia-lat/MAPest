@@ -261,7 +261,7 @@ contactPatternDetection;
 % floating-base formalism.
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
-[~, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
+[baseVelocity.linear, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
     synchroKin.state, G_T_b, contactPattern);
 disp(strcat('[End] Computing the <',currentBase,'> velocity'));
 
