@@ -394,17 +394,20 @@ for blockIdx = 1 : block.nrOfBlocks
 end
 disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
 
+%% Contact pattern definition
+% Trials are performed with both the feet attached to the ground (i.e.,
+% doubleSupport).  No single support is assumed for this analysis.
+for blockIdx = 1 : block.nrOfBlocks
+    contactPattern(blockIdx).block = block.labels(blockIdx);
+    contactPattern(blockIdx).contactPattern = cell(length(synchroKin(blockIdx).masterTime),1);
+    for tmpIdx = 1 : length(synchroKin(blockIdx).masterTime)
+        contactPattern(blockIdx).contactPattern{tmpIdx} = 'doubleSupport';
+    end
+end
 
 %% Velocity of the currentBase
 % Code to handle the info of the velocity of the base.
 % This value is mandatorily required in the floating-base formalism.
-% The new MVNX2018 does not provide the sensorAngularVelocity anymore.
-
-% Define the end effector frame.  In this frame the velocity is assumed to
-% be zero (e.g., a frame associated to a link that is in fixed contact with
-% the ground).
-constraints.endEffectorFrameLF = 'LeftFoot';
-constraints.endEffectorFrameRF = 'RightFoot';
 
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
@@ -414,7 +417,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'baseVelocity.mat'), 'file')
         [baseVel(blockIdx).baseLinVelocity, baseVel(blockIdx).baseAngVelocity] = computeBaseVelocity(human_kinDynComp, ...
             synchroKin(blockIdx),...
             G_T_base(blockIdx), ...
-            constraints);
+            contactPattern(blockIdx).contactPattern);
     end
     save(fullfile(bucket.pathToProcessedData,'baseVelocity.mat'),'baseVel');
 else

@@ -1,22 +1,30 @@
-function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kynDynComputation, state, G_T_base ,constraints)
-%COMPUTEBASEVELOCITY computes the 6D base velocity via differential
-%kinematic equation by considering 2 constraints.
+function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity(kinDynComputation, state,  I_T_base ,contactPattern)
+%COMPUTEBASEANGULARVELOCITY computes the angular velocity of the model Base
+%via differential kinematic equation in [rad/s].
+%
+% The velocity 6D of the base w.r.t. the inertial frame I is:
+%
+%              I_v_b = - pinv(J(q)_b)* J(q)_S*\dot(s)
+%
+% where I_v_b = [I_\dot(x)_b; I_w_p].
+%
+% Inputs:
+%  - kinDynComputation: berdy object
+%  - currentBerdyBase:  base of the model you want to compute the angular velocity
+%  - state:             Matlab struct containing q and dq
+%  - I_T_base           iDynTreeTransform from the base frame to the inertial
+%                       frame
+%  - contactPattern:    list of frames of end effectors whose velocity is assumed
+%                       to be zero (e.g., a frame associated to a link that is in
+%                       fixed contact with the ground).
+% Outputs:
+%  - baseAngVelocity:   I_\dot(x)_b, linear velocity of the base B w.r.t. the
+%                       inertial frame I, in [rad/s].
+%  - baseAngVelocity:   I_w_b, angular velocity of the base B w.r.t. the
+%                       inertial frame I, in [rad/s].
 
-% The velocity of the base w.r.t. the global frame G is
-% G_v_B = [G_\dot(x)_B; G_w_B].
-
-endEffectorFrameLF = constraints.endEffectorFrameLF;
-kynDynComputationLF = kynDynComputation;
-iDynTreeJacobianLF = iDynTree.FrameFreeFloatingJacobian(kynDynComputationLF.model);
-iDynTreeJacobianLF.zero();
-
-endEffectorFrameRF = constraints.endEffectorFrameRF;
-kynDynComputationRF = kynDynComputation;
-iDynTreeJacobianRF = iDynTree.FrameFreeFloatingJacobian(kynDynComputationRF.model);
-iDynTreeJacobianRF.zero()
-
-q  = iDynTree.JointPosDoubleArray(kynDynComputation.model);
-dq = iDynTree.JointDOFsDoubleArray(kynDynComputation.model);
+q  = iDynTree.JointPosDoubleArray(kinDynComputation.model);
+dq = iDynTree.JointDOFsDoubleArray(kinDynComputation.model);
 base_vel = iDynTree.Twist();
 gravity = iDynTree.Vector3();
 gravity.fromMatlab([0; 0; -9.81]);
@@ -28,24 +36,20 @@ baseAngVelocity = zeros(3,samples);
 for i = 1 : samples
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
-    
     base_vel.fromMatlab(zeros(6,1));
+    % Compute the Jacobian J = [J(q)_B J(q)_S] from kin
+    kinDynComputation.setRobotState(I_T_base.G_T_b{i,1},q,base_vel,dq,gravity);
     
-    % Compute the Jacobian J = [J(q)_B J(q)_S] from kin per each constraint
-    kynDynComputationLF.setRobotState(G_T_base.G_T_b{i,1},q,base_vel,dq,gravity);
-    kynDynComputationLF.getFrameFreeFloatingJacobian(endEffectorFrameLF, iDynTreeJacobianLF);
-    fullJacobianLF = iDynTreeJacobianLF.toMatlab();
+    if strcmp(contactPattern{i},'doubleSupport')
+        endEffectorFrame = {'LeftFoot','RightFoot'};
+    else
+        endEffectorFrame = contactPattern{i};
+    end
     
-    kynDynComputationRF.setRobotState(G_T_base.G_T_b{i,1},q,base_vel,dq,gravity);
-    kynDynComputationRF.getFrameFreeFloatingJacobian(endEffectorFrameRF, iDynTreeJacobianRF);
-    fullJacobianRF = iDynTreeJacobianRF.toMatlab();
-    
-    baseJacobianCombined   = [fullJacobianLF(:,1:6); fullJacobianRF(:,1:6)];
-    jointsJacobianCombined = [fullJacobianLF(:,7:end);fullJacobianRF(:,7:end)];
-    
-    % Compute G_v_B
-    G_v_B = - pinv(baseJacobianCombined,1e-4) * jointsJacobianCombined * state.dq(:,i);
-    baseLinVelocity(:,i) = G_v_B(1:3,:);
-    baseAngVelocity(:,i) = G_v_B(4:6,:);
+    fullJacobian = getFloatingContactJacobian(kinDynComputation,endEffectorFrame);
+    % Compute I_v_B
+    I_v_b = - pinvDamped(fullJacobian(:,1:6),1e-4)* fullJacobian(:,7:end)*state.dq(:,i);
+    baseLinVelocity(:,i) = I_v_b(1:3,:);
+    baseAngVelocity(:,i) = I_v_b(4:6,:);
 end
 end
