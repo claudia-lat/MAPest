@@ -6,8 +6,10 @@ function [ implFeetConstraintForm ] = computeImplicitFeetConstraintForm( kynDynC
 %
 % Inputs:
 %  - kinDynComputation: berdy object
-%  - currentBerdyBase:  base of the model you want to compute the angular velocity
-%  - state:             Matlab struct containing q and dq
+%  - G_T_base         : berdy Transform of the base of the model w.r.t.
+%                       the inertial frame
+%  - state            : Matlab struct containing q and dq
+%  - baseVel          : 6D base velocity
 % Outputs:
 %  - implFeetConstraintForm:   pinv(N*B)* N
 %                              being N the null space projector of J_feet,
