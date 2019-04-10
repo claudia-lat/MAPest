@@ -67,10 +67,10 @@ if opts.EXO
         % ---------------------------------------------------------------------
         % options
         opts.rightArmPlot = true;  %C7shoulder-shoulder-elbow-wrist
-        opts.leftArmPlot  = true;  %C7shoulder-shoulder-elbow-wrist
-        opts.torsoPlot    = true;  %L5S1-L4L3-L1T12-T9T8-T1C7-C1head
-        opts.rightLegPlot = true;  %hip-knee-ankle-ballFoot
-        opts.leftLegPlot  = true;  %hip-knee-ankle-ballFoot
+        opts.leftArmPlot  = false;  %C7shoulder-shoulder-elbow-wrist
+        opts.torsoPlot    = false;  %L5S1-L4L3-L1T12-T9T8-T1C7-C1head
+        opts.rightLegPlot = false;  %hip-knee-ankle-ballFoot
+        opts.leftLegPlot  = false;  %hip-knee-ankle-ballFoot
         % $$$$$$$$$$$$$$$$$$
         if opts.rightArmPlot
             rightArmIdx   = (15:1:22);

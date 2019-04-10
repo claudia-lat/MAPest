@@ -50,8 +50,9 @@ if opts.MAPbenchmarking
 %     opts.OsimID             = false;
 end
 
-% Final plots
-opts.finalPlot = false;
+% Plots for the standalone analysis. No comparison for the same subject
+% with and without exo
+opts.finalPlot_standalone = false;
 
 %% Run MAPest main.m
 main;
