@@ -32,8 +32,9 @@ taskID = 1;
 % EXO option
 opts.EXO = true;
 if opts.EXO
-    opts.EXO_torqueLevelAnalysis = true;
+    opts.EXO_torqueLevelAnalysis = false;
     opts.EXO_forceLevelAnalysis  = false;
+    opts.EXO_insideMAP           = false;
 end
 
 % Option for C7 joints as follows:

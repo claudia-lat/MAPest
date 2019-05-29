@@ -239,6 +239,11 @@ if opts.noC7joints
     clearvars selectedJointsReduced synchroKinReduced;
 end
 
+%% if EXO, load raw meas from EXO table
+if opts.EXO
+    loadEXOtableMeas;
+end
+
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
@@ -536,45 +541,6 @@ end
 
 %% ---------------------------- EXO ANALYSIS ------------------------------
 if opts.EXO
-    %% Load and extract data from EXO table
-    EXO.dataFilename  = fullfile(bucket.datasetRoot, 'ForceDataTable.csv');
-    EXO.extractedDataRaw = table2array(readtable(EXO.dataFilename,'Delimiter',';'));
-    
-    % Generic raw info table (labels/extraction range per label)
-    EXO.tableLabels = {'shoulderAngle';
-        'F_arm_scher';
-        'F_arm_support';
-        'F_ASkraft_x';
-        'F_ASkraft_y';
-        'F_KGkraft_x';
-        'F_KGkraft_y';
-        'M_support'};
-    
-    for labelIdx = 1 : size(EXO.tableLabels,1)
-        EXO.tableInfo(labelIdx).labels = EXO.tableLabels{labelIdx};
-        EXO.tableInfo(labelIdx).range  = (labelIdx:8:96);
-    end
-    
-    % Extraction of info from the EXO table per subject
-    EXO.nrOfSubj = 12;
-    for subjIdx = 1 : EXO.nrOfSubj
-        EXO.extractedTable(subjIdx).shoulder_angles  = EXO.extractedDataRaw(:,EXO.tableInfo(1).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_arm_scher   = EXO.extractedDataRaw(:,EXO.tableInfo(2).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_arm_support = EXO.extractedDataRaw(:,EXO.tableInfo(3).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_ASkraft_x   = EXO.extractedDataRaw(:,EXO.tableInfo(4).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_ASkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(5).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_KGkraft_x   = EXO.extractedDataRaw(:,EXO.tableInfo(6).range(subjIdx));
-        EXO.extractedTable(subjIdx).F_KGkraft_y   = EXO.extractedDataRaw(:,EXO.tableInfo(7).range(subjIdx));
-        
-        % Correction: Computation of a
-        % newTableTorque = F_arm_support * 0.6895 * subject upper arm length
-        % Note: The point where the exo applies the force at the upper arm is
-        %       0.6895 of the total upper arm length (i.e., the application point
-        %       of the force does not coincide with the elbow joint!!!).
-        EXO.extractedTable(subjIdx).M_support_mod    = EXO.extractedDataRaw(:,EXO.tableInfo(8).range(subjIdx)) * ...
-            0.6895 * subjectParamsFromData.leftUpperArm_y;
-    end
-    
     %% Change of coordinates (CoC)
     % Important note:
     % ---------------
