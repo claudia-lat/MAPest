@@ -239,11 +239,6 @@ if opts.noC7joints
     clearvars selectedJointsReduced synchroKinReduced;
 end
 
-%% if EXO, load raw meas from EXO table
-if opts.EXO
-    loadEXOtableMeas;
-end
-
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
 humanModel.filename = bucket.filenameURDF;
@@ -541,6 +536,9 @@ end
 
 %% ---------------------------- EXO ANALYSIS ------------------------------
 if opts.EXO
+    %% Load raw meas from EXO table
+    loadEXOtableMeas;
+
     %% Change of coordinates (CoC)
     % Important note:
     % ---------------
@@ -596,25 +594,6 @@ if opts.EXO
         end
     end
     
-    %% Compute the term for the feet implicit constraints
-    % This section computes the term which makes the dynamics of the system to
-    % satisfy the 2-feet contact constraint.
-    disp('-------------------------------------------------------------------');
-    disp(strcat('[Start] Computing the term for the feet implicit constraint...'));
-    if ~exist(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'), 'file')
-        for blockIdx = 1 : block.nrOfBlocks
-            implFeetConstraint(blockIdx).block = block.labels(blockIdx);
-            implFeetConstraint(blockIdx).term  = computeImplicitFeetConstraintForm(human_kinDynComp, ...
-                G_T_base(blockIdx), ...
-                synchroKin(blockIdx), ...
-                baseVel(blockIdx));
-        end
-        save(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'),'implFeetConstraint');
-    else
-        load(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'));
-    end
-    disp(strcat('[End] Computing the term for the feet implicit constraint'));
-
     %% Torque level analysis
     if opts.EXO_torqueLevelAnalysis
         disp('-------------------------------------------------------------------');
@@ -628,15 +607,44 @@ if opts.EXO
     if opts.EXO_forceLevelAnalysis
         disp('-------------------------------------------------------------------');
         disp('[Start] EXO Force level analysis');
+
+        % -----------------------------------------------------------------
+        % Compute the term for the feet implicit constraints
+        % This section computes the term which makes the dynamics of the system to
+        % satisfy the 2-feet contact constraint.
+        disp('-------------------------------------------------------------------');
+        disp(strcat('[Start] Computing the term for the feet implicit constraint...'));
+        if ~exist(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'), 'file')
+            for blockIdx = 1 : block.nrOfBlocks
+                implFeetConstraint(blockIdx).block = block.labels(blockIdx);
+                implFeetConstraint(blockIdx).term  = computeImplicitFeetConstraintForm(human_kinDynComp, ...
+                    G_T_base(blockIdx), ...
+                    synchroKin(blockIdx), ...
+                    baseVel(blockIdx));
+            end
+            save(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'),'implFeetConstraint');
+        else
+            load(fullfile(bucket.pathToProcessedData,'implicitFeetContraint.mat'));
+        end
+        disp(strcat('[End] Computing the term for the feet implicit constraint'));
+        % -----------------------------------------------------------------
+
         EXO_forceLevelAnalysis;
         save(fullfile(bucket.pathToProcessedData,'exo_forceLevel.mat'),'exo_forceLevel');
         disp('[End] EXO Force level analysis');
     end
-end
 
-%%  Final plots
-if opts.finalPlot
-    finalPlots;
+    %% EXO inside MAP analysis
+    if opts.EXO_insideMAP
+        disp('-------------------------------------------------------------------');
+        disp('[Start] EXO inside MAP analysis');
+        % Call a parallel main to recompute the MAP estimation with the EXO
+        % forces (properly transformed in human frames) into the y
+        % measurements vector.
+        main_EXOinsideMAP;
+        save(fullfile(bucket.pathToProcessedData,'exo_insideMAP.mat'),'exo_insideMAP');
+        disp('[End] EXO inside MAP analysis');
+    end
 end
 
 disp('-------------------------------------------------------------------');
