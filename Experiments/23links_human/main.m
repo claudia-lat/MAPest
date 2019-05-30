@@ -638,13 +638,15 @@ if opts.EXO
     if opts.EXO_insideMAP
         disp('-------------------------------------------------------------------');
         disp('[Start] EXO inside MAP analysis');
-        % Call a parallel main to recompute the MAP estimation with the EXO
-        % forces (properly transformed in human frames) into the y
-        % measurements vector.
-        main_EXOinsideMAP;
-        save(fullfile(bucket.pathToProcessedData,'exo_insideMAP.mat'),'exo_insideMAP');
+        if ~exist(fullfile(bucket.pathToProcessedData,'exo_insideMAP.mat'), 'file')
+            % Call a parallel main to recompute the MAP estimation with the EXO
+            % forces (properly transformed in human frames) into the y
+            % measurements vector.
+            main_EXOinsideMAP;
+        else
+            load(fullfile(bucket.pathToProcessedData,'exo_insideMAP.mat'));
+        end
         disp('[End] EXO inside MAP analysis');
     end
 end
-
 disp('-------------------------------------------------------------------');
