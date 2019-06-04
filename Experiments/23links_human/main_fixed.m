@@ -20,7 +20,7 @@ end
 
 disp(' ');
 disp('====================== FIXED-BASE ANALYSIS ========================');
-disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
+fprintf('[Start] Analysis SUBJECT_%02d, TRIAL_%02d\n',subjectID,taskID);
 
 %% URDF loading
 if opts.analysis_48dofURDF
