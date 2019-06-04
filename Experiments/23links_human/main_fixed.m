@@ -13,11 +13,13 @@ bucket.pathToIKdata       = fullfile(bucket.pathToTask,'data/humanState');
 bucket.pathToURDF         = fullfile(bucket.pathToSubject,'URDFs');
 
 % Path to the folder where processed data will be saved
-bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
+bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed_fixed');
 if ~exist(bucket.pathToProcessedData)
     mkdir (bucket.pathToProcessedData)
 end
 
+disp(' ');
+disp('====================== FIXED-BASE ANALYSIS ========================');
 disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
 
 %% URDF loading
@@ -102,7 +104,7 @@ for jointsIdx = 1: nrDofs
     synchroKin.label{jointsIdx,1} =  IKdata.joints{jointsIdx, 1}.label;
     synchroKin.state.q = [synchroKin.state.q, IKdata.joints{jointsIdx, 1}.angle'];
 end
-synchroKin.state.q = synchroKin.state.q';
+synchroKin.state.q = synchroKin.state.q'; 
 
 %% Computation of dq,ddq via Savitzi-Golay
 % Set Sg parameters
@@ -127,8 +129,20 @@ shoesForcesInSensorFrames.RightShoe_SF = suit.ftShoes.Right';
 
 shoes = transformShoesWrenches(shoesForcesInSensorFrames);
 
-% 2.Import transform from IHumanForceProvider
+% 2.Import forces from IHumanForceProvider
 % TODO: the comparison.
+
+%% Contact pattern analysis
+patternRanges.parameterForDStuning = 80;
+% This value is a % of the mean total weight of the subject.  It defines how
+% big the area for double support (DS) has to be considered in the
+% analysis.
+
+patternRanges.sampleDSTreshold = 20;
+% For a number of samples < patternRanges.sampleDSTreshold, DS is
+% considered as the previous SS.
+
+contactPatternDetection;
 
 %% ------------------------RUNTIME PROCEDURE-------------------------------
 %% Load URDF model with sensors
@@ -145,23 +159,32 @@ human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
 humanSensors = humanModelLoader.sensors();
+
+% Remove sensor on the fixed base
+fixedBase = 'LeftFoot';
+humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
+
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
-bucket.base = 'Pelvis'; % floating base
 
 %% Initialize berdy
 disp('-------------------------------------------------------------------');
 % Specify berdy options
 berdyOptions = iDynTree.BerdyOptions;
 
-berdyOptions.baseLink = bucket.base;
+berdyOptions.baseLink = fixedBase; % change of the base link
+%--------------------------------------------------------------------------
+% IMPORTANT NOTE:
+% ---------------
+% Until this point the base link was 'Pelvis' but from now on  we decided
+% to change it with the 'LeftFoot' since it is really fixed during the
+% experiment.
+%--------------------------------------------------------------------------
 berdyOptions.includeAllNetExternalWrenchesAsSensors          = true;
 berdyOptions.includeAllNetExternalWrenchesAsDynamicVariables = true;
 berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
-
-berdyOptions.berdyVariant = iDynTree.BERDY_FLOATING_BASE;
-berdyOptions.includeFixedBaseExternalWrench = false;
+berdyOptions.includeFixedBaseExternalWrench                  = true;
 
 % Load berdy
 berdy = iDynTree.BerdyHelper;
@@ -170,16 +193,9 @@ berdy.init(humanModel, humanSensors, berdyOptions);
 % Get the current traversal
 traversal = berdy.dynamicTraversal;
 
-% Floating base settings
+% Base settings
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('[Info] Current base is < ', currentBase,'>.'));
-human_kinDynComp.setFloatingBase(currentBase);
-baseKinDynModel = human_kinDynComp.getFloatingBase();
-
-% Consistency check: berdy.model base and human_kinDynComp.model have to be consistent!
-if currentBase ~= baseKinDynModel
-    error(strcat('The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
-end
 
 % Get the tree is visited as the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1);
@@ -195,18 +211,10 @@ end
 
 % ---------------------------------------------------
 % CHECK: print the order of variables in d vector
-% printBerdyDynVariables_floating(berdy)
+% printBerdyDynVariables(berdy)
 % ---------------------------------------------------
 
 %% Measurements wrapping
-% Set the sensor covariance priors (to be tailored by the user)
-priors = struct;
-priors.acc_IMU     = 0.001111 * ones(3,1);                  %[m^2/s^2]   , from datasheet
-% priors.gyro_IMU    = xxxxxx * ones(3,1);                  %[rad^2/s^2] , from datasheet
-priors.ddq         = 6.66e-6;                               %[rad^2/s^4] , from worst case covariance
-priors.foot_fext   = 1e-3 * [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2]
-priors.noSens_fext = 1e-6 * ones(6,1);                      %[N^2,(Nm)^2]
-
 disp('-------------------------------------------------------------------');
 disp('[Start] Wrapping measurements...');
 fext.rightHuman = shoes.Right_HF;
@@ -228,50 +236,11 @@ disp('[End] Wrapping measurements');
 % printBerdySensorOrder(berdy);
 % ---------------------------------------------------
 
-%% Compute the transformation of the base w.r.t. the global suit frame G
-disp('-------------------------------------------------------------------');
-disp(strcat('[Start] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G...'));
-%--------Computation of the suit base orientation and position w.r.t. G
-for suitLinksIdx = 1 : size(suit.links,1)
-    if strcmp(suit.links{suitLinksIdx, 1}.label, currentBase)
-        basePos_wrtG  = suit.links{suitLinksIdx, 1}.meas.position;
-        baseOrientation = suit.links{suitLinksIdx, 1}.meas.orientation;
-    end
-end
-
-G_T_b = computeTransformBaseToGlobalFrame(human_kinDynComp, synchroKin.state,...
-    baseOrientation, basePos_wrtG);
-
-disp(strcat('[End] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G'));
-
-%% Contact pattern analysis
-patternRanges.parameterForDStuning = 19;
-% This value is a % of the mean total weight of the subject.  It defines how
-% big the area for double support (DS) has to be considered in the
-% analysis.
-
-patternRanges.sampleDSTreshold = 20;
-% For a number of samples < patternRanges.sampleDSTreshold, DS is
-% considered as the previous SS.
-
-contactPatternDetection;
-
-%% Computation of the angular velocity of the currentBase
-% The angular velocity of the base is mandatorily required in the
-% floating-base formalism.
-disp('-------------------------------------------------------------------');
-disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
-[baseVelocity.linear, baseVelocity.angular] = computeBaseVelocity(human_kinDynComp, ...
-    synchroKin.state, G_T_b, contactPattern);
-disp(strcat('[End] Computing the <',currentBase,'> velocity'));
-
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
-priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables());
-% 1e+4 means low reliability on the estimation (i.e., no prior info on the final solution d)
-priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations());
-% 1e-4 means high reliability on the model constraints
+priors.Sigmad = bucket.Sigmad * eye(berdy.getNrOfDynamicVariables());
+priors.SigmaD = bucket.SigmaD * eye(berdy.getNrOfDynamicEquations());
 
 %% Possibility to remove a sensor from the analysis
 % except fot the accelerometers and gyroscope for whose removal already
@@ -303,12 +272,10 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
     priors.Sigmay = Sigmay;
     if opts.Sigma_dgiveny
         disp('[Start] Complete MAP computation...');
-        [estimation.mu_dgiveny, estimation.Sigma_dgiveny] = MAPcomputation_floating(berdy, ...
-            traversal, ...
+        [estimation.mu_dgiveny, estimation.Sigma_dgiveny] = MAPcomputation(berdy, ...
             synchroKin.state, ...
             y, ...
             priors, ...
-            baseVelocity.angular, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] Complete MAP computation');
         % TODO: variables extraction
@@ -318,16 +285,13 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
         % TODO: extractSigmaOfEstimatedVariables
     else
         disp('[Start] mu_dgiveny MAP computation...');
-        [estimation.mu_dgiveny] = MAPcomputation_floating(berdy, ...
-            traversal, ...
+        [estimation.mu_dgiveny] = MAPcomputation(berdy, ...
             synchroKin.state,...
             y, ...
             priors, ...
-            baseVelocity.angular, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] mu_dgiveny MAP computation');
     end
-    
     save(fullfile(bucket.pathToProcessedData,'estimation.mat'),'estimation');
 else
     disp('MAP computation already saved!');
@@ -344,6 +308,8 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
         estimation.mu_dgiveny, ...
         synchroKin.state.q);
     disp('[End] Torque MAP extraction');
+    
+     dVectorOrder =  dVectorOrder(2:end,:);
     
     % fext extraction (no via Berdy)
     disp('-------------------------------------------------------------------');
@@ -369,10 +335,8 @@ end
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
     disp('[Start] Simulated y computation...');
-    [y_sim] = sim_y_floating(berdy, ...
+    [y_sim] = sim_y_test(berdy, ...
         synchroKin.state, ...
-        traversal, ...
-        baseVelocity.angular, ...
         estimation.mu_dgiveny);
     disp('[End] Simulated y computation');
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
@@ -391,3 +355,30 @@ else
     disp('Simulated y forces extraction already saved!');
     load(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'));
 end
+
+%%
+fixedBaseRange = struct;
+fixedBaseRange.range_accSIM_pelvis = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'Pelvis_accelerometer');
+if strcmp(fixedBase,'RightFoot')
+    fixedBaseRange.range_fextMEAS_leftFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'LeftFoot');
+end
+if  strcmp(fixedBase,'LeftFoot')
+    fixedBaseRange.range_fextMEAS_rightFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'RightFoot');
+end
+% torque
+fixedBaseRange.rotx_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotx'),:);
+fixedBaseRange.roty_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_roty'),:);
+fixedBaseRange.rotz_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotz'),:);
+fixedBaseRange.rotx_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotx'),:);
+fixedBaseRange.roty_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_roty'),:);
+fixedBaseRange.rotz_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotz'),:);
+
+save(fullfile(bucket.pathToProcessedData,'fixedBaseRange.mat'),'fixedBaseRange');
+
+%% Clear iDynTree variables for the next computation
+clearvars berdy berdyOptions ...
+    humanModel humanModelLoader human_kinDynComp humanSensors ...
+    joint link traversal;
+
+%% Plot
+% plot_estimatedTorquesInPattern_tot;
