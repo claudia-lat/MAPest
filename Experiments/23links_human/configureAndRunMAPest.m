@@ -53,6 +53,11 @@ bucket.SigmaD = 1e+1;
 
 %% Run MAPest main.m
 if opts.fixedVSfloat
+    if taskID == 4
+        fixedBase = 'RightFoot';
+    else
+        fixedBase = 'LeftFoot';
+    end
     main_fixed;
 end
 

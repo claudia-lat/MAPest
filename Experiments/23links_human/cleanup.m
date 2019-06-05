@@ -11,5 +11,5 @@ delete(fullfile(bucket.pathToProcessedData,'estimation.mat'));
 delete(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 delete(fullfile(bucket.pathToProcessedData,'y_sim.mat'));
 delete(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'));
-delete(fullfile(bucket.pathToProcessedData,'RMSE_fixedVSfloat.mat'));
-delete(fullfile(bucket.pathToProcessedData,'errorVal_fixedVSfloat.mat'));
+delete(fullfile(bucket.pathToProcessedData,'RMSE_measVSestim.mat'));
+delete(fullfile(bucket.pathToProcessedData,'errorVal_measVSestim.mat'));

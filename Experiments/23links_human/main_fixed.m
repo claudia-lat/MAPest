@@ -161,7 +161,6 @@ human_kinDynComp.loadRobotModel(humanModel);
 humanSensors = humanModelLoader.sensors();
 
 % Remove sensor on the fixed base
-fixedBase = 'LeftFoot';
 humanSensors.removeSensor(iDynTree.ACCELEROMETER_SENSOR, strcat(fixedBase,'_accelerometer'));
 
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
@@ -301,15 +300,24 @@ end
 %% Variables extraction from MAP estimation
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
-    % torque extraction (via Berdy)
+    % torque extraction (no via Berdy)
     disp('[Start] Torque MAP extraction...');
     estimatedVariables.tau.label  = selectedJoints;
-    estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
-        estimation.mu_dgiveny, ...
-        synchroKin.state.q);
+    estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny_fixed(berdy, ...
+        selectedJoints, ...
+        estimation.mu_dgiveny);
     disp('[End] Torque MAP extraction');
+     
+    dVectorOrder =  dVectorOrder(2:end,:);
     
-     dVectorOrder =  dVectorOrder(2:end,:);
+    % 6D acceleration (no via Berdy)
+    disp('-------------------------------------------------------------------');
+    disp('[Start] Acceleration MAP extraction...');
+    estimatedVariables.Acc.label  = dVectorOrder;
+    estimatedVariables.Acc.values = extractEstimatedAcc_from_mu_dgiveny_fixed(berdy, ...
+        dVectorOrder, ...
+        estimation.mu_dgiveny);
+    disp('[End] Acceleration MAP extraction for Block');
     
     % fext extraction (no via Berdy)
     disp('-------------------------------------------------------------------');
@@ -335,7 +343,7 @@ end
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
     disp('[Start] Simulated y computation...');
-    [y_sim] = sim_y_test(berdy, ...
+    [y_sim] = sim_y_fixed(berdy, ...
         synchroKin.state, ...
         estimation.mu_dgiveny);
     disp('[End] Simulated y computation');
@@ -356,24 +364,24 @@ else
     load(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'));
 end
 
-%%
-fixedBaseRange = struct;
-fixedBaseRange.range_accSIM_pelvis = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'Pelvis_accelerometer');
-if strcmp(fixedBase,'RightFoot')
-    fixedBaseRange.range_fextMEAS_leftFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'LeftFoot');
-end
-if  strcmp(fixedBase,'LeftFoot')
-    fixedBaseRange.range_fextMEAS_rightFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'RightFoot');
-end
-% torque
-fixedBaseRange.rotx_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotx'),:);
-fixedBaseRange.roty_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_roty'),:);
-fixedBaseRange.rotz_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotz'),:);
-fixedBaseRange.rotx_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotx'),:);
-fixedBaseRange.roty_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_roty'),:);
-fixedBaseRange.rotz_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotz'),:);
-
-save(fullfile(bucket.pathToProcessedData,'fixedBaseRange.mat'),'fixedBaseRange');
+%% Note: needed only if using plot_Estimation_floatingVSfixed_v1.m
+% fixedBaseRange = struct;
+% fixedBaseRange.range_accSIM_pelvis = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'Pelvis_accelerometer');
+% if strcmp(fixedBase,'RightFoot')
+%     fixedBaseRange.range_fextMEAS_leftFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'LeftFoot');
+% end
+% if  strcmp(fixedBase,'LeftFoot')
+%     fixedBaseRange.range_fextMEAS_rightFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'RightFoot');
+% end
+% % torque
+% fixedBaseRange.rotx_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotx'),:);
+% fixedBaseRange.roty_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_roty'),:);
+% fixedBaseRange.rotz_tau_Rhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jRightHip_rotz'),:);
+% fixedBaseRange.rotx_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotx'),:);
+% fixedBaseRange.roty_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_roty'),:);
+% fixedBaseRange.rotz_tau_Lhip = estimation.mu_dgiveny(rangeOfDynamicVariable(berdy, iDynTree.DOF_TORQUE, 'jLeftHip_rotz'),:);
+%
+% save(fullfile(bucket.pathToProcessedData,'fixedBaseRange.mat'),'fixedBaseRange');
 
 %% Clear iDynTree variables for the next computation
 clearvars berdy berdyOptions ...

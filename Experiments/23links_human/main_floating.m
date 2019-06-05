@@ -331,7 +331,16 @@ end
 %% Variables extraction from MAP estimation
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
+    % 6D acceleration (no via Berdy)
+    disp('[Start] Acceleration MAP extraction...');
+    estimatedVariables.Acc.label  = dVectorOrder;
+    estimatedVariables.Acc.values = extractEstimatedAcc_from_mu_dgiveny(berdy, ...
+        dVectorOrder, ...
+        estimation.mu_dgiveny);
+    disp('[End] Acceleration MAP extraction for Block');
+
     % torque extraction (via Berdy)
+    disp('-------------------------------------------------------------------');
     disp('[Start] Torque MAP extraction...');
     estimatedVariables.tau.label  = selectedJoints;
     estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
