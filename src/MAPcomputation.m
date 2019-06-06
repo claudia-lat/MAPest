@@ -168,16 +168,14 @@ end
 end
 
 function [x] = CholSolve(A, b, P)
-% control if A is symmetric
-if (issymmetric(round(A,5)) == 1)
-    C              = P'*A*P;  % P is given as input 
+if ~issymmetric(A)
+    A = (A+A')/2;
+end
+    C              = P'*A*P;  % P is given as input
     [R]            = chol(C); % R is such that R'*R = P'*C*P
     
     w_forward      = P\b;
     z_forward      = R'\w_forward;
     y_forward      = R\z_forward;
     x              = P'\y_forward;
-else
-    error('matrix A is not symmetric')        
-end    
 end
