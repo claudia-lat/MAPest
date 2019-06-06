@@ -42,6 +42,7 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation(berdy, state, y, priors, v
 % sensor and the related block variance from the Sigmay.
 % -------------------------------------------------------------------------
 
+%% Argument options
 options = struct(   ...
     'SENSORS_TO_REMOVE', []...
     );
@@ -68,7 +69,7 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     end
 end
 
-%%
+%% Sensor removal options
 rangeOfRemovedSensors = [];
 for i = 1 : size(options.SENSORS_TO_REMOVE)
     ithSensor = options.SENSORS_TO_REMOVE(i);
@@ -79,7 +80,7 @@ end
 y(rangeOfRemovedSensors,:) = [];
 priors.Sigmay(rangeOfRemovedSensors, :) = [];  % TO BE CHECKED!
 priors.Sigmay(:, rangeOfRemovedSensors) = [];  % TO BE CHECKED!
-%% 
+%% Set variables
 % Set gravity 
 gravity = [0 0 -9.81];
 grav  = iDynTree.Vector3();
@@ -109,12 +110,11 @@ mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 Sigma_dgiveny =  cell(samples,1);
 
-% MAP Computation
+%% MAP Computation
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 
 for i = 1 : samples
-    
     q.fromMatlab(state.q(:,i));
     dq.fromMatlab(state.dq(:,i));
     

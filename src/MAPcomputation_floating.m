@@ -43,6 +43,7 @@ function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation_floating(berdy, traversal,
 % sensor and the related block variance from the Sigmay.
 % -------------------------------------------------------------------------
 
+%% Argument options
 options = struct(   ...
     'SENSORS_TO_REMOVE', []...
     );
@@ -69,7 +70,7 @@ for pair = reshape(varargin,2,[]) % pair is {propName;propValue}
     end
 end
 
-%%
+%% Sensor removal options
 rangeOfRemovedSensors = [];
 for i = 1 : size(options.SENSORS_TO_REMOVE)
     ithSensor = options.SENSORS_TO_REMOVE(i);
@@ -80,7 +81,7 @@ end
 y(rangeOfRemovedSensors,:) = [];
 priors.Sigmay(rangeOfRemovedSensors, :) = [];
 priors.Sigmay(:, rangeOfRemovedSensors) = [];
-%%
+%% Set variables
 % % Set angularVector
 % angVect = [0 0 0];
 % omega  = iDynTree.Vector3();
@@ -110,7 +111,7 @@ mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 Sigma_dgiveny =  cell(samples,1);
 
-% MAP Computation
+%% MAP Computation
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
