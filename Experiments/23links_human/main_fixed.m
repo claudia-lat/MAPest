@@ -301,15 +301,16 @@ end
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % torque extraction (no via Berdy)
-    disp('[Start] Torque MAP extraction...');
+    disp('[Start] Torque and joint acceleration MAP extraction...');
     estimatedVariables.tau.label  = selectedJoints;
-    estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny_fixed(berdy, ...
+    estimatedVariables.ddq.label  = selectedJoints;
+    [estimatedVariables.tau.values, estimatedVariables.ddq.values] = extractEstimatedTau_from_mu_dgiveny_fixed(berdy, ...
         selectedJoints, ...
         estimation.mu_dgiveny);
-    disp('[End] Torque MAP extraction');
-     
+    disp('[End] Torque and joint acceleration MAP extraction');
+        
     dVectorOrder =  dVectorOrder(2:end,:);
-    
+
     % 6D acceleration (no via Berdy)
     disp('-------------------------------------------------------------------');
     disp('[Start] Acceleration MAP extraction...');
@@ -331,7 +332,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % save extracted viariables
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
-    disp('Torque and ext force MAP extraction already saved!');
+    disp('Torque, joint acc and ext force MAP extraction already saved!');
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
 

@@ -348,6 +348,19 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
         synchroKin.state.q);
     disp('[End] Torque MAP extraction');
     
+    % joint acc extraction (no via Berdy)
+    disp('-------------------------------------------------------------------');
+    disp('[Start] Joint acceleration MAP extraction...');
+    estimatedVariables.ddq.label  = selectedJoints;
+    %     estimatedVariables.ddq.values = extractEstimatedDdq_from_mu_dgiveny_floating(berdy, ...
+    %         selectedJoints, ...
+    %         mu_dgiveny);
+    % ---------------------------
+    estimatedVariables.ddq.values = estimation.mu_dgiveny(...
+        length(estimation.mu_dgiveny)-(nrDofs-1) : size(estimation.mu_dgiveny,1) ,:);
+    % ---------------------------
+    disp('[End] Joint acceleration MAP extraction');
+    
     % fext extraction (no via Berdy)
     disp('-------------------------------------------------------------------');
     disp('[Start] External force MAP extraction...');
@@ -360,7 +373,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     % save extracted viariables
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
-    disp('Torque and ext force MAP extraction already saved!');
+    disp('Torque, joint acc and ext force MAP extraction already saved!');
     load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 end
 
