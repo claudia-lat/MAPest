@@ -150,7 +150,7 @@ for i = 1 : samples
                 disp('[Info] [Y; D] is a matrix with rows > columns');
             end
         else
-            error('[Info] [Y; D] is a with matrix rows < columns! Check the matrix!!');
+            error('[Info] [Y; D] is a matrix with rows < columns! Check the matrix!!');
         end
     end
 
