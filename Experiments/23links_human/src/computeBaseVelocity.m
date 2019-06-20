@@ -18,7 +18,7 @@ function [ baseLinVelocity, baseAngVelocity] = computeBaseVelocity( kinDynComput
 %                       to be zero (e.g., a frame associated to a link that is in
 %                       fixed contact with the ground).
 % Outputs: 
-%  - baseAngVelocity:   I_\dot(x)_b, linear velocity of the base B w.r.t. the
+%  - baseLinVelocity:   I_\dot(x)_b, linear velocity of the base B w.r.t. the
 %                       inertial frame I, in [rad/s].
 %  - baseAngVelocity:   I_w_b, angular velocity of the base B w.r.t. the
 %                       inertial frame I, in [rad/s].
