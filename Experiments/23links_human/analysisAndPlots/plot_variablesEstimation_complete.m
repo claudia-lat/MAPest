@@ -9,9 +9,6 @@ close all;
 % measured (acc, fext and ddq) --> then we can suppose that the estimation
 % of fint, fnet and tau are reasonable, as well.
 
-% variables estimated
-load(fullfile(bucket.pathToProcessedData,'estimation.mat'));
-load(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'));
 % variables in y simulated from d
 load(fullfile(bucket.pathToProcessedData,'y_sim.mat'));
 
@@ -36,22 +33,22 @@ box(axes1,'on');
 hold(axes1,'on');
 grid on;
 % % -------------
-% RIGHT UPPER ARM
-% simulated in y vector (link frame)
-range_accMEAS_rightUpperArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'RightUpperArm_accelerometer');
-acc.measured.rightUpperArm = y_sim((range_accMEAS_rightUpperArm:range_accMEAS_rightUpperArm+5),:);
-acc.measured.rightUpperArm_sigma = Sigmay((range_accMEAS_rightUpperArm:range_accMEAS_rightUpperArm+5),(range_accMEAS_rightUpperArm:range_accMEAS_rightUpperArm+5));
+% RIGHT UPPER Leg
+% simulated in y vector
+range_accSIM_rightUpperLeg = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'RightUpperLeg_accelerometer');
+acc.simulated.rightUpperLeg = y_sim((range_accSIM_rightUpperLeg:range_accSIM_rightUpperLeg+2),:);
+% acc.simulated.rightUpperArm_sigma = Sigmay((range_accSIM_rightUpperArm:range_accSIM_rightUpperArm+2),(range_accSIM_rightUpperArm:range_accSIM_rightUpperArm+2));
 
-% fext.estimated (after MAP)
-range_accEST_rightUpperArm = rangeOfDynamicVariable(berdy, iDynTree.LINK_BODY_PROPER_CLASSICAL_ACCELERATION, 'RightUpperArm');
-acc.estimated.rightUpperArm = estimation.mu_dgiveny((range_accEST_rightUpperArm:range_accEST_rightUpperArm+5 ),:);
+% acc measured in y vector
+acc.measured.rightUpperLeg = data(12).meas;
+acc.measured.rightUpperLeg_sigma = data(12).var;
 
-subplot (3,3,1) %  right UpperArm x component
-plot1 = plot(acc.estimated.rightUpperArm(1,:),'b','lineWidth',1.5);
+subplot (3,3,1) %  right x component
+plot1 = plot(acc.simulated.rightUpperLeg(1,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightUpperArm_sigma(1);
-shad2 = shadedErrorBar([],acc.measured.rightUpperArm(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
-ylabel('rightUpperArm','HorizontalAlignment','center',...
+specific_vector_sigma(1,:) = acc.measured.rightUpperLeg_sigma(1);
+shad2 = shadedErrorBar([],acc.measured.rightUpperLeg(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+ylabel('rightUpperLeg','HorizontalAlignment','center',...
     'FontWeight','bold',...
     'FontSize',18,...
     'Interpreter','latex');
@@ -61,22 +58,22 @@ grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,2) %  right UpperArm y component
-plot1 = plot(acc.estimated.rightUpperArm(2,:),'b','lineWidth',1.5);
+subplot (3,3,2) %  right y component
+plot1 = plot(acc.simulated.rightUpperLeg(2,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightUpperArm_sigma(2);
-shad2 = shadedErrorBar([],acc.measured.rightUpperArm(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+specific_vector_sigma(1,:) = acc.measured.rightUpperLeg_sigma(2);
+shad2 = shadedErrorBar([],acc.measured.rightUpperLeg(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 title ('y');
 xlabel('N samples');
 grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,3) %  right UpperArm z component
-plot1 = plot(acc.estimated.rightUpperArm(3,:),'b','lineWidth',1.5);
+subplot (3,3,3) %  right z component
+plot1 = plot(acc.simulated.rightUpperLeg(3,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightUpperArm_sigma(3);
-shad2 = shadedErrorBar([],acc.measured.rightUpperArm(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+specific_vector_sigma(1,:) = acc.measured.rightUpperLeg_sigma(3);
+shad2 = shadedErrorBar([],acc.measured.rightUpperLeg(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 title ('z');
 xlabel('N samples');
 grid on;
@@ -84,21 +81,21 @@ axis tight;
 xlim([0 len])
 
 % % -------------
-% RIGHT FORE ARM
-% simulated in y vector (link frame)
-range_accMEAS_rightForeArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'RightForeArm_accelerometer');
-acc.measured.rightForeArm = y_sim((range_accMEAS_rightForeArm:range_accMEAS_rightForeArm+5),:);
-acc.measured.rightForeArm_sigma = Sigmay((range_accMEAS_rightForeArm:range_accMEAS_rightForeArm+5),(range_accMEAS_rightForeArm:range_accMEAS_rightForeArm+5));
+% RIGHT lower Leg
+% simulated in y vector
+range_accSIM_rightLowerLeg = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'RightLowerLeg_accelerometer');
+acc.simulated.rightLowerLeg = y_sim((range_accSIM_rightLowerLeg:range_accSIM_rightLowerLeg+2),:);
+% acc.measured.rightForeArm_sigma = Sigmay((range_accSIM_rightForeArm:range_accSIM_rightForeArm+2),(range_accSIM_rightForeArm:range_accSIM_rightForeArm+2));
 
-% fext.estimated (after MAP)
-range_accEST_rightForeArm = rangeOfDynamicVariable(berdy, iDynTree.LINK_BODY_PROPER_CLASSICAL_ACCELERATION, 'RightForeArm');
-acc.estimated.rightForeArm = estimation.mu_dgiveny((range_accEST_rightForeArm:range_accEST_rightForeArm+5 ),:);
+% acc measured in y vector
+acc.measured.rightLowerLeg = data(13).meas;
+acc.measured.rightLowerLeg_sigma = data(13).var;
 
-subplot (3,3,4) %  right ForeArm x component
-plot1 = plot(acc.estimated.rightForeArm(1,:),'b','lineWidth',1.5);
+subplot (3,3,4) %  right x component
+plot1 = plot(acc.simulated.rightLowerLeg(1,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightForeArm_sigma(1);
-shad2 = shadedErrorBar([],acc.measured.rightForeArm(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+specific_vector_sigma(1,:) = acc.measured.rightLowerLeg_sigma(1);
+shad2 = shadedErrorBar([],acc.measured.rightLowerLeg(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 ylabel('rightForeArm','HorizontalAlignment','center',...
     'FontWeight','bold',...
     'FontSize',18,...
@@ -108,21 +105,21 @@ xlabel('N samples');
 axis tight;
 xlim([0 len])
 
-subplot (3,3,5) %  right ForeArm y component
-plot1 = plot(acc.estimated.rightForeArm(2,:),'b','lineWidth',1.5);
+subplot (3,3,5) %  right y component
+plot1 = plot(acc.simulated.rightLowerLeg(2,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightForeArm_sigma(2);
-shad2 = shadedErrorBar([],acc.measured.rightForeArm(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+specific_vector_sigma(1,:) = acc.measured.rightLowerLeg_sigma(2);
+shad2 = shadedErrorBar([],acc.measured.rightLowerLeg(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 xlabel('N samples');
 grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,6) %  right ForeArm z component
-plot1 = plot(acc.estimated.rightForeArm(3,:),'b','lineWidth',1.5);
+subplot (3,3,6) %  right z component
+plot1 = plot(acc.simulated.rightLowerLeg(3,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightForeArm_sigma(3);
-shad2 = shadedErrorBar([],acc.measured.rightForeArm(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
+specific_vector_sigma(1,:) = acc.measured.rightLowerLeg_sigma(3);
+shad2 = shadedErrorBar([],acc.measured.rightLowerLeg(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 grid on;
 xlabel('N samples');
 axis tight;
@@ -155,17 +152,17 @@ hold(axes1,'on');
 grid on;
 % % -------------
 % LEFT UPPER ARM
-% simulated in y vector (link frame)
-range_accMEAS_leftUpperArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'LeftUpperArm_accelerometer');
-acc.measured.leftUpperArm = y_sim((range_accMEAS_leftUpperArm:range_accMEAS_leftUpperArm+5),:);
-acc.measured.leftUpperArm_sigma = Sigmay((range_accMEAS_leftUpperArm:range_accMEAS_leftUpperArm+5),(range_accMEAS_leftUpperArm:range_accMEAS_leftUpperArm+5));
+% simulated in y vector
+range_accSIM_leftUpperArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'LeftUpperArm_accelerometer');
+acc.simulated.leftUpperArm = y_sim((range_accSIM_leftUpperArm:range_accSIM_leftUpperArm+2),:);
+% acc.measured.leftUpperArm_sigma = Sigmay((range_accSIM_leftUpperArm:range_accSIM_leftUpperArm+2),(range_accSIM_leftUpperArm:range_accSIM_leftUpperArm+2));
 
-% fext.estimated (after MAP)
-range_accEST_leftUpperArm = rangeOfDynamicVariable(berdy, iDynTree.LINK_BODY_PROPER_CLASSICAL_ACCELERATION, 'LeftUpperArm');
-acc.estimated.leftUpperArm = estimation.mu_dgiveny((range_accEST_leftUpperArm:range_accEST_leftUpperArm+5 ),:);
+% acc measured in y vector
+acc.measured.leftUpperArm = data(9).meas;
+acc.measured.leftUpperArm_sigma = data(9).var;
 
-subplot (3,3,1) %  left UpperArm x component
-plot1 = plot(acc.estimated.leftUpperArm(1,:),'b','lineWidth',1.5);
+subplot (3,3,1) %  left x component
+plot1 = plot(acc.simulated.leftUpperArm(1,:),'b','lineWidth',1.5);
 hold on
 specific_vector_sigma(1,:) = acc.measured.leftUpperArm_sigma(1);
 shad2 = shadedErrorBar([],acc.measured.leftUpperArm(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
@@ -179,8 +176,8 @@ grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,2) %  left UpperArm y component
-plot1 = plot(acc.estimated.leftUpperArm(2,:),'b','lineWidth',1.5);
+subplot (3,3,2) %  left y component
+plot1 = plot(acc.simulated.leftUpperArm(2,:),'b','lineWidth',1.5);
 hold on
 specific_vector_sigma(1,:) = acc.measured.leftUpperArm_sigma(2);
 shad2 = shadedErrorBar([],acc.measured.leftUpperArm(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
@@ -190,8 +187,8 @@ grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,3) %  left UpperArm z component
-plot1 = plot(acc.estimated.leftUpperArm(3,:),'b','lineWidth',1.5);
+subplot (3,3,3) %  left z component
+plot1 = plot(acc.simulated.leftUpperArm(3,:),'b','lineWidth',1.5);
 hold on
 specific_vector_sigma(1,:) = acc.measured.leftUpperArm_sigma(3);
 shad2 = shadedErrorBar([],acc.measured.leftUpperArm(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
@@ -203,19 +200,19 @@ xlim([0 len])
 
 % % -------------
 % LEFT FORE ARM
-% simulated in y vector (link frame)
-range_accMEAS_leftForeArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'LeftForeArm_accelerometer');
-acc.measured.leftForeArm = y_sim((range_accMEAS_leftForeArm:range_accMEAS_leftForeArm+5),:);
-acc.measured.leftForeArm_sigma = Sigmay((range_accMEAS_leftForeArm:range_accMEAS_leftForeArm+5),(range_accMEAS_leftForeArm:range_accMEAS_leftForeArm+5));
+% simulated in y vector
+range_accSIM_leftForeArm = rangeOfSensorMeasurement(berdy, iDynTree.ACCELEROMETER_SENSOR, 'LeftForeArm_accelerometer');
+acc.simulated.leftForeArm = y_sim((range_accSIM_leftForeArm:range_accSIM_leftForeArm+2),:);
+% acc.measured.leftForeArm_sigma = Sigmay((range_accSIM_leftForeArm:range_accSIM_leftForeArm+2),(range_accSIM_leftForeArm:range_accSIM_leftForeArm+2));
 
-% fext.estimated (after MAP)
-range_accEST_leftForeArm = rangeOfDynamicVariable(berdy, iDynTree.LINK_BODY_PROPER_CLASSICAL_ACCELERATION, 'LeftForeArm');
-acc.estimated.leftForeArm = estimation.mu_dgiveny((range_accEST_leftForeArm:range_accEST_leftForeArm+5 ),:);
+% acc measured in y vector
+acc.measured.leftForeArm = data(10).meas;
+acc.measured.leftForeArm_sigma = data(10).var;
 
-subplot (3,3,4) %  left ForeArm x component
-plot1 = plot(acc.estimated.rightForeArm(1,:),'b','lineWidth',1.5);
+subplot (3,3,4) %  left x component
+plot1 = plot(acc.simulated.leftForeArm(1,:),'b','lineWidth',1.5);
 hold on
-specific_vector_sigma(1,:) = acc.measured.rightForeArm_sigma(1);
+specific_vector_sigma(1,:) = acc.measured.leftForeArm_sigma(1);
 shad2 = shadedErrorBar([],acc.measured.rightForeArm(1,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
 ylabel('rightForeArm','HorizontalAlignment','center',...
     'FontWeight','bold',...
@@ -226,8 +223,8 @@ xlabel('N samples');
 axis tight;
 xlim([0 len])
 
-subplot (3,3,5) %  right ForeArm y component
-plot1 = plot(acc.estimated.leftForeArm(2,:),'b','lineWidth',1.5);
+subplot (3,3,5) %  right y component
+plot1 = plot(acc.simulated.leftForeArm(2,:),'b','lineWidth',1.5);
 hold on
 specific_vector_sigma(1,:) = acc.measured.leftForeArm_sigma(2);
 shad2 = shadedErrorBar([],acc.measured.leftForeArm(2,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
@@ -236,8 +233,8 @@ grid on;
 axis tight;
 xlim([0 len])
 
-subplot (3,3,6) %  left ForeArm z component
-plot1 = plot(acc.estimated.leftForeArm(3,:),'b','lineWidth',1.5);
+subplot (3,3,6) %  left z component
+plot1 = plot(acc.simulated.leftForeArm(3,:),'b','lineWidth',1.5);
 hold on
 specific_vector_sigma(1,:) = acc.measured.leftForeArm_sigma(3);
 shad2 = shadedErrorBar([],acc.measured.leftForeArm(3,:),2.*sqrt(specific_vector_sigma(1,:)),'r',1.5);
@@ -268,12 +265,12 @@ box(axes1,'on');
 hold(axes1,'on');
 grid on;
 
-% fext.measured in y vector (link frame)
+% simulated in y vector
 range_fextMEAS_rightFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'RightFoot');
 fext.measured.rightFoot = y_sim((range_fextMEAS_rightFoot:range_fextMEAS_rightFoot+5),:);
 fext.measured.rightFoot_sigma = diag(Sigmay((range_fextMEAS_rightFoot:range_fextMEAS_rightFoot+5),(range_fextMEAS_rightFoot:range_fextMEAS_rightFoot+5)));
 
-% fext.estimated (after MAP)
+% % acc measured in y vector
 range_fextEST_rightFoot = rangeOfDynamicVariable(berdy, iDynTree.NET_EXT_WRENCH, 'RightFoot');
 fext.estimated.rightFoot = estimation.mu_dgiveny((range_fextEST_rightFoot:range_fextEST_rightFoot+5 ),:);
 
@@ -314,12 +311,12 @@ grid on;
 axis tight;
 xlim([0 len])
 
-% fext.measured in y vector (link frame)
+% simulated in y vector
 range_fextMEAS_leftFoot = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'LeftFoot');
 fext.measured.leftFoot = y_sim((range_fextMEAS_leftFoot:range_fextMEAS_leftFoot+5),:);
 fext.measured.leftFoot_sigma = diag(Sigmay((range_fextMEAS_leftFoot:range_fextMEAS_leftFoot+5),(range_fextMEAS_leftFoot:range_fextMEAS_leftFoot+5)));
 
-% fext.estimated (after MAP)
+% acc measured in y vector
 range_fextEST_leftFoot = rangeOfDynamicVariable(berdy, iDynTree.NET_EXT_WRENCH, 'LeftFoot');
 fext.estimated.leftFoot = estimation.mu_dgiveny((range_fextEST_leftFoot:range_fextEST_leftFoot+5 ),:);
 
