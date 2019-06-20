@@ -95,7 +95,27 @@ for i = 1 : samples
     b_Y = berdyMatrices.b_Y.toMatlab();
     
     b_Y(rangeOfRemovedSensors) = [];
-    
+
+    % Check on the [Y; D] matrix rank
+    if (i==1)
+        bigMatrix = full([Y; D]);
+        rowsOfbigMatrix = size(bigMatrix,1);
+        columnsOfbigMatrix = size(bigMatrix,2);
+        % svd
+        % [U_bigMatrix,S_bigMatrix,V_bigMatrix] = svd(bigMatrix);
+        svd_bigMatrix = svd(bigMatrix);
+        rank_bigMatrix = nnz(svd_bigMatrix);
+        if (rowsOfbigMatrix > columnsOfbigMatrix)
+            if rank_bigMatrix == nrOfDynVariables
+                disp('[Info] [Y; D] is a full rank matrix with rows > columns');
+            else
+                disp('[Info] [Y; D] is a matrix with rows > columns');
+            end
+        else
+            error('[Info] [Y; D] is a matrix with rows < columns! Check the matrix!!');
+        end
+    end
+
     SigmaBarD_inv   = D' * SigmaD_inv * D + Sigmad_inv;
     
     % the permutation matrix for SigmaBarD_inv is computed only for the first
