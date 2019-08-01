@@ -7,6 +7,7 @@ format long;
 addpath(genpath('src'));
 addpath(genpath('../../src'));
 addpath(genpath('../../external'));
+addpath(genpath('scripts'));
 
 %% Set Java path needed by OSIM - SCREWS MATLAB CURRENT CONFIGURATION
 %       UNCONMMENT ONLY IF YOU KNOW WHAT YOU ARE DOING
