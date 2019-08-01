@@ -55,5 +55,19 @@ end
 % with and without exo
 opts.finalPlot_standalone = false;
 
+%% Covariances setting
+priors = struct;
+priors.acc_IMU     = 0.001111 * ones(3,1);                 %[m^2/s^2]   , from datasheet
+% priors.gyro_IMU    = xxxxxx * ones(3,1);                 %[rad^2/s^2] , from datasheet
+priors.angAcc      = 1e-4 * ones(3,1); %test
+priors.ddq         = 6.66e-6;                              %[rad^2/s^4] , from worst case covariance
+priors.foot_fext   = [59; 59; 36; 2.25; 2.25; 0.56];       %[N^2,(Nm)^2]
+priors.noSens_fext = 1e-6 * ones(6,1);
+
+bucket.Sigmad = 1e4;
+% low reliability on the estimation (i.e., no prior info on the model regularization term d)
+bucket.SigmaD = 1e-4;
+% high reliability on the model constraints
+
 %% Run MAPest main.m
 main;
