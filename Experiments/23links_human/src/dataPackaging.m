@@ -1,4 +1,4 @@
-function [ dataPacked ] = dataPackaging(blockIdx, model, sensors, suit, fext, ddq, contactLink, priors)
+function [ dataPacked ] = dataPackaging(blockIdx,model, sensors, suit, angAcc, fext, ddq, contactLink, priors)
 %DATAPACKAGING creates a data struct organised in the following way:
 % - data.time (a unified time for all type of sensors)
 % Each substructure is identified by:
@@ -10,6 +10,7 @@ function [ dataPacked ] = dataPackaging(blockIdx, model, sensors, suit, fext, dd
 data      = struct;
 data.acc  = struct;
 % data.gyro = struct;
+data.angAcc  = struct;
 data.ddq  = struct;
 data.fext = struct;
 
@@ -67,6 +68,23 @@ data.acc.var = priors.acc_IMU;
 % % end
 % % % variance
 % % data.gyro.var = priors.gyro_IMU;
+
+% SENSOR: <ANGULAR ACCELEROMETER>
+% type
+data.angAcc.type = iDynTree.THREE_AXIS_ANGULAR_ACCELEROMETER_SENSOR;
+% id
+nOfSensor.angAcc = length(suit.sensors);
+data.angAcc.id   = cell(nOfSensor.angAcc,1);
+for i = 1 : nOfSensor.angAcc
+    data.angAcc.id{i} = angAcc(i).sensorName;
+end
+% meas
+data.angAcc.meas = cell(nOfSensor.angAcc,1);
+for i = 1 : nOfSensor.angAcc
+    data.angAcc.meas{i} = angAcc(i).meas(blockIdx).S_meas_L;
+end
+% variance
+data.angAcc.var = priors.angAcc;
 
 %% FROM ddq
 nOfSensor.DOFacc = size(ddq,1);
@@ -161,6 +179,14 @@ end
 indx = nOfSensor.acc;
 % indx = i;
 %--
+for i = 1 : nOfSensor.angAcc
+    dataPacked(i + (indx)).type         = data.angAcc.type;
+    dataPacked(i + (indx)).id           = data.angAcc.id{i};
+    dataPacked(i + (indx)).meas         = data.angAcc.meas{i};
+    dataPacked(i + (indx)).var          = data.angAcc.var;
+end
+indx = indx + nOfSensor.angAcc;
+%--
 for i = 1 : nOfSensor.DOFacc
     dataPacked(i + (indx)).type         = data.ddq.type;
     dataPacked(i + (indx)).id           = data.ddq.id{i};
@@ -186,3 +212,4 @@ for i = 1 : nOfSensor.fext
     end
 end
 end
+

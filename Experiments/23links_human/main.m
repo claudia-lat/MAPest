@@ -248,14 +248,62 @@ if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
     % here the model loads the same order of selectedJoints.
     fprintf('Something wrong with the model loading.')
 end
+
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
+bucket.base = 'Pelvis'; % floating base
+
+% Sensors
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
-bucket.base = 'Pelvis'; % floating base
+
+%% Add link angular acceleration sensors
+% iDynTree.THREE_AXIS_ANGULAR_ACCELEROMETER_SENSOR is not supported by the
+% URDF model.  It requires to be added differently.
+
+if ~exist(fullfile(bucket.pathToProcessedData,'angAcc_sensor.mat'), 'file')
+    % Angular Acceleration struct
+    angAcc_sensor = struct;
+    for angAccSensIdx = 1 : length(suit.sensors)
+        angAcc_sensor(angAccSensIdx).attachedLink = suit.sensors{angAccSensIdx, 1}.label;
+        angAcc_sensor(angAccSensIdx).iDynModelIdx = humanModel.getLinkIndex(suit.links{angAccSensIdx, 1}.label);
+        angAcc_sensor(angAccSensIdx).sensorName   = strcat(angAcc_sensor(angAccSensIdx).attachedLink, '_angAcc');
+
+        angAcc_sensor(angAccSensIdx).S_R_L        = iDynTree.Rotation().RPY(suit.sensors{angAccSensIdx, 1}.RPY(1), ...
+            suit.sensors{angAccSensIdx, 1}.RPY(2), suit.sensors{angAccSensIdx, 1}.RPY(3)).toMatlab;
+        angAcc_sensor(angAccSensIdx).pos_SwrtL    = suit.sensors{angAccSensIdx, 1}.position;
+
+        for suitLinkIdx = 1 : length(suit.links)
+            if strcmp(suit.sensors{angAccSensIdx, 1}.label,suit.links{suitLinkIdx, 1}.label)
+                sampleToMatch = suitLinkIdx;
+                for lenSample = 1 : suit.properties.lenData
+                    G_R_S_mat = quat2Mat(suit.sensors{angAccSensIdx, 1}.meas.sensorOrientation(:,lenSample));
+                    for blockIdx = 1 : block.nrOfBlocks
+                        % ---Labels
+                        angAcc_sensor(angAccSensIdx).meas(blockIdx).block  = block.labels(blockIdx);
+                        % ---Cut meas
+                        tmp.cutRange{blockIdx} = (tmp.blockRange(blockIdx).first : tmp.blockRange(blockIdx).last);
+                        angAcc_sensor(angAccSensIdx).meas(blockIdx).S_meas_L = G_R_S_mat' * suit.links{sampleToMatch, 1}.meas.angularAcceleration(:,tmp.cutRange{blockIdx});
+                    end
+                end
+                break;
+            end
+        end
+    end
+    save(fullfile(bucket.pathToProcessedData,'angAcc_sensor.mat'),'angAcc_sensor');
+else
+    load(fullfile(bucket.pathToProcessedData,'angAcc_sensor.mat'));
+end
+
+% Create new angular accelerometer sensor in berdy sensor
+for newSensIdx = 1 : length(suit.sensors)
+    humanSensors = addAccAngSensorInBerdySensors(humanSensors,angAcc_sensor(newSensIdx).sensorName, ...
+        angAcc_sensor(newSensIdx).attachedLink,angAcc_sensor(newSensIdx).iDynModelIdx, ...
+        angAcc_sensor(newSensIdx).S_R_L, angAcc_sensor(newSensIdx).pos_SwrtL);
+end
 
 %% Initialize berdy
 % Specify berdy options
@@ -324,6 +372,7 @@ for blockIdx = 1 : block.nrOfBlocks
         humanModel,...
         humanSensors,...
         suit_runtime,...
+        angAcc_sensor, ...
         fext,...
         synchroKin(blockIdx).ddq,...
         bucket.contactLink, ...
