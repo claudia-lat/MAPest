@@ -572,7 +572,12 @@ end
 
 %% Variables extraction from y_sim
 if ~isfield(y_sim,'FextSim_RightFoot')
-    extractFext_from_y_sim
+    for blockIdx = 1 : block.nrOfBlocks
+        extractFext_from_y_sim
+    end
+    save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
+else
+    load(fullfile(bucket.pathToProcessedData,'y_sim.mat'));
 end
 
 %% ---------------------------- EXO ANALYSIS ------------------------------
