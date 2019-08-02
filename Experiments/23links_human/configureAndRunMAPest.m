@@ -52,9 +52,29 @@ if opts.MAPbenchmarking
 %     opts.OsimID             = false;
 end
 
-% Plots for the standalone analysis. No comparison for the same subject
-% with and without exo
+%% Plots
+opts.plots = false;
 opts.finalPlot_standalone = false;
+
+if opts.plots
+    addpath(genpath('plots_scripts'));
+    % ----------------------------------
+    % Plots for the standalone analysis. No comparison for the same subject
+    % with and without exo
+    if opts.finalPlot_standalone
+        finalPlot_standalone;
+    end
+    % ----------------------------------
+    % Force-level analysis plots
+    if opts.EXO_forceLevelAnalysis
+        EXOvsNOEXO_plots_forcelevel;
+    end
+    % ----------------------------------
+    % EXO inside MAP analysis plots
+    if opts.EXO_insideMAP
+        EXOvsNOEXO_plots_insideMAP;
+    end
+end
 
 %% Covariances setting
 priors = struct;
