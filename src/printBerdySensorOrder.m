@@ -18,6 +18,8 @@ for i = 1 : size(sensorOrder,2)
             typeStr = 'Int_Wrench_sensor       ';
         case iDynTree.ACCELEROMETER_SENSOR
             typeStr = 'Accelerometer           ';
+        case iDynTree.THREE_AXIS_ANGULAR_ACCELEROMETER_SENSOR
+            typeStr = 'AngAcceleration_sensor          ';
         case iDynTree.GYROSCOPE_SENSOR
             typeStr= 'Gyroscope                ';
         case iDynTree.DOF_ACCELERATION_SENSOR
