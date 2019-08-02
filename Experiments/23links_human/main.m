@@ -198,13 +198,6 @@ end
 % ---------------------------------------------------
 
 %% Measurements wrapping
-% Set the sensor covariance priors (to be tailored by the user)
-priors = struct;
-priors.acc_IMU     = 0.001111 * ones(3,1);           %[m^2/s^2]   , from datasheet
-% priors.gyro_IMU    = xxxxxx * ones(3,1);           %[rad^2/s^2] , from datasheet
-priors.ddq         = 6.66e-6;                        %[rad^2/s^4] , from worst case covariance
-priors.foot_fext   = [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2], from worst case covariance
-priors.noSens_fext = 1e-6 * ones(6,1);               %[N^2,(Nm)^2]
 
 disp('-------------------------------------------------------------------');
 disp('[Start] Wrapping measurements...');
@@ -230,8 +223,8 @@ disp('[End] Wrapping measurements');
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
 priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
-priors.Sigmad = 1e+4 * eye(berdy.getNrOfDynamicVariables()); % 1e+4 means low reliability on the estimation (i.e., no prior info on the final solution d)
-priors.SigmaD = 1e-4 * eye(berdy.getNrOfDynamicEquations()); % 1e-4 means high reliability on the model constraints
+priors.Sigmad = bucket.Sigmad * eye(berdy.getNrOfDynamicVariables());
+priors.SigmaD = bucket.SigmaD * eye(berdy.getNrOfDynamicEquations());
 
 %% Possibility to remove a sensor from the analysis
 % except fot the accelerometers and gyroscope for whose removal already
