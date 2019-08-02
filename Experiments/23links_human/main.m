@@ -151,10 +151,14 @@ if ~humanModelLoader.loadReducedModelFromFile(humanModel.filename, ...
     % here the model loads the same order of selectedJoints.
     fprintf('Something wrong with the model loading.')
 end
+
 humanModel = humanModelLoader.model();
 human_kinDynComp = iDynTree.KinDynComputations();
 human_kinDynComp.loadRobotModel(humanModel);
 
+bucket.base = 'Pelvis'; % floating base
+
+% Sensors
 humanSensors = humanModelLoader.sensors();
 humanSensors.removeAllSensorsOfType(iDynTree.GYROSCOPE_SENSOR);
 % humanSensors.removeAllSensorsOfType(iDynTree.ACCELEROMETER_SENSOR);
@@ -209,10 +213,21 @@ berdyOptions.includeFixedBaseExternalWrench = false;
 % Load berdy
 berdy = iDynTree.BerdyHelper;
 berdy.init(humanModel, humanSensors, berdyOptions);
+
 % Get the current traversal
 traversal = berdy.dynamicTraversal;
+
+% Floating base settings
 currentBase = berdy.model().getLinkName(traversal.getBaseLink().getIndex());
 disp(strcat('[Info] Current base is < ', currentBase,'>.'));
+human_kinDynComp.setFloatingBase(currentBase);
+baseKinDynModel = human_kinDynComp.getFloatingBase();
+
+% Consistency check: berdy.model base and human_kinDynComp.model have to be consistent!
+if currentBase ~= baseKinDynModel
+    error(strcat('The berdy model base (',currentBase,') and the kinDyn model base (',baseKinDynModel,') do not match!'));
+end
+
 % Get the tree is visited as the order of variables in vector d
 dVectorOrder = cell(traversal.getNrOfVisitedLinks(), 1);
 dJointOrder = cell(traversal.getNrOfVisitedLinks()-1, 1);
