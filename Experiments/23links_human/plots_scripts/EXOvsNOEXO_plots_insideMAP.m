@@ -59,34 +59,34 @@ for subjIdx = 1 : length(subjectID)
         comparisonWEvsNE.torqueNorm = struct;
         
         % ------------------ do task 01 vs. 00 comparison -----------------
-%         for jointsIdx = 1 : length(selectedJoints.selectedJoints)
-%             fig = figure('Name', 'EXO vs NOEXO analysis','NumberTitle','off');
-%             axes1 = axes('Parent',fig,'FontSize',16);
-%             box(axes1,'on');
-%             hold(axes1,'on');
-%             grid on;
-%             
-%             for blockIdx = 1 : block.nrOfBlocks
-%                 subplot (5,1,blockIdx)
-%                 % Task 01 --> NO EXO
-%                 plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(jointsIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
-%                 hold on;
-%                 % Task 00 --> WITH EXO
-%                 plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(jointsIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
-%                 title(sprintf('%s, S%02d, Block %s',selectedJoints.selectedJoints{jointsIdx,1}, ...
-%                     subjectID(subjIdx), num2str(blockIdx)),'Interpreter','latex');
-%                 ylabel('torque [Nm]');
-%                 if blockIdx == 5
-%                     xlabel('samples');
-%                 end
-%                 set(gca,'FontSize',15)
-%                 grid on;
-%                 %legend
-%                 leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
-%                 set(leg,'Interpreter','latex');
-%                 axis tight
-%             end
-%         end
+        %         for jointsIdx = 1 : length(selectedJoints.selectedJoints)
+        %             fig = figure('Name', 'EXO vs NOEXO analysis','NumberTitle','off');
+        %             axes1 = axes('Parent',fig,'FontSize',16);
+        %             box(axes1,'on');
+        %             hold(axes1,'on');
+        %             grid on;
+        %
+        %             for blockIdx = 1 : block.nrOfBlocks
+        %                 subplot (5,1,blockIdx)
+        %                 % Task 01 --> NO EXO
+        %                 plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(jointsIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        %                 hold on;
+        %                 % Task 00 --> WITH EXO
+        %                 plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(jointsIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        %                 title(sprintf('%s, S%02d, Block %s',selectedJoints.selectedJoints{jointsIdx,1}, ...
+        %                     subjectID(subjIdx), num2str(blockIdx)),'Interpreter','latex');
+        %                 ylabel('torque [Nm]');
+        %                 if blockIdx == 5
+        %                     xlabel('samples');
+        %                 end
+        %                 set(gca,'FontSize',15)
+        %                 grid on;
+        %                 %legend
+        %                 leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        %                 set(leg,'Interpreter','latex');
+        %                 axis tight
+        %             end
+        %         end
     else
         pathToTask00 = fullfile(pathToSubject,sprintf('task%d',taskID(1)));
         pathToTask01 = fullfile(pathToSubject,sprintf('task%d',taskID(2)));
@@ -274,7 +274,7 @@ if group1
         set(leg,'Interpreter','latex');
         axis tight
     end
-    tightfig;
+    %     tightfig;
     
     % ============= right leg
     fig = figure('Name', 'EXO vs NOEXO norm_RIGHT LEG','NumberTitle','off');
@@ -318,6 +318,233 @@ if group1
         plot2 = plot(comparisonWEvsNE.torqueNorm(blockIdx).leftLeg_exo00,'color',greenAnDycolor,'lineWidth',1.5);
         title(sprintf('Left leg norm, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
         ylabel('\tau norm');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    %% shoulders plots
+    tmp.rC7ShoIdx = 15;
+    tmp.rShoRotxIdx = 16;
+    tmp.rShoRotyIdx = 17;
+    tmp.rShoRotzIdx = 18;
+    
+    tmp.lC7ShoIdx = 23;
+    tmp.lShoRotxIdx = 24;
+    tmp.lShoRotyIdx = 25;
+    tmp.lShoRotzIdx = 26;
+    
+    % ============= right c7 shoulder
+    fig = figure('Name', 'EXO vs NOEXO RIGHT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.rC7ShoIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.rC7ShoIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Right C7 shoulder, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= left c7 shoulder
+    fig = figure('Name', 'EXO vs NOEXO LEFT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.lC7ShoIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.lC7ShoIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Left C7 shoulder, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= right shoulder rotx
+    fig = figure('Name', 'EXO vs NOEXO RIGHT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.rShoRotxIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.rShoRotxIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Right shoulder rotx, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= left shoulder rotx
+    fig = figure('Name', 'EXO vs NOEXO LEFT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.lShoRotxIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.lShoRotxIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Left shoulder rotx, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= right shoulder roty
+    fig = figure('Name', 'EXO vs NOEXO RIGHT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.rShoRotyIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.rShoRotyIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Right shoulder roty, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= left shoulder roty
+    fig = figure('Name', 'EXO vs NOEXO LEFT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.lShoRotyIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.lShoRotyIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Left shoulder roty, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= right shoulder rotz
+    fig = figure('Name', 'EXO vs NOEXO RIGHT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.rShoRotzIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.rShoRotzIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Right shoulder rotz, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
+        if blockIdx == 5
+            xlabel('samples');
+        end
+        ylim([0 200]);
+        set(gca,'FontSize',15)
+        grid on;
+        %legend
+        leg = legend([plot1,plot2],{'NE','WE'},'Location','northeast');
+        set(leg,'Interpreter','latex');
+        axis tight
+    end
+    
+    % ============= left shoulder rotz
+    fig = figure('Name', 'EXO vs NOEXO LEFT SHOULDER','NumberTitle','off');
+    axes1 = axes('Parent',fig,'FontSize',16);
+    box(axes1,'on');
+    hold(axes1,'on');
+    grid on;
+    for blockIdx = 1 : block.nrOfBlocks
+        subplot (5,1,blockIdx)
+        % Task 00 --> NO EXO
+        plot1 = plot(noexo01.estimatedVariables.tau(blockIdx).values(tmp.lShoRotzIdx,:),'color',orangeAnDycolor,'lineWidth',1.5);
+        hold on;
+        % Task 01 --> WITH EXO
+        plot2 = plot(exo00.exo_insideMAP.estimatedVariables.tau(blockIdx).values(tmp.lShoRotzIdx,:),'color',greenAnDycolor,'lineWidth',1.5);
+        title(sprintf('Left shoulder rotz, S%02d, Block %s',subjectID(subjIdx), num2str(blockIdx)));
+        ylabel('\tau');
         if blockIdx == 5
             xlabel('samples');
         end
