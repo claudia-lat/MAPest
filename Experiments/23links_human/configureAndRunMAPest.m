@@ -90,5 +90,11 @@ bucket.Sigmad = 1e4;
 bucket.SigmaD = 1e-4;
 % high reliability on the model constraints
 
+if opts.EXO
+    if opts.EXO_insideMAP
+        priors.exo_fext   = 1e1 * ones(6,1); %[N^2,(Nm)^2]
+    end
+end
+
 %% Run MAPest main.m
 main;

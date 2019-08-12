@@ -12,7 +12,6 @@ disp('       [End] Transforming EXO force in human frames');
 %% Wrapping new measurements with EXO in y vector
 disp('-------------------------------------------------------------------');
 disp('       [Start] Wrapping measurements with EXO in y...');
-priors.exo_fext   = 1e1 * ones(6,1); %[N^2,(Nm)^2]
 
 % Find links where EXO forces are acting
 lenCheck = length(data(blockIdx).data);
