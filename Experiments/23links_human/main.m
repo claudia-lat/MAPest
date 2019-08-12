@@ -2,12 +2,15 @@
 %--------------------------------------------------------------------------
 % JSI_experiments main
 %--------------------------------------------------------------------------
+
 bucket.pathToSubject = fullfile(bucket.datasetRoot, sprintf('S%02d',subjectID));
 bucket.pathToTask    = fullfile(bucket.pathToSubject,sprintf('task%d',taskID));
 bucket.pathToRawData = fullfile(bucket.pathToTask,'data');
 bucket.pathToProcessedData   = fullfile(bucket.pathToTask,'processed');
 
-disp(strcat('[Start] Analysis SUBJECT_ ',num2str(subjectID),', TRIAL_',num2str(taskID)'));
+disp(' ');
+disp('===================== FLOATING-BASE ANALYSIS ======================');
+fprintf('[Start] Analysis SUBJECT_%02d, TRIAL_%02d\n',subjectID,taskID);
 
 % Extraction of the masterFile
 masterFile = load(fullfile(bucket.pathToRawData,sprintf(('S%02d_%02d.mat'),subjectID,taskID)));
