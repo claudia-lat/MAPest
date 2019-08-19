@@ -16,7 +16,7 @@ for blockIdx = 1 : block.nrOfBlocks
     EXO.exoForces(blockIdx).f_table_LUA = zeros(6,len);
     EXO.exoForces(blockIdx).f_table_LUA(1,:) = EXO.leftRoundedTable(blockIdx).F_arm_scher;
     EXO.exoForces(blockIdx).f_table_LUA(2,:) = EXO.leftRoundedTable(blockIdx).F_arm_support;
-    EXO.exoForces(blockIdx).f_table_LUA(6,:) = EXO.leftRoundedTable(blockIdx).M_support_mod;
+%     EXO.exoForces(blockIdx).f_table_LUA(6,:) = EXO.leftRoundedTable(blockIdx).M_support_mod;
     
     % LH
     EXO.exoForces(blockIdx).f_table_LH  = zeros(6,len);
@@ -28,7 +28,7 @@ for blockIdx = 1 : block.nrOfBlocks
     EXO.exoForces(blockIdx).f_table_RUA = zeros(6,len);
     EXO.exoForces(blockIdx).f_table_RUA(1,:) = EXO.rightRoundedTable(blockIdx).F_arm_scher;
     EXO.exoForces(blockIdx).f_table_RUA(2,:) = EXO.rightRoundedTable(blockIdx).F_arm_support;
-    EXO.exoForces(blockIdx).f_table_RUA(6,:) = EXO.rightRoundedTable(blockIdx).M_support_mod;
+%     EXO.exoForces(blockIdx).f_table_RUA(6,:) = EXO.rightRoundedTable(blockIdx).M_support_mod;
     
     % RH
     EXO.exoForces(blockIdx).f_table_RH  = zeros(6,len);
