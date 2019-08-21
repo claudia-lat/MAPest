@@ -35,7 +35,7 @@ samples = size(human_state.q ,2);
 for i = 1: samples
 
     q.fromMatlab(human_state.q(:,i));
-    dq.fromMatlab(human_state.q(:,i));
+    dq.fromMatlab(human_state.dq(:,i));
     base_angVel.fromMatlab(baseAngVel(:,i));
     
     berdy.updateKinematicsFromFloatingBase(q,dq,baseIndex,base_angVel);
