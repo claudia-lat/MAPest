@@ -407,6 +407,15 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
         estimation.mu_dgiveny);
     disp('[End] External force MAP extraction for Block');
     
+    % fint extraction (no via Berdy)
+    disp('-------------------------------------------------------------------');
+    disp('[Start] Internal force MAP extraction...');
+    estimatedVariables.Fint.label  = selectedJoints;
+    estimatedVariables.Fint.values = extractEstimatedFint_from_mu_dgiveny(berdy, ...
+        selectedJoints, ...
+        estimation.mu_dgiveny);
+    disp('[End] Internal force MAP extraction for Block');
+
     % save extracted viariables
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
@@ -438,7 +447,8 @@ end
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'), 'file')
     disp('[Start] Simulated y forces extraction...');
-    extractFext_from_y_sim;
+%     extractFext_from_y_sim;
+    extractSingleVar_from_y_sim_all;
     disp('[End] Simulated y forces extraction');
 else
     disp('Simulated y forces extraction already saved!');
