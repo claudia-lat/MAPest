@@ -29,12 +29,12 @@ for n = (window+1)/2 : l-(window+1)/2
     for j = 1 : size(a, 1)
         if ~isempty(varargin)
             % 1st differential
-            da(j,n) = dot(diffCoeff(:,2), a(j,n - halfWindow:n + halfWindow));
+            da(j,n) = factorial(1) * dot(diffCoeff(:,2), a(j,n - halfWindow:n + halfWindow));
             % 2nd differential
-            dda(j,n) = dot(diffCoeff(:,3), a(j,n - halfWindow:n + halfWindow));
+            dda(j,n) = factorial(2) * dot(diffCoeff(:,3), a(j,n - halfWindow:n + halfWindow));
         end
         % smoother
-        smooth(j,n) = dot(diffCoeff(:,1), a(j,n - halfWindow:n + halfWindow));
+        smooth(j,n) = factorial(0) * dot(diffCoeff(:,1), a(j,n - halfWindow:n + halfWindow));
     end
 end
 
