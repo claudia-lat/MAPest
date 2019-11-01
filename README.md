@@ -13,33 +13,8 @@ Detailes on the experiments in the README of each related Section.
 Please cite the following publication if you are using the code contained in this repository for your own research and/or experiments:
 
 ~~~
-Latella, C.; Lorenzini, M.; Lazzaroni, M.; Romano, F.; Traversaro, S.; Akhras, M.A.; Pucci, D.; Nori, F.
-Towards Real-time Whole-Body Human Dynamics Estimation through Probabilistic Sensor Fusion Algorithms.
-A Physical Human–Robot Interaction Case Study.
-Autonomous Robots, Springer US, October 2018, doi:
-10.1007/s10514-018-9808-4
-https://doi.org/10.1007/s10514-018-9808-4
-~~~
-
-The bibtex code for including this citation is provided:
-
-~~~
-@Article{Latella2018,
-author="Latella, Claudia
-and Lorenzini, Marta
-and Lazzaroni, Maria
-and Romano, Francesco
-and Traversaro, Silvio
-and Akhras, M. Ali
-and Pucci, Daniele
-and Nori, Francesco",
-title="Towards real-time whole-body human dynamics estimation through probabilistic sensor fusion algorithms",
-journal="Autonomous Robots",
-year="2018",
-month="Oct",
-day="31",
-issn="1573-7527",
-doi="10.1007/s10514-018-9808-4",
-url="https://doi.org/10.1007/s10514-018-9808-4"
-}
+Latella, C.; Traversaro, S.; Ferigo, D.; Tirupachuri, Y.; Rapetti, L.; 
+Andrade Chavez, F.J.; Nori, F.; Pucci, D. Simultaneous Floating-Base 
+Estimation of Human Kinematics and Joint Torques. Sensors 2019, 19, 2794
+doi: https://doi.org/10.3390/s19122794
 ~~~
