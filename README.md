@@ -10,7 +10,7 @@ For the moment the repository consists of two type of experiments:
 Detailes on the experiments in the README of each related Section.
 
 ### Citing this work
-Please cite the following publication if you are using the code contained in this repository for your own research and/or experiments:
+Please cite the following publications if you are using the code contained in this repository for your own research and/or experiments:
 
 ~~~
 Latella, C.; Traversaro, S.; Ferigo, D.; Tirupachuri, Y.; Rapetti, L.; 
@@ -18,3 +18,11 @@ Andrade Chavez, F.J.; Nori, F.; Pucci, D. Simultaneous Floating-Base
 Estimation of Human Kinematics and Joint Torques. Sensors 2019, 19, 2794
 doi: https://doi.org/10.3390/s19122794
 ~~~
+https://www.mdpi.com/1424-8220/19/12/2794
+
+and
+
+~~~
+Latella, C. Human Whole-Body Dynamics Estimation for Enhancing Physical Human-Robot Interaction
+~~~
+https://arxiv.org/abs/1912.01136
