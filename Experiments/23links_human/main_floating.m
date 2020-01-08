@@ -197,6 +197,19 @@ berdyOptions.includeAllNetExternalWrenchesAsSensors          = true;
 berdyOptions.includeAllNetExternalWrenchesAsDynamicVariables = true;
 berdyOptions.includeAllJointAccelerationsAsSensors           = true;
 berdyOptions.includeAllJointTorquesAsSensors                 = false;
+berdyOptions.includeCoMAccelerometerAsSensorInTask1          = true;
+berdyOptions.includeCoMAccelerometerAsSensorInTask2          = false;
+berdyOptions.stackOfTasksMAP                                 = true;
+
+% Option useful for the new measurement equation
+%      X_{COMconstrainedLinks} * fˆx_{COMconstrainedLinks} = m * ddx_COM
+% where COMconstrainedLinks is a vector containing link names.
+COMconstrainedLinks = iDynTree.StringVector();
+COMconstrainedLinks.push_back('LeftFoot');
+COMconstrainedLinks.push_back('RightFoot');
+COMconstrainedLinks.push_back('LeftHand');
+COMconstrainedLinks.push_back('RightHand');
+berdyOptions.comConstraintLinkNamesVector = COMconstrainedLinks;
 
 berdyOptions.berdyVariant = iDynTree.BERDY_FLOATING_BASE;
 berdyOptions.includeFixedBaseExternalWrench = false;
