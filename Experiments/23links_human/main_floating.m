@@ -249,29 +249,6 @@ end
 % printBerdyDynVariables_floating(berdy)
 % ---------------------------------------------------
 
-%% Measurements wrapping
-disp('-------------------------------------------------------------------');
-disp('[Start] Wrapping measurements...');
-fext.rightHuman = shoes.Right_HF;
-fext.leftHuman  = shoes.Left_HF;
-
-data = dataPackaging(humanModel, ...
-    humanSensors, ...
-    suit, ...
-    angAcc_sensor, ...
-    fext, ...
-    synchroKin.ddq, ...
-    bucket.linkInShoes, ...
-    priors);
-% y vector as input for MAP
-[y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
-disp('[End] Wrapping measurements');
-
-% ---------------------------------------------------
-% CHECK: print the order of measurement in y
-% printBerdySensorOrder(berdy);
-% ---------------------------------------------------
-
 %% Compute the transformation of the base w.r.t. the global suit frame G
 disp('-------------------------------------------------------------------');
 disp(strcat('[Start] Computing the <',currentBase,'> iDynTree transform w.r.t. the global frame G...'));
@@ -311,6 +288,37 @@ disp(strcat('[Start] Computing the <',currentBase,'> velocity...'));
 disp(strcat('[End] Computing the <',currentBase,'> velocity'));
 
 % plot_baseVelocityInPattern;
+
+%% Compute the linear part for the rate of change of momentum, dL_lin
+disp('-------------------------------------------------------------------');
+disp(strcat('[Start] Computing the linear rate of change of momentum...'));
+baseVelocity6D = [baseVelocity.linear ; baseVelocity.angular];
+dL_lin = computeLinRateOfChangeOfMomentum(human_kinDynComp, humanModel, ...
+    synchroKin.state, baseVelocity6D, G_T_b);
+disp(strcat('[End] Computing the linear rate of change of momentum'));
+
+%% Measurements wrapping
+disp('-------------------------------------------------------------------');
+disp('[Start] Wrapping measurements...');
+fext.rightHuman = shoes.Right_HF;
+fext.leftHuman  = shoes.Left_HF;
+
+data = dataPackaging(humanModel, ...
+    humanSensors, ...
+    suit, ... %     angAcc_sensor, ...
+    fext, ...
+    synchroKin.ddq, ...
+    bucket.linkInShoes, ...
+    priors);
+
+% y vector as input for MAP
+[y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
+disp('[End] Wrapping measurements');
+
+% ---------------------------------------------------
+% CHECK: print the order of measurement in y
+% printBerdySensorOrder(berdy);
+% ---------------------------------------------------
 
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
