@@ -1,12 +1,13 @@
-function [y, Sigmay] = berdyMeasurementsWrapping(berdy, data)
+function [y, Sigmay] = berdyMeasurementsWrapping(berdy, data, stackOfTaskMAP)
 % BERDYMEASUREMENTSWRAPPING orders the measurements in a format
 % compatible with the BerdyHelper class.  It returns a vector of
 % ordered measurements and its associated covariance matrix.
 
-sensorOrder = berdy.getSensorsOrdering();
+sensorOrder = berdy.getSensorsOrdering(stackOfTaskMAP);
 
-y = zeros(berdy.getNrOfSensorsMeasurements(),size(data(1).meas,2));
-Sigmay = zeros(berdy.getNrOfSensorsMeasurements,berdy.getNrOfSensorsMeasurements);
+y = zeros(berdy.getNrOfSensorsMeasurements(stackOfTaskMAP),size(data(1).meas,2));
+Sigmay = zeros(berdy.getNrOfSensorsMeasurements(stackOfTaskMAP), ...
+    berdy.getNrOfSensorsMeasurements(stackOfTaskMAP));
 for i = 1:size(sensorOrder,2)
     currentInfo = sensorOrder{i};
     found = false;

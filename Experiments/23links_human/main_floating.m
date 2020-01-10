@@ -246,7 +246,7 @@ end
 
 % ---------------------------------------------------
 % CHECK: print the order of variables in d vector
-% printBerdyDynVariables_floating(berdy)
+% printBerdyDynVariables_floating(berdy, opts.stackOfTaskMAP);
 % ---------------------------------------------------
 
 %% Compute the transformation of the base w.r.t. the global suit frame G
@@ -311,15 +311,16 @@ data = dataPackaging(humanModel, ...
     dL_lin, ...
     synchroKin.ddq, ...
     bucket.linkInShoes, ...
-    priors);
+    priors, ...
+    opts.stackOfTaskMAP);
 
 % y vector as input for MAP
-[y, Sigmay] = berdyMeasurementsWrapping(berdy, data);
+[y, Sigmay] = berdyMeasurementsWrapping(berdy, data, opts.stackOfTaskMAP);
 disp('[End] Wrapping measurements');
 
 % ---------------------------------------------------
 % CHECK: print the order of measurement in y
-% printBerdySensorOrder(berdy);
+% printBerdySensorOrder(berdy, opts.stackOfTaskMAP);
 % ---------------------------------------------------
 
 %% ------------------------------- MAP ------------------------------------

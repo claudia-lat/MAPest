@@ -38,6 +38,21 @@ opts.fixedVSfloat_iterative = false; % option for iterative testing.
 % Every time the code is launched, .mat files in the fixed/floating
 % processed folders are automatically deleted.
 
+
+% Option for stack of task (SOT)
+opts.stackOfTaskMAP = false;
+% This option is by default set to FALSE to guarantee the back
+% compatibility with the old MAP
+
+opts.task1_SOT = true;
+if opts.task1_SOT
+    % SOT in Task1
+    opts.stackOfTaskMAP = true;
+else
+    % SOT in Task2
+    opts.stackOfTaskMAP = false;
+end
+
 %% Covariances setting
 priors = struct;
 priors.acc_IMU     = 1e-3 * ones(3,1);                     %[m^2/s^2]   , from datasheet
@@ -51,6 +66,9 @@ bucket.Sigmad = 1e+3;
 % low reliability on the estimation (i.e., no prior info on the regularization term d)
 bucket.SigmaD = 1e+1;
 % high reliability on the model constraints
+
+% for SOT in Task1
+priors.dL_lin      = 1e-6 * ones(3,1);
 
 %% Run MAPest main.m
 if opts.fixedVSfloat
