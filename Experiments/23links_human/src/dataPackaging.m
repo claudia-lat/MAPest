@@ -1,4 +1,4 @@
-function [ dataPacked ] = dataPackaging(model, sensors, suit, angAcc, fext, ddq, contactLink, priors)
+function [ dataPacked ] = dataPackaging(model, base, sensors, suit, fext, dL_lin, ddq, contactLink, priors)
 %DATAPACKAGING creates a data struct organised in the following way:
 % - data.time (a unified time for all type of sensors)
 % Each substructure is identified by:
@@ -10,7 +10,7 @@ function [ dataPacked ] = dataPackaging(model, sensors, suit, angAcc, fext, ddq,
 data      = struct;
 data.acc  = struct;
 % data.gyro = struct;
-data.angAcc  = struct;
+data.dL_lin  = struct;
 data.ddq  = struct;
 data.fext = struct;
 
@@ -69,22 +69,14 @@ data.acc.var = priors.acc_IMU;
 % % % variance
 % % data.gyro.var = priors.gyro_IMU;
 
-% SENSOR: <ANGULAR ACCELEROMETER>
+%% FROM dL_lin
 % type
-data.angAcc.type = iDynTree.THREE_AXIS_ANGULAR_ACCELEROMETER_SENSOR;
-% id
-nOfSensor.angAcc = length(suit.sensors);
-data.angAcc.id   = cell(nOfSensor.angAcc,1);
-for i = 1 : nOfSensor.angAcc
-    data.angAcc.id{i} = angAcc(i).sensorName;
-end
-% meas
-data.angAcc.meas = cell(nOfSensor.angAcc,1);
-for i = 1 : nOfSensor.angAcc
-    data.angAcc.meas{i} = angAcc(i).S_meas_L;
-end
+data.dL_lin.type = iDynTree.COM_ACCELEROMETER_SENSOR;
+% id & meas
+data.dL_lin.id   = base;
+data.dL_lin.meas = dL_lin;
 % variance
-data.angAcc.var = priors.angAcc;
+data.dL_lin.var  = priors.dL_lin;
 
 %% FROM ddq
 nOfSensor.DOFacc = size(ddq,1);
@@ -159,11 +151,14 @@ data.fext.var = priors.noSens_fext;
 
 %% Final Packaging
 dataPacked = struct;
+
+% lin acc sensor
 for i = 1 : nOfSensor.acc
     dataPacked(i).type                  = data.acc.type;
     dataPacked(i).id                    = data.acc.id{i};
     dataPacked(i).meas                  = data.acc.meas{i};
     dataPacked(i).var                   = data.acc.var;
+    % gyro sensor
     %     dataPacked(i + nOfSensor.acc).type  = data.gyro.type;
     %     dataPacked(i + nOfSensor.acc).id    = data.gyro.id{i};
     %     dataPacked(i + nOfSensor.acc).meas  = data.gyro.meas{i};
@@ -171,15 +166,24 @@ for i = 1 : nOfSensor.acc
 end
 indx = nOfSensor.acc;
 % indx = i;
-%--
-for i = 1 : nOfSensor.angAcc
-    dataPacked(i + (indx)).type         = data.angAcc.type;
-    dataPacked(i + (indx)).id           = data.angAcc.id{i};
-    dataPacked(i + (indx)).meas         = data.angAcc.meas{i};
-    dataPacked(i + (indx)).var          = data.angAcc.var;
-end
-indx = indx + nOfSensor.angAcc;
-%--
+
+% ang acc sensor
+% for i = 1 : nOfSensor.angAcc
+%     dataPacked(i + (indx)).type         = data.angAcc.type;
+%     dataPacked(i + (indx)).id           = data.angAcc.id{i};
+%     dataPacked(i + (indx)).meas         = data.angAcc.meas{i};
+%     dataPacked(i + (indx)).var          = data.angAcc.var;
+% end
+% indx = indx + nOfSensor.angAcc;
+
+% COM_sensor
+dataPacked(indx + 1).type         = data.dL_lin.type;
+dataPacked(indx + 1).id           = data.dL_lin.id;
+dataPacked(indx + 1).meas         = data.dL_lin.meas;
+dataPacked(indx + 1).var          = data.dL_lin.var;
+indx = indx + 1;
+
+% ddq sensor
 for i = 1 : nOfSensor.DOFacc
     dataPacked(i + (indx)).type         = data.ddq.type;
     dataPacked(i + (indx)).id           = data.ddq.id{i};
@@ -188,6 +192,7 @@ for i = 1 : nOfSensor.DOFacc
 end
 indx = indx + nOfSensor.DOFacc;
 
+% fext sensor
 for i = 1 : nOfSensor.fext
     dataPacked(i + (indx)).type         = data.fext.type;
     dataPacked(i + (indx)).id           = data.fext.id{i};
