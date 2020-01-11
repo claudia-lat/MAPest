@@ -325,9 +325,9 @@ disp('[End] Wrapping measurements');
 
 %% ------------------------------- MAP ------------------------------------
 %% Set MAP priors
-priors.mud    = zeros(berdy.getNrOfDynamicVariables(), 1);
-priors.Sigmad = bucket.Sigmad * eye(berdy.getNrOfDynamicVariables());
-priors.SigmaD = bucket.SigmaD * eye(berdy.getNrOfDynamicEquations());
+priors.mud    = zeros(berdy.getNrOfDynamicVariables(opts.stackOfTaskMAP), 1);
+priors.Sigmad = bucket.Sigmad * eye(berdy.getNrOfDynamicVariables(opts.stackOfTaskMAP));
+priors.SigmaD = bucket.SigmaD * eye(berdy.getNrOfDynamicEquations(opts.stackOfTaskMAP));
 
 %% Possibility to remove a sensor from the analysis
 % except fot the accelerometers and gyroscope for whose removal already
