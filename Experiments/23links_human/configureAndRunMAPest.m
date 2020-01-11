@@ -68,7 +68,7 @@ bucket.SigmaD = 1e+1;
 % high reliability on the model constraints
 
 % for SOT in Task1
-priors.dL_lin      = 1e-6 * ones(3,1);
+priors.properDotL_lin = 1e-6 * ones(3,1);
 
 %% Run MAPest main.m
 if opts.fixedVSfloat

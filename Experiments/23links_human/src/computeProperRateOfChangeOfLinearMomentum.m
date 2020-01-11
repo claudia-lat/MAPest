@@ -1,6 +1,9 @@
-function dL_lin = computeLinRateOfChangeOfMomentum(kinDynComputation, humanModel, state, baseVelocity, G_T_b)
-%COMPUTELINRATEOFCHANGEOFMOMENTUM computes 
-%          dL_lin = m * b_R_G * (G_linAccCOM - G_g)
+function properDotL_lin = computeProperRateOfChangeOfLinearMomentum(kinDynComputation, humanModel, state, baseVelocity, G_T_b)
+%COMPUTEPROPERRATEOFCHANGEOFLINEARMOMENTUM computes the proper rate of
+%chenge of the linear part of the momentum, such as
+%
+%          properDotL_lin = m * b_R_G * (G_linAccCOM - G_g)
+%
 % where:
 % - G_linAccCOM is the proper linear CoM acceleration w.r.t. the global
 %               suit frame G;
@@ -17,7 +20,7 @@ gravity.fromMatlab(gravityMatlab);
 G_R_b = iDynTree.Rotation();
 biasAccCOM = iDynTree.Vector3();
 samples = size(state.q ,2);
-dL_lin = zeros(3,samples);
+properDotL_lin = zeros(3,samples);
 
 for i = 1 : samples
     q.fromMatlab(state.q(:,i));
@@ -29,5 +32,5 @@ for i = 1 : samples
     % Get center of mass bias acceleration
     biasAccCOM = kinDynComputation.getCenterOfMassBiasAcc();
     % Compute dL_lin
-    dL_lin(:,i) =  humanModel.getTotalMass * G_R_b.toMatlab' * (biasAccCOM.toMatlab - gravityMatlab);
+    properDotL_lin(:,i) =  humanModel.getTotalMass * G_R_b.toMatlab' * (biasAccCOM.toMatlab - gravityMatlab);
 end
