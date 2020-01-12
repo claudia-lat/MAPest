@@ -1,8 +1,8 @@
-function [ index, len ] = rangeOfDynamicVariable( berdy, varType, varID)
+function [ index, len ] = rangeOfDynamicVariable( berdy, varType, varID, stackOfTaskMAP)
 % RANGEOFDYNAMICVARIABLE given a type of variable and its label, returns its
 % index in the vector d and its range.
 
-dynVariable = berdy.getDynamicVariablesOrdering();
+dynVariable = berdy.getDynamicVariablesOrdering(stackOfTaskMAP);
 index = -1;
 len = 0;
 for i = 1:size(dynVariable,2)

@@ -1,8 +1,8 @@
-function [ index, len ] = rangeOfSensorMeasurement( berdy, sensType, sensID)
+function [ index, len ] = rangeOfSensorMeasurement( berdy, sensType, sensID, stackOfTaskMAP)
 %RANGEOFDYNAMICVARIABLE given a type of sensor and its label, returns its
 % index in the vector y and its range.
 
-sensorOrder = berdy.getSensorsOrdering();
+sensorOrder = berdy.getSensorsOrdering(stackOfTaskMAP);
 index = -1;
 len = 0;
 for i = 1:size(sensorOrder,2)

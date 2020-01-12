@@ -1,4 +1,4 @@
-function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation_floating(berdy, traversal, state, y, priors, baseAngVel, varargin)
+function [mu_dgiveny, Sigma_dgiveny] = MAPcomputation_floating(berdy, traversal, state, y, priors, baseAngVel, stackOfTaskMAP, varargin)
 % MAPCOMPUTATION_FLOATING solves the inverse dynamics problem with a 
 % maximum-a-posteriori estimation by using the Newton-Euler algorithm and 
 % redundant sensor measurements as originally described in the paper 
@@ -74,7 +74,7 @@ end
 rangeOfRemovedSensors = [];
 for i = 1 : size(options.SENSORS_TO_REMOVE)
     ithSensor = options.SENSORS_TO_REMOVE(i);
-    [index, len] = rangeOfSensorMeasurement( berdy, ithSensor.type, ithSensor.id);
+    [index, len] = rangeOfSensorMeasurement( berdy, ithSensor.type, ithSensor.id, stackOfTaskMAP);
     rangeOfRemovedSensors = [rangeOfRemovedSensors, index : index + len - 1];
 end
 
@@ -97,7 +97,9 @@ berdyMatrices.b_Y   = iDynTree.VectorDynSize();
 berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
     berdyMatrices.b_D,...
     berdyMatrices.Y,...
-    berdyMatrices.b_Y);
+    berdyMatrices.b_Y,...
+    stackOfTaskMAP);
+
 % Set priors
 mud        = priors.mud;
 Sigmad_inv = sparse(inv(priors.Sigmad));
@@ -106,7 +108,7 @@ Sigmay_inv = sparse(inv(priors.Sigmay));
 
 % Allocate outputs
 samples = size(y, 2);
-nrOfDynVariables = berdy.getNrOfDynamicVariables();
+nrOfDynVariables = berdy.getNrOfDynamicVariables(stackOfTaskMAP);
 mu_dgiveny    = zeros(nrOfDynVariables, samples);
 % Sigma_dgiveny = sparse(nrOfDynVariables, nrOfDynVariables, samples);
 Sigma_dgiveny =  cell(samples,1);
@@ -128,7 +130,8 @@ for i = 1 : samples
     berdy.getBerdyMatrices(berdyMatrices.D,...
         berdyMatrices.b_D,...
         berdyMatrices.Y,...
-        berdyMatrices.b_Y);
+        berdyMatrices.b_Y,...
+        stackOfTaskMAP);
     
     D   = sparse(berdyMatrices.D.toMatlab());
     b_D = berdyMatrices.b_D.toMatlab();

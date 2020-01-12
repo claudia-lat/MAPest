@@ -365,6 +365,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
             y, ...
             priors, ...
             baseVelocity.angular, ...
+            opts.stackOfTaskMAP, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] Complete MAP computation');
         % TODO: variables extraction
@@ -380,6 +381,7 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimation.mat'), 'file')
             y, ...
             priors, ...
             baseVelocity.angular, ...
+            opts.stackOfTaskMAP, ...
             'SENSORS_TO_REMOVE', sensorsToBeRemoved);
         disp('[End] mu_dgiveny MAP computation');
     end
@@ -392,35 +394,51 @@ end
 %% Variables extraction from MAP estimation
 disp('-------------------------------------------------------------------');
 if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
-    % 6D acceleration (no via Berdy)
-    disp('[Start] Acceleration MAP extraction...');
-    estimatedVariables.Acc.label  = dVectorOrder;
-    estimatedVariables.Acc.values = extractEstimatedAcc_from_mu_dgiveny(berdy, ...
-        dVectorOrder, ...
-        estimation.mu_dgiveny);
-    disp('[End] Acceleration MAP extraction for Block');
-
-    % torque extraction (via Berdy)
-    disp('-------------------------------------------------------------------');
-    disp('[Start] Torque MAP extraction...');
-    estimatedVariables.tau.label  = selectedJoints;
-    estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
-        estimation.mu_dgiveny, ...
-        synchroKin.state.q);
-    disp('[End] Torque MAP extraction');
-    
-    % joint acc extraction (no via Berdy)
-    disp('-------------------------------------------------------------------');
-    disp('[Start] Joint acceleration MAP extraction...');
-    estimatedVariables.ddq.label  = selectedJoints;
-    %     estimatedVariables.ddq.values = extractEstimatedDdq_from_mu_dgiveny_floating(berdy, ...
-    %         selectedJoints, ...
-    %         mu_dgiveny);
-    % ---------------------------
-    estimatedVariables.ddq.values = estimation.mu_dgiveny(...
-        length(estimation.mu_dgiveny)-(nrDofs-1) : size(estimation.mu_dgiveny,1) ,:);
-    % ---------------------------
-    disp('[End] Joint acceleration MAP extraction');
+    if ~opts.stackOfTaskMAP
+        % The following variables do not exist in the mu_dgiveny vector if
+        % opts.stackOfTaskMAP = true
+        
+        % 6D acceleration (no via Berdy)
+        disp('[Start] Acceleration MAP extraction...');
+        estimatedVariables.Acc.label  = dVectorOrder;
+        estimatedVariables.Acc.values = extractEstimatedAcc_from_mu_dgiveny(berdy, ...
+            dVectorOrder, ...
+            estimation.mu_dgiveny, ...
+            opts.stackOfTaskMAP);
+        disp('[End] Acceleration MAP extraction for Block');
+        
+        % torque extraction (via Berdy)
+        disp('-------------------------------------------------------------------');
+        disp('[Start] Torque MAP extraction...');
+        estimatedVariables.tau.label  = selectedJoints;
+        estimatedVariables.tau.values = extractEstimatedTau_from_mu_dgiveny(berdy, ...
+            estimation.mu_dgiveny, ...
+            synchroKin.state.q);
+        disp('[End] Torque MAP extraction');
+        
+        % joint acc extraction (no via Berdy)
+        disp('-------------------------------------------------------------------');
+        disp('[Start] Joint acceleration MAP extraction...');
+        estimatedVariables.ddq.label  = selectedJoints;
+        %     estimatedVariables.ddq.values = extractEstimatedDdq_from_mu_dgiveny_floating(berdy, ...
+        %         selectedJoints, ...
+        %         mu_dgiveny);
+        % ---------------------------
+        estimatedVariables.ddq.values = estimation.mu_dgiveny(...
+            length(estimation.mu_dgiveny)-(nrDofs-1) : size(estimation.mu_dgiveny,1) ,:);
+        % ---------------------------
+        disp('[End] Joint acceleration MAP extraction');
+        
+        % fint extraction (no via Berdy)
+        disp('-------------------------------------------------------------------');
+        disp('[Start] Internal force MAP extraction...');
+        estimatedVariables.Fint.label  = selectedJoints;
+        estimatedVariables.Fint.values = extractEstimatedFint_from_mu_dgiveny(berdy, ...
+            selectedJoints, ...
+            estimation.mu_dgiveny, ...
+            opts.stackOfTaskMAP);
+        disp('[End] Internal force MAP extraction for Block');
+    end
     
     % fext extraction (no via Berdy)
     disp('-------------------------------------------------------------------');
@@ -428,18 +446,10 @@ if ~exist(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'), 'file')
     estimatedVariables.Fext.label  = dVectorOrder;
     estimatedVariables.Fext.values = extractEstimatedFext_from_mu_dgiveny(berdy, ...
         dVectorOrder, ...
-        estimation.mu_dgiveny);
+        estimation.mu_dgiveny, ...
+        opts.stackOfTaskMAP);
     disp('[End] External force MAP extraction for Block');
     
-    % fint extraction (no via Berdy)
-    disp('-------------------------------------------------------------------');
-    disp('[Start] Internal force MAP extraction...');
-    estimatedVariables.Fint.label  = selectedJoints;
-    estimatedVariables.Fint.values = extractEstimatedFint_from_mu_dgiveny(berdy, ...
-        selectedJoints, ...
-        estimation.mu_dgiveny);
-    disp('[End] Internal force MAP extraction for Block');
-
     % save extracted viariables
     save(fullfile(bucket.pathToProcessedData,'estimatedVariables.mat'),'estimatedVariables');
 else
@@ -459,7 +469,8 @@ if ~exist(fullfile(bucket.pathToProcessedData,'y_sim.mat'), 'file')
         synchroKin.state, ...
         traversal, ...
         baseVelocity.angular, ...
-        estimation.mu_dgiveny);
+        estimation.mu_dgiveny, ...
+        opts.stackOfTaskMAP);
     disp('[End] Simulated y computation');
     save(fullfile(bucket.pathToProcessedData,'y_sim.mat'),'y_sim');
 else

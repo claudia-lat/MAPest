@@ -1,4 +1,4 @@
-function y_simulated = sim_y_floating(berdy, human_state, traversal, baseAngVel, mu_dgiveny)
+function y_simulated = sim_y_floating(berdy, human_state, traversal, baseAngVel, mu_dgiveny, stackOfTaskMAP)
 %SIMYFLOATING is useful (mandatoty) to compare the measurements in the y vector
 % (i.e., the vector of the measurements) and the results of the MAP estimation in mu_dgiveny.
 %
@@ -22,8 +22,8 @@ berdyMatrices.b_Y   = iDynTree.VectorDynSize();
 berdy.resizeAndZeroBerdyMatrices(berdyMatrices.D,...
     berdyMatrices.b_D,...
     berdyMatrices.Y,...
-    berdyMatrices.b_Y);
-
+    berdyMatrices.b_Y,...
+    stackOfTaskMAP);
 
 q  = iDynTree.JointPosDoubleArray(berdy.model());
 dq = iDynTree.JointDOFsDoubleArray(berdy.model());
@@ -43,7 +43,8 @@ for i = 1: samples
     berdy.getBerdyMatrices(berdyMatrices.D,...
         berdyMatrices.b_D,...
         berdyMatrices.Y,...
-        berdyMatrices.b_Y);
+        berdyMatrices.b_Y,...
+        stackOfTaskMAP);
     
     Y_nonsparse = berdyMatrices.Y.toMatlab();
     
