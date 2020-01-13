@@ -38,28 +38,13 @@ opts.fixedVSfloat_iterative = false; % option for iterative testing.
 % Every time the code is launched, .mat files in the fixed/floating
 % processed folders are automatically deleted.
 
-
-% Option for stack of task (SOT)
-opts.stackOfTaskMAP = false;
-% This option is by default set to FALSE to guarantee the back
-% compatibility with the old MAP
-
-opts.task1_SOT = true;
-if opts.task1_SOT
-    % SOT in Task1
-    opts.stackOfTaskMAP = true;
-else
-    % SOT in Task2
-    opts.stackOfTaskMAP = false;
-end
-
 %% Covariances setting
 priors = struct;
-priors.acc_IMU     = 1e-3 * ones(3,1);                     %[m^2/s^2]   , from datasheet
+priors.acc_IMU     = 1e-6 * ones(3,1);                     %[m^2/s^2]   , from datasheet
 % priors.gyro_IMU    = xxxxxx * ones(3,1);                 %[rad^2/s^2] , from datasheet
-priors.angAcc      = 1e-6 * ones(3,1); %test
-priors.ddq         = 6.66e-3;                              %[rad^2/s^4] , from worst case covariance
-priors.foot_fext   = 1e-4 *[59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2]
+% priors.angAcc      = 1e6 * ones(3,1); %test
+priors.ddq         = 6.66e-6;                              %[rad^2/s^4] , from worst case covariance
+priors.foot_fext   = 1e-6 * [59; 59; 36; 2.25; 2.25; 0.56]; %[N^2,(Nm)^2]
 priors.noSens_fext = 1e-6 * ones(6,1);
 
 bucket.Sigmad = 1e6;
