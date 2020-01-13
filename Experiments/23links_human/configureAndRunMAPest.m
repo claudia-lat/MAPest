@@ -72,15 +72,25 @@ bucket.SigmaD = 1e-4;
 priors.fext_hands     = 1e3  * eye(3);
 priors.properDotL_lin = 1e-4 * ones(3,1);
 
-%% Run MAPest main.m
-if opts.fixedVSfloat
-    if taskID == 4
-        fixedBase = 'RightFoot';
-    else
-        fixedBase = 'LeftFoot';
-    end
-    main_fixed;
-end
-
-% floating-base computation
+%% Run MAPest stack of task (SOT)
+% =========================================================================
+%  RUN TASK1
+disp('=====================================================================');
+disp('=====================================================================');
+disp('[Start] Run SOT Task1..');
+opts.task1_SOT = true;
+opts.stackOfTaskMAP = true; % argument value for berdy functions for task1
 main_floating;
+disp('[End] Run SOT Task1');
+% plotMAPestDebug
+
+% =========================================================================
+%  RUN TASK2
+disp('=====================================================================');
+disp('=====================================================================');
+disp('[Start] Run SOT Task2..');
+opts.task1_SOT = false;
+opts.stackOfTaskMAP = false; % argument value for berdy functions for task2
+main_floating;
+disp('[End] Run SOT Task2');
+% plotMAPestDebug

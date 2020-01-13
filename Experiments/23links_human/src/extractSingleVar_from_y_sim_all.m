@@ -11,7 +11,13 @@ for vectOrderIdx = 1 : length(dVectorOrder)
     range_fextMEAS = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, dVectorOrder{vectOrderIdx}, opts.stackOfTaskMAP);
     y_sim_fext.meas{vectOrderIdx,1} = y_sim((range_fextMEAS:range_fextMEAS+5),:);
 end
-save(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'),'y_sim_fext');
+
+if opts.task1_SOT
+    save(fullfile(bucket.pathToProcessedData_SOTtask1,'y_sim_fext.mat'),'y_sim_fext');
+else
+    save(fullfile(bucket.pathToProcessedData,'y_sim_fext.mat'),'y_sim_fext');
+end
+
 
 if ~opts.stackOfTaskMAP
     % -----------------------------------------------------------------------%
