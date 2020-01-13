@@ -162,26 +162,40 @@ for i = 1 : samples
         end
     end
     
-    SigmaBarD_inv   = D' * SigmaD_inv * D + Sigmad_inv;
-    
-    % the permutation matrix for SigmaBarD_inv is computed only for the first
-    % sample, beacuse this matrix does not change in the experiment
-    if (i==1)
-        [~,~,PBarD]= chol(SigmaBarD_inv);
+    if ~stackOfTaskMAP
+        SigmaBarD_inv   = D' * SigmaD_inv * D + Sigmad_inv;
+        
+        % the permutation matrix for SigmaBarD_inv is computed only for the first
+        % sample, beacuse this matrix does not change in the experiment
+        if (i==1)
+            [~,~,PBarD]= chol(SigmaBarD_inv);
+        end
+        
+        rhsBarD         = Sigmad_inv * mud - D' * (SigmaD_inv * b_D);
+        muBarD          = CholSolve(SigmaBarD_inv , rhsBarD, PBarD);
+        
+        Sigma_dgiveny_inv = SigmaBarD_inv + Y' * Sigmay_inv * Y;
+        
+        % the permutation matrix for Sigma_dgiveny_inv is computed only for the first
+        % sample, beacuse this matrix does not change in the experiment
+        if (i==1)
+            [~,~,P]= chol(Sigma_dgiveny_inv);
+        end
+        
+        rhs             = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
+        
+    else
+        
+        Sigma_dgiveny_inv = Y' * Sigmay_inv * Y;
+        
+        % the permutation matrix for Sigma_dgiveny_inv is computed only for the first
+        % sample, beacuse this matrix does not change in the experiment
+        if (i==1)
+            [~,~,P]= chol(Sigma_dgiveny_inv);
+        end
+        
+        rhs              = Y' * Sigmay_inv * (y(:,i) - b_Y);
     end
-    
-    rhsBarD         = Sigmad_inv * mud - D' * (SigmaD_inv * b_D);
-    muBarD          = CholSolve(SigmaBarD_inv , rhsBarD, PBarD);
-    
-    Sigma_dgiveny_inv = SigmaBarD_inv + Y' * Sigmay_inv * Y;
-    
-    % the permutation matrix for Sigma_dgiveny_inv is computed only for the first
-    % sample, beacuse this matrix does not change in the experiment
-    if (i==1)
-        [~,~,P]= chol(Sigma_dgiveny_inv);
-    end
-    
-    rhs             = Y' * (Sigmay_inv * (y(:,i) - b_Y)) + SigmaBarD_inv * muBarD;
     
     if nargout > 1   % Sigma_dgiveny requested as output
         Sigma_dgiveny{i}   = inv(Sigma_dgiveny_inv);

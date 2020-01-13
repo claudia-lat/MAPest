@@ -318,6 +318,15 @@ data = dataPackaging(humanModel, ...
 [y, Sigmay] = berdyMeasurementsWrapping(berdy, data, opts.stackOfTaskMAP);
 disp('[End] Wrapping measurements');
 
+if opts.task1_SOT
+    % modify variances for the external forces at the hands
+    range_leftHand = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'LeftHand',opts.stackOfTaskMAP);
+    Sigmay(range_leftHand:range_leftHand+2,range_leftHand:range_leftHand+2) = priors.fext_hands;
+    
+    range_rightHand = rangeOfSensorMeasurement(berdy, iDynTree.NET_EXT_WRENCH_SENSOR, 'RightHand',opts.stackOfTaskMAP);
+    Sigmay(range_rightHand:range_rightHand+2,range_rightHand:range_rightHand+2) = priors.fext_hands;
+end
+
 % ---------------------------------------------------
 % CHECK: print the order of measurement in y
 % printBerdySensorOrder(berdy, opts.stackOfTaskMAP);
