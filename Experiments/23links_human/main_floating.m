@@ -83,7 +83,6 @@ if opts.task1_SOT
                     transpose(G_R_S) * ...
                     (suit.sensors{sensIdx, 1}.meas.sensorFreeAcceleration(:,lenIdx) - gravity);
             end
-            break;
         end
         save(fullfile(bucket.pathToProcessedData,'suit.mat'),'suit');
     else
